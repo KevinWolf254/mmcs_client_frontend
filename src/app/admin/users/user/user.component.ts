@@ -11,6 +11,7 @@ export class UserComponent implements OnInit {
 
   private userForm: FormGroup;
   private roles: string[] = [];
+  private newUser: User;
 
   constructor(private _fb: FormBuilder) {
     this.userForm = _fb.group({
