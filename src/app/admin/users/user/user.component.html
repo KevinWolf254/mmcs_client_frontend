@@ -1,0 +1,69 @@
+<div class="card border-top-0 shadow">
+    <div class="card-body">
+        <h6 class="mb-4 bg-light p-2 rounded">User Details</h6>
+        <form [formGroup] = "userForm" (ngSubmit) = "createUser(userForm.value)">
+            <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-user fa-lg"></i></span>
+                </div>
+                <input type="text" class="form-control" formControlName="firstName" placeholder="Surname">
+                <input type="text" class="form-control" formControlName="lastName" placeholder="Other Names">
+            </div>
+            <!-- email -->
+            <div class="input-group mb-0">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                </div>
+                <input type="text" class="form-control" formControlName="email" placeholder="Email">
+            </div>
+            <!-- email error msg -->
+            <div class=" d-flex flex-row-reverse" 
+            *ngIf="!userForm.controls['email'].valid && userForm.controls['email'].touched">
+              <span class="text text-danger mt-0 pt-0 pr-3" style="font-size:13px">
+                  Please enter a valid email
+              </span>
+            </div>
+            <!-- role -->
+            <div class="input-group mt-2 mb-0">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-cog"></i></span>
+                </div>
+                <select id="role" class="form-control" formControlName="role">
+                    <option value="0" selected>Select role</option>
+                    <option *ngFor="let role of roles" >{{role}}</option>
+                </select>
+            </div>
+            <!-- role error msg -->
+            <div class=" d-flex flex-row-reverse" 
+            *ngIf="!userForm.controls['role'].valid && userForm.controls['role'].touched">
+              <span class="text text-danger mt-0 pt-0 pr-3" style="font-size:13px">
+                  Please enter a user role
+              </span>
+            </div>
+            <!-- default password -->
+            <div class="input-group mt-2 mb-0">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-lock fa-lg px-0"></i></span>
+                </div>
+                <input type="text" class="form-control" formControlName="defaultPass" placeholder="Password">
+            </div>
+            <small class="form-text text-muted">
+                NB: Users must change their password after their first sign in
+            </small>
+            <!-- default password error -->
+            <div class=" d-flex flex-row-reverse" 
+            *ngIf="!userForm.controls['defaultPass'].valid && userForm.controls['defaultPass'].touched && !userForm.controls['defaultPass'].hasError('minlength')">
+              <span class="text text-danger mt-0 pt-0 pr-3" style="font-size:13px">
+                  Please enter a default password
+              </span>
+            </div><!-- new Password length error msg -->
+            <div class=" d-flex flex-row-reverse" 
+            *ngIf="userForm.controls['defaultPass'].hasError('minlength')">
+              <span class="text text-danger mt-0 pt-0 pr-3" style="font-size:13px">
+                  Please enter a minimum of 4 characters
+              </span>
+            </div>
+            <button class="btn btn-primary btn-block my-4 px-4" [disabled]="!userForm.valid" type="submit">Create User</button>
+        </form> 
+    </div>
+</div>

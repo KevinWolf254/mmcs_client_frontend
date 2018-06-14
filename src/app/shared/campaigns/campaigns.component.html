@@ -1,0 +1,44 @@
+<!-- Top navigation bar -->
+<app-top-navbar></app-top-navbar>
+<div class="container-fluid">
+  <div class="row">
+    <!-- SideNav -->
+    <nav class="col-md-3 d-none d-md-block bg-light sidebar">
+      <app-side-navbar></app-side-navbar>
+    </nav>
+    <!-- Content Body -->
+    <div class="col-md-9 ml-sm-auto mt-5 px-2 pt-2">
+      <div class="row">
+        <div class="col">
+            <div class="d-flex pb-2 mb-3 border-bottom">
+                <h3>Sms Campaigns</h3>
+              </div>
+        </div>
+      </div>
+      <div class="row ">
+        <div class="col">
+            <ngb-tabset>
+              <!-- On Demand Sms -->
+              <ngb-tab title="On Demand Sms" id="nowTab">
+                <ng-template ngbTabContent>
+                  <app-one-time-campaign></app-one-time-campaign>                 
+                </ng-template>
+              </ngb-tab>
+              <!-- Scheduled Campaigns -->
+              <ngb-tab title="Scheduled a Campaign" id="scheduleTab">
+                <ng-template ngbTabContent>
+                  <app-scheduled-campaign></app-scheduled-campaign>
+                </ng-template>
+              </ngb-tab>
+              <!-- Manage Campaigns -->
+              <ngb-tab title="Manage Campaigns" id="manageTab">
+                <ng-template ngbTabContent>
+                  <app-manage-campaigns></app-manage-campaigns>
+                </ng-template>
+              </ngb-tab>
+            </ngb-tabset>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

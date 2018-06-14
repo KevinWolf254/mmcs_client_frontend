@@ -1,0 +1,42 @@
+<div class="card border-top-0 shadow">
+  <div class="card-body">
+    <form [formGroup] = "form" (ngSubmit) = "sendSms(form.value)">
+      <h6 class="mb-4 bg-light p-2 rounded">Compose message</h6>
+      <div class="form-group">
+        <textarea class="form-control" formControlName="message" rows="5" placeholder="Sms Message" aria-describedby="messageHelp"></textarea>
+        <small id="messageHelp" class="form-text text-muted">
+          Compose an SMS message that is less than 160 characters long, otherwise additional charges apply.
+        </small>
+      </div>
+      <hr class="mb-4">
+      <h6 class="mb-4 bg-light p-2 rounded">Groups to send to</h6>
+      <div class="input-group mb-3">
+        <select class="form-control" formControlName="group" 
+        aria-describedby="groupSelectHelp" [(ngModel)]="selected">
+          <option value='0' selected>Select Group</option>
+          <option *ngFor="let group of allGroups" [value]="group.id">{{group.name}}</option>
+        </select>
+        <div class="input-group-append">
+          <button class="btn btn-info px-4" (click)="add()" [disabled]="!form.controls['group'].valid" type="button">
+            Add
+          </button>
+        </div> 
+      </div>
+      <small id="groupSelectHelp" class="form-text text-muted mb-4">
+        Select groups of clients that should receive the above message. 
+      </small>
+      <div *ngIf="selectedRecipients.length != 0">
+        <h6 class="mb-2 bg-light p-2 rounded">Selected Groups:</h6>
+        <span *ngFor="let group of selectedRecipients" class="badge badge-pill badge-info px-2 m-1">
+          {{group.name}}
+          <span class="btn btn-sm btn-info" (click)="remove(group)">&times;</span>
+        </span>
+      </div>
+      <hr class="mb-4">
+      <button class="btn btn-primary btn-block" type="submit" [disabled]="!form.valid || selectedRecipients.length == 0">
+        Send Sms
+      </button>
+    </form>
+  </div>
+</div> 
+

@@ -1,0 +1,31 @@
+<div class="card border-top-0 shadow">
+  <div class="card-body">
+    <p class="bg-light p-2 rounded"><b>Single Client creation:</b></p>
+    <form [formGroup] = "form" (ngSubmit) = "create(form.value)">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-user"></i></span>
+          </div>
+          <input type="text" class="form-control" formControlName="names" placeholder="Full names">
+        </div>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fa fa-phone"></i></span>
+          </div>
+          <input type="number" class="form-control col-sm-2" formControlName="code" placeholder="254">
+          <input type="number" class="form-control col-sm-10" formControlName="phone" placeholder="720100100">
+        </div>
+      <button type="submit" class="btn btn-primary btn-block mb-2" [disabled]="!form.valid">Create Client</button>
+    </form>
+    <hr class="mb-4">
+    <p class="bg-light p-2 rounded"><b>Multiple Client creation:</b></p>
+    <form [formGroup] = "fileForm" (ngSubmit) = "createFromFile(fileForm.value)">
+      <div class="form-group">
+        <label for="importFile">Import from File</label>
+        <input type="file" class="form-control-file" id="importFile" formControlName="file">
+      </div>
+      <button type="submit" class="btn btn-primary btn-block mb-2" [disabled]="!fileForm.valid">Create Clients</button>
+    </form>
+  </div>
+</div> 
+   

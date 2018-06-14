@@ -1,0 +1,84 @@
+<!-- Top navigation bar -->
+<app-top-navbar></app-top-navbar>
+<div class="container-fluid">
+  <div class="row">
+    <!-- SideNav -->
+    <nav class="col-md-3 d-none d-md-block bg-light sidebar">
+      <app-side-navbar></app-side-navbar>
+    </nav>
+    <!-- Content Body -->
+    <div class="col-md-9 ml-sm-auto mt-5 px-2 pt-2">
+      <div class="d-flex pb-2 mb-3 border-bottom">
+        <h3>Client Administration</h3>
+      </div>
+      <ngb-tabset>
+        <!-- Create Clients -->
+        <ngb-tab title="Create Clients" id="clientTab">
+          <ng-template ngbTabContent>
+            <app-client></app-client>                 
+          </ng-template>
+        </ngb-tab>
+        <!-- Manage Clients -->
+        <ngb-tab title="Group Clients" id="groupTab">
+          <ng-template ngbTabContent>
+            <div class="card border-top-0 shadow">
+              <div class="card-body">
+                <p class="bg-light p-2 rounded"><b>Add Single Client:</b></p>
+                <!-- Single Client Form -->
+                <form [formGroup] = "form" (ngSubmit) = "add(form.value)">
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-group"></i></span>
+                      </div>
+                      <select class="form-control" formControlName="group">
+                        <option value='0' selected>Choose Group...</option>
+                        <option *ngFor="let group of groups" [value]="group.id">{{group.name}}</option> 
+                      </select>
+                    </div>
+                    <div class="input-group mb-2">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="fa fa-phone px-1"></i></span>
+                      </div>
+                      <input type="number" class="form-control col-sm-10" formControlName="phone" placeholder="720100100">
+                      <div class="input-group-append">
+                        <button class="btn btn-primary" type="button" (click)="check(form.value.phone)" 
+                        [disabled]="!form.controls['phone'].valid">
+                          check
+                        </button>
+                      </div>
+                    </div>
+                  <button type="submit" class="btn btn-primary btn-block mb-2" [disabled]="!form.valid">Add Client</button>
+                </form>
+                <!-- Multiple Clients Form -->
+                <p class="bg-light p-2 mt-4 rounded"><b>Add Multiple Clients:</b></p>
+                <form [formGroup] = "fileForm" (ngSubmit) = "addClients(fileForm.value)">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="fa fa-group"></i></span>
+                    </div>
+                    <select class="form-control" formControlName="group">
+                      <option value='0' selected>Choose Group...</option>
+                      <option *ngFor="let group of groups" [value]="group.id">{{group.name}}</option> 
+                    </select>
+                  </div>
+                  <div class="form-group ">
+                    <label for="importFile">Import Clients from File</label>
+                    <input type="file" class="form-control-file mt-2" formControlName="file">
+                  </div>
+                  <button type="submit" class="btn btn-primary btn-block mb-2" [disabled]="!fileForm.valid">Add Clients</button>
+                </form>
+              </div>
+            </div>                  
+          </ng-template>
+        </ngb-tab>
+        <!-- Groups -->
+        <ngb-tab title="Manage Groups" id="manageGroupTab">
+            <ng-template ngbTabContent>
+              <app-client-groups></app-client-groups>
+            </ng-template>
+          </ngb-tab>
+      </ngb-tabset>
+    </div>
+  </div>
+</div>
+

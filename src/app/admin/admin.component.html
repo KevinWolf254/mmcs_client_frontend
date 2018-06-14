@@ -1,0 +1,39 @@
+
+<!-- Top navigation bar -->
+<app-top-navbar></app-top-navbar>
+<div class="container-fluid">
+  <div class="row">
+    <!-- SideNav -->
+    <nav class="col-md-3 d-none d-md-block bg-light sidebar">
+      <app-side-navbar></app-side-navbar>
+    </nav>
+    <!-- Content Body -->
+    <div class="col-md-9 ml-sm-auto mt-5 px-2 pt-2">
+      <div class="row">
+        <div class="col">
+          <div class="d-flex pb-2 mb-3 border-bottom">              
+              <h3>User Administration</h3>
+            </div>
+        </div>
+      </div>
+      <div class="row ">
+        <div class="col">
+          <ngb-tabset>
+            <!-- Create Users -->
+            <ngb-tab title="Create User" id="userTab">
+              <ng-template ngbTabContent>
+                <app-user></app-user>           
+              </ng-template>
+            </ngb-tab>
+            <!-- Manage Users -->
+            <ngb-tab title="Manage Users" id="manageUserTab">
+              <ng-template ngbTabContent>
+                <app-users></app-users>
+              </ng-template>
+            </ngb-tab>
+          </ngb-tabset>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

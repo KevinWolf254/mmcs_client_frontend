@@ -1,0 +1,52 @@
+<div class="card border-top-0 mb-5 shadow">
+  <div class="card-body">
+    <h6 class="mb-4 bg-light p-2 rounded shadow-sm">Campaigns:</h6>
+    <table datatable class="table table-striped table-hover table-responsive">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Name</th>
+          <th scope="col">Type</th>
+          <th scope="col">Time</th>
+          <th scope="col">Last Dispatch</th>
+          <th scope="col">Next Dispatch</th>
+          <th scope="col">Actions</th>
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">1</th>
+          <td>Rent Remainder</td>
+          <td>Monthly Campaign</td>
+          <td>5th every month at 14:00</td>
+          <td>5/5/2018</td>
+          <td>5/6/2018</td>
+          <td>
+            <div class="btn-group" role="group" aria-label="Actions">
+              <button (click)="edit(editModal, schedule)" class="btn btn-sm btn-outline-info" data-toggle="tooltip" data-placement="top" title="Edit schedule"><i class="fa fa-pencil"></i></button>
+              <button class="btn btn-sm btn-outline-danger" data-toggle="tooltip" data-placement="top" title="Delete schedule"><i class="fa fa-trash"></i></button>
+            </div>
+          </td>
+          <td><b>SCHEDULED</b></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<!-- Edit Schedule Details -->
+<ng-template #editModal let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Edit User Details</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="c('Save click')">Save</button>
+  </div>
+</ng-template>
