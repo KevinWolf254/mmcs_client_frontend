@@ -30,25 +30,64 @@
       </thead>
       <tbody> 
         <tr *ngFor="let user of usersCredentials">
-          <td>{{ user.id }}</td>
-          <td>{{ user.firstName }}</td>
-          <td>{{ user.lastName }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.credentials.role }}</td>
-          <td>{{ user.credentials.active }}</td>
-          <td>{{ user.credentials.lastSignIn }}</td>
-          <td>
-            <div class="btn-group" role="group" aria-label="Actions">
-              <button (click)="edit(editModal, user)" class="btn btn-sm btn-outline-info" data-toggle="tooltip" data-placement="top" title="Edit user details"><i class="fa fa-pencil"></i></button>
-              <button (click)="reset(resetModal, user)" class="btn btn-sm btn-outline-warning" data-toggle="tooltip" data-placement="top" title="Reset user password"><i class="fa fa-repeat"></i></button>
-              <button (click)="delete(deleteModal, user)" class="btn btn-sm btn-outline-danger" data-toggle="tooltip" data-placement="top" title="Delete user"><i class="fa fa-trash"></i></button>
-            </div>
-          </td>
+          <form *ngIf="!edit" [formGroup] = "form" (ngSubmit) = "edit(form.value)">
+            <td>
+              <span *ngIf="!edit">{{user.id}}</span>
+              <input *ngIf="edit" type="number" class="form-control" formControlName="id">
+            </td>
+            <td>
+              <span *ngIf="!edit">{{user.firstName}}</span>
+              <input *ngIf="edit" type="number" class="form-control" formControlName="firstName">
+            </td>
+            <td>
+              <span *ngIf="!edit">{{user.lastName}}</span>
+              <input *ngIf="edit" type="number" class="form-control" formControlName="lastName">
+            </td>
+            <td>{{ user.email }}</td>
+            <td>
+              <span *ngIf="!edit">{{user.credentials.role}}</span>
+              <select *ngIf="edit" class="form-control" formControlName="role">
+                  <option value="0" selected>Change role</option>
+                  <option *ngFor="let role of roles" >{{role}}</option>
+              </select>
+            </td>
+            <td>
+              <span *ngIf="!edit">{{user.credentials.active}}</span>
+              <div *ngIf="edit">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" formControlName="active" id="enable" value="true">
+                  <label class="form-check-label" for="enable">enable</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" formControlName="active" id="disable" value="false">
+                  <label class="form-check-label" for="disable">disable</label>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span *ngIf="!edit">{{user.credentials.lastSignIn}}</span>
+              <input *ngIf="edit" type="number" class="form-control" formControlName="lastSignIn">
+            </td>
+            <!-- <td>{{ user.id }}</td>
+            <td>{{ user.firstName }}</td>
+            <td>{{ user.lastName }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.credentials.role }}</td>
+            <td>{{ user.credentials.active }}</td>
+            <td>{{ user.credentials.lastSignIn }}</td> --> 
+            <td>
+              <div class="btn-group" role="group" aria-label="Actions">
+                <button (click)="edit(editModal, user)" class="btn btn-sm btn-outline-info" data-toggle="tooltip" data-placement="top" title="Edit user details"><i class="fa fa-pencil"></i></button>
+                <button (click)="reset(resetModal, user)" class="btn btn-sm btn-outline-warning" data-toggle="tooltip" data-placement="top" title="Reset user password"><i class="fa fa-repeat"></i></button>
+                <button (click)="delete(deleteModal, user)" class="btn btn-sm btn-outline-danger" data-toggle="tooltip" data-placement="top" title="Delete user"><i class="fa fa-trash"></i></button>
+              </div>
+            </td>
+          </form>
         </tr>
       </tbody>
     </table>
   </div>
-</div>  
+</div>
 
 <!-- Edit User Details -->
 <ng-template #editModal let-c="close" let-d="dismiss">

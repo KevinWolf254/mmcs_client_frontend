@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { User } from '../../shared/models/user.model';
 import { UserCredentials } from '../../shared/models/user-credentials.model';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-users',
@@ -12,6 +13,7 @@ export class UsersComponent implements OnInit {
 
   private dtOptions: DataTables.Settings = {};
   private usersCredentials: UserCredentials[] = [];
+
 
   constructor(private modalService: NgbModal) { }
 

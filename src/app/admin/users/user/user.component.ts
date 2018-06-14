@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { selectValidator } from '../../../shared/validators/select-validator';
+import { User } from '../../../shared/models/user.model';
 
 @Component({
   selector: 'app-user',
@@ -27,11 +28,10 @@ export class UserComponent implements OnInit {
     this.roles = ["Admin", "User"];
   }
 
-  createUser(values){
-    // create user
-    console.log("firstName: "+values.firstName+
-    " lastName: "+values.lastName+" role: "+values.role
-    +" email: "+values.email+" defaultPass: "+values.defaultPass);
+  createUser(form){
+    this.newUser = new User(0, form.firstName, form.lastName, form.email);
+    let role = form.role;
+    let defaultPass = form.defaultPass;
     this.userForm.reset();
   }
 }
