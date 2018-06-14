@@ -11,7 +11,7 @@ import { UserCredentials } from '../../shared/models/user-credentials.model';
 export class UsersComponent implements OnInit {
 
   private dtOptions: DataTables.Settings = {};
-  private users: User[] = [];
+  private usersCredentials: UserCredentials[] = [];
 
   constructor(private modalService: NgbModal) { }
 
@@ -25,9 +25,10 @@ export class UsersComponent implements OnInit {
 
   // retrieves all users from server
   private getUsers(){
-    let user: User;
+    let user: UserCredentials;
     for(let i=1; i<=100; i++){
-      this.users.push(user = {id:i, firstName: 'user '+i, lastName: 'user', email: 'user'+i+'@company.co.ke', role: 'Admin'});
+      user = new UserCredentials(i, 'User', ''+i, 'user'+i+'@company.com', 'Admin', true, new Date());
+      this.usersCredentials.push(user);
     }
   }
 

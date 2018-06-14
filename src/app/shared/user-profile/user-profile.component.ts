@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { confirmPasswordValidator } from '../validators/confirm-password-validator';
 import { User } from '../models/user.model';
+import { UserCredentials } from '../models/user-credentials.model';
 
 @Component({
   selector: 'app-user-profile',
@@ -10,7 +11,8 @@ import { User } from '../models/user.model';
 })
 export class UserProfileComponent implements OnInit {
 
-  private user: User = new User();
+  // private user: User = new User();
+  private user: UserCredentials;
   private changePassForm: FormGroup;
 
   constructor(private _fb: FormBuilder) { 
@@ -32,10 +34,9 @@ export class UserProfileComponent implements OnInit {
 
   getUserProfile(){
     //retrieve user information 
-    this.user.firstName = "Kanyi";
-    this.user.lastName = "JavaGuru";
-    this.user.email = "admin@aeon-io.co.ke";
-    this.user.role = "Admin";
+    this.user = new UserCredentials(1, 'Kanyi', 'JavaGuru', 'admin@aeon-io.co.ke', 'Admin', true, new Date());
+    // this.user.credentials.active = true;
+    // this.user.credentials.lastSignIn = new Date();
   }
 
   changePassword(values){

@@ -24,17 +24,19 @@
           <th scope="col">Email</th>
           <th scope="col">Role</th>
           <th scope="col">Active</th>
+          <th scope="col">Signed In</th>
           <th scope="col">Actions</th>
         </tr>
       </thead>
       <tbody> 
-        <tr *ngFor="let user of users">
+        <tr *ngFor="let user of usersCredentials">
           <td>{{ user.id }}</td>
           <td>{{ user.firstName }}</td>
           <td>{{ user.lastName }}</td>
           <td>{{ user.email }}</td>
-          <td>{{ user.role }}</td>
-          <td>{{ user.role }}</td>
+          <td>{{ user.credentials.role }}</td>
+          <td>{{ user.credentials.active }}</td>
+          <td>{{ user.credentials.lastSignIn }}</td>
           <td>
             <div class="btn-group" role="group" aria-label="Actions">
               <button (click)="edit(editModal, user)" class="btn btn-sm btn-outline-info" data-toggle="tooltip" data-placement="top" title="Edit user details"><i class="fa fa-pencil"></i></button>
@@ -46,7 +48,7 @@
       </tbody>
     </table>
   </div>
-</div> 
+</div>  
 
 <!-- Edit User Details -->
 <ng-template #editModal let-c="close" let-d="dismiss">

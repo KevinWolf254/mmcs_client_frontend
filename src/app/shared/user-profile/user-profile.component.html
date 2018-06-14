@@ -62,7 +62,14 @@
                             <div class="input-group-prepend">
                               <span class="input-group-text bg-info text-white"><i class="fa fa-cog"></i></span>
                             </div>
-                            <input type="text" class="form-control" [ngModel]="user.role">
+                            <input type="text" class="form-control" [ngModel]="user.credentials.role">
+                          </div>
+                          <!-- Last Sign In -->
+                          <div class="input-group my-2">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text bg-info text-white"><i class="fa fa-calendar"></i></span>
+                            </div>
+                            <input type="text" class="form-control" [ngModel]="user.credentials.lastSignIn">
                           </div>
                         </fieldset>
                       </div>
