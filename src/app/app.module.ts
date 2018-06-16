@@ -17,12 +17,12 @@ import { AdminModule } from './Admin/admin.module';
   ],
   imports: [
     BrowserModule,
+    NgxDatatableModule,
     AppRoutingModule,
     NgbModule.forRoot(),
     AdminModule,
     SharedModule,
-    DataTablesModule,
-    NgxDatatableModule
+    DataTablesModule
   ],
   providers: [],
   bootstrap: [

@@ -20,7 +20,8 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
     DataTablesModule,
     NgbModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxDatatableModule
   ],
   exports:[
     AdminComponent, 
