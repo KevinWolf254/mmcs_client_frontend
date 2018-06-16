@@ -13,96 +13,54 @@
       </div>
     </div>
     <!-- Users Table -->
-    <table datatable [dtOptions]="dtOptions" 
-    class="table table-striped table-hover table-responsive" 
-    style="width:100%">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">First Name</th>
-          <th scope="col">Last Name</th>
-          <th scope="col">Email</th>
-          <th scope="col">Role</th>
-          <th scope="col">Active</th>
-          <th scope="col">Signed In</th>
-          <th scope="col">Actions</th>
-        </tr>
-      </thead>
-      <tbody> 
-        <tr *ngFor="let user of usersCredentials">
-          <form *ngIf="!edit" [formGroup] = "form" (ngSubmit) = "edit(form.value)">
-            <td>
-              <span *ngIf="!edit">{{user.id}}</span>
-              <input *ngIf="edit" type="number" class="form-control" formControlName="id">
-            </td>
-            <td>
-              <span *ngIf="!edit">{{user.firstName}}</span>
-              <input *ngIf="edit" type="number" class="form-control" formControlName="firstName">
-            </td>
-            <td>
-              <span *ngIf="!edit">{{user.lastName}}</span>
-              <input *ngIf="edit" type="number" class="form-control" formControlName="lastName">
-            </td>
-            <td>{{ user.email }}</td>
-            <td>
-              <span *ngIf="!edit">{{user.credentials.role}}</span>
-              <select *ngIf="edit" class="form-control" formControlName="role">
-                  <option value="0" selected>Change role</option>
-                  <option *ngFor="let role of roles" >{{role}}</option>
-              </select>
-            </td>
-            <td>
-              <span *ngIf="!edit">{{user.credentials.active}}</span>
-              <div *ngIf="edit">
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" formControlName="active" id="enable" value="true">
-                  <label class="form-check-label" for="enable">enable</label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" formControlName="active" id="disable" value="false">
-                  <label class="form-check-label" for="disable">disable</label>
-                </div>
-              </div>
-            </td>
-            <td>
-              <span *ngIf="!edit">{{user.credentials.lastSignIn}}</span>
-              <input *ngIf="edit" type="number" class="form-control" formControlName="lastSignIn">
-            </td>
-            <!-- <td>{{ user.id }}</td>
-            <td>{{ user.firstName }}</td>
-            <td>{{ user.lastName }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.credentials.role }}</td>
-            <td>{{ user.credentials.active }}</td>
-            <td>{{ user.credentials.lastSignIn }}</td> --> 
-            <td>
-              <div class="btn-group" role="group" aria-label="Actions">
-                <button (click)="edit(editModal, user)" class="btn btn-sm btn-outline-info" data-toggle="tooltip" data-placement="top" title="Edit user details"><i class="fa fa-pencil"></i></button>
-                <button (click)="reset(resetModal, user)" class="btn btn-sm btn-outline-warning" data-toggle="tooltip" data-placement="top" title="Reset user password"><i class="fa fa-repeat"></i></button>
-                <button (click)="delete(deleteModal, user)" class="btn btn-sm btn-outline-danger" data-toggle="tooltip" data-placement="top" title="Delete user"><i class="fa fa-trash"></i></button>
-              </div>
-            </td>
-          </form>
-        </tr>
-      </tbody>
+    <table datatable [dtOptions]="dtOptions" style="width:100%"
+    class="table table-striped table-hover table-responsive">
     </table>
   </div>
 </div>
 
 <!-- Edit User Details -->
 <ng-template #editModal let-c="close" let-d="dismiss">
-  <div class="modal-header">
+  <!-- <div class="modal-header">
     <h4 class="modal-title">Edit User Details</h4>
     <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
-  </div>
+  </div> -->
   <div class="modal-body">
-    <form>
+    <form [formGroup] = "form" (ngSubmit) = "editUser(form.value)">
+      <!-- First and Last Names -->
+      <div class="input-group mb-2">
+        <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-user fa-lg"></i></span>
+        </div>
+        <input type="text" class="form-control" formControlName="firstName" placeholder="Surname">
+        <input type="text" class="form-control" formControlName="lastName" placeholder="Other Names">
+      </div>
+      <!-- Role -->
+      <div class="input-group mt-2 mb-0">
+        <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-cog"></i></span>
+        </div>
+        <select id="role" class="form-control" formControlName="role">
+            <option value="0" selected>Select role</option>
+            <option *ngFor="let role of roles" >{{role}}</option>
+        </select>
+      </div>
+      <!-- Account Status -->
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" formControlName="acntStatus" id="enabled" value="true">
+        <label class="form-check-label" for="once">enable</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" formControlName="acntStatus" id="disabled" value="false">
+        <label class="form-check-label" for="scheduled">disable</label>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit" [disabled]="!form.valid">Save Edit</button>
     </form>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" (click)="c('Save click')">Save</button>
+    <button type="button" class="btn btn-outline-dark" (click)="c('Save click')">Dismiss</button>
   </div>
 </ng-template>
 
