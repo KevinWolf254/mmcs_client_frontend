@@ -13,9 +13,18 @@
       </div>
     </div>
     <!-- Users Table -->
-    <table datatable [dtOptions]="dtOptions" style="width:100%"
-    class="table table-striped table-hover table-responsive">
-    </table>
+    <!-- <div class="btn-group" role="group" aria-label="Actions">
+      <button onclick="edit($event)" class="btn btn-sm btn-outline-info" data-toggle="tooltip" data-placement="top" title="Edit user details"><i class="fa fa-pencil"></i></button>
+      <button class="btn btn-sm btn-outline-warning" data-toggle="tooltip" data-placement="top" title="Reset user password"><i class="fa fa-repeat"></i></button>
+      <button class="btn btn-sm btn-outline-danger" data-toggle="tooltip" data-placement="top" title="Delete user"><i class="fa fa-trash"></i></button>
+    </div>
+    <button class="btn btn-sm btn-success" disabled type="button"><i class="fa fa-toggle-on fa-lg"></i> enabled</button>
+    <button class="btn btn-sm btn-danger" disabled type="button"><i class="fa fa-toggle-off"></i> disabled</button> -->
+    <div>
+        <ngx-datatable [rows]="rows" [columns]="columns" class="material" [limit]="perPage">
+        </ngx-datatable>
+      </div>
+
   </div>
 </div>
 

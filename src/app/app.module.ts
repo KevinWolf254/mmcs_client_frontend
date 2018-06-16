@@ -5,10 +5,9 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { AppRoutingModule } from './app-routing.module';
 import { DataTablesModule } from 'angular-datatables';
 import { SharedModule } from './shared/shared.module';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 import { AppComponent } from './app.component';
-import { UserComponent } from './Admin/users/user/user.component';
-import { UnitsComponent } from './Admin/units/units.component';
 import { AdminModule } from './Admin/admin.module';
 
 
@@ -21,7 +20,9 @@ import { AdminModule } from './Admin/admin.module';
     AppRoutingModule,
     NgbModule.forRoot(),
     AdminModule,
-    SharedModule
+    SharedModule,
+    DataTablesModule,
+    NgxDatatableModule
   ],
   providers: [],
   bootstrap: [
