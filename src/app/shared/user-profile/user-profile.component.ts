@@ -34,7 +34,8 @@ export class UserProfileComponent implements OnInit {
 
   getUserProfile(){
     //retrieve user information 
-    this.user = new UserCredentials(1, 'Kanyi', 'JavaGuru', 'admin@aeon-io.co.ke', 'Admin', true, new Date());
+    let date: string = (new Date().toISOString().slice(0,10));
+    this.user = new UserCredentials(1, 'Kanyi', 'JavaGuru', 'admin@aeon-io.co.ke', 'Admin', true, date);
     // this.user.credentials.active = true;
     // this.user.credentials.lastSignIn = new Date();
   }

@@ -12,48 +12,71 @@
         </p>
       </div>
     </div>
+    <div class="d-flex justify-content-between">
+      <!-- Per Page Entries -->
+      <div class="input-group col-sm-5">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Show</span>
+        </div>
+        <select class="custom-select" id="perPageEntries" (change)="changePageEntries($event)">
+          <option *ngFor="let pageNo of perPageNos">{{pageNo}}</option>
+        </select>
+        <div class="input-group-append">
+          <span class="input-group-text">Entries</span>
+        </div>
+      </div>
+      <!-- Search -->
+      <div class="input-group col-sm-7">
+        <input type="text" class="form-control" placeholder="Search by Email" (keyup)='search($event)' aria-label="Search by Email" aria-describedby="search">
+        <div class="input-group-append">
+          <span class="input-group-text" id="search"><i class="fa fa-search"></i></span>
+        </div>
+      </div>
+    </div>
     <!-- Users Table -->
-    <ngx-datatable class="bootstrap" [rows]="users" [limit]="perPage" [columnMode]="'force'"
-      [rowHeight]="55" [cssClasses]="customPagerIcons" [footerHeight]="40">
-      <ngx-datatable-column name="id"></ngx-datatable-column>
-      <ngx-datatable-column name="first name">        
+    <ngx-datatable class="bootstrap mt-3" [rows]="users" [limit]="perPage" [columnMode]="'flex'"
+      [rowHeight]="55" [cssClasses]="customPagerIcons" [footerHeight]="40" [scrollbarH]="true">
+      <ngx-datatable-column name="id" [flexGrow]="1"></ngx-datatable-column>
+      <ngx-datatable-column name="first name" [flexGrow]="2">        
         <ng-template ngx-datatable-cell-template let-row="row" let-value="value" let-rowIndex="rowIndex">
           <span *ngIf="!edit[rowIndex]">{{value}}</span>        
-          <input *ngIf="edit[rowIndex]" type="text" class="form-control form-control-sm" [value]="value">
+          <input *ngIf="edit[rowIndex]" type="text" class="form-control form-control-sm" [value]="value" (blur)="setFName($event, rowIndex)">
         </ng-template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="last name">
+      <ngx-datatable-column name="last name" [flexGrow]="2">
         <ng-template ngx-datatable-cell-template let-row="row" let-value="value" let-rowIndex="rowIndex">
           <span *ngIf="!edit[rowIndex]">{{value}}</span>        
-          <input *ngIf="edit[rowIndex]" type="text" class="form-control form-control-sm" [value]="value">
+          <input *ngIf="edit[rowIndex]" type="text" class="form-control form-control-sm" [value]="value" (blur)="setLName($event, rowIndex)">
         </ng-template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="email"></ngx-datatable-column>
-      <ngx-datatable-column name="role">
-        <ng-template ngx-datatable-cell-template let-row="row" let-value="value" let-rowIndex="rowIndex">
+      <ngx-datatable-column name="email" [flexGrow]="3"></ngx-datatable-column>
+      <ngx-datatable-column name="role" [flexGrow]="1">
+        <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
           <span *ngIf="!edit[rowIndex]">{{row.credentials.role}}</span>
-          <select *ngIf="edit[rowIndex]" class="form-control form-control-sm py-1">
+          <select *ngIf="edit[rowIndex]" class="form-control form-control-sm py-1" (change)="setRole($event, rowIndex)">
             <option selected>Change...</option>
-            <option>Admin</option>
-            <option>User</option>
+            <option value="Admin">Admin</option>
+            <option value="User">User</option>
           </select>
         </ng-template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="acnt status">
-        <ng-template ngx-datatable-cell-template let-row="row" let-value="value" let-rowIndex="rowIndex">
-          <button *ngIf='row.credentials.active' class="btn btn-sm btn-success" [disabled]="!edit[rowIndex]" type="button"><i class="fa fa-toggle-on fa-lg"></i> active</button>
-          <button *ngIf='!row.credentials.active' class="btn btn-sm btn-danger" [disabled]="!edit[rowIndex]" type="button"><i class="fa fa-toggle-off"></i> disabled</button>  
+      <ngx-datatable-column name="acnt status" [flexGrow]="2">
+        <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+          
+          <button *ngIf='row.credentials.active' (click)="row.credentials.active = false" class="btn btn-sm btn-success" [disabled]="!edit[rowIndex]" type="button"><i class="fa fa-toggle-on fa-lg"></i> active</button>
+          <button *ngIf='!row.credentials.active' (click)="row.credentials.active = true" class="btn btn-sm btn-danger" [disabled]="!edit[rowIndex]" type="button"><i class="fa fa-toggle-off fa-lg"></i> disabled</button>  
          </ng-template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="signed In">
-        <ng-template ngx-datatable-cell-template let-row="row" let-value="value">{{row.credentials.lastSignIn}}</ng-template>
+      <ngx-datatable-column name="signed In" [flexGrow]="2">
+        <ng-template ngx-datatable-cell-template let-row="row">{{row.credentials.lastSignIn}}</ng-template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="actions">
+      <ngx-datatable-column name="actions" [flexGrow]="3">
         <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
           <div class="btn-group" role="group" aria-label="actions">
-            <button (click)="editUser(row, rowIndex)" class="btn btn-sm btn-outline-info" data-toggle="tooltip" data-placement="top" title="Edit user details"><i class="fa fa-pencil"></i></button>
-            <button class="btn btn-sm btn-outline-warning" data-toggle="tooltip" data-placement="top" title="Reset user password"><i class="fa fa-repeat"></i></button>
-            <button class="btn btn-sm btn-outline-danger" data-toggle="tooltip" data-placement="top" title="Delete user"><i class="fa fa-trash"></i></button>
+            <button (click)="editUser(rowIndex)" *ngIf='!edit[rowIndex]' class="btn btn-sm btn-outline-info" data-toggle="tooltip" data-placement="top" title="Edit user details"><i class="fa fa-pencil"></i></button>
+            <button (click)="updateUser(rowIndex)" *ngIf='edit[rowIndex]' class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="top" title="update"><i class="fa fa-check"></i></button>
+            <button (click)="openReset(resetModal, row, rowIndex)" class="btn btn-sm btn-outline-warning" data-toggle="tooltip" data-placement="top" title="Reset user password"><i class="fa fa-repeat"></i></button>
+            <button (click)="confirmDelete(deleteModal, row, rowIndex)" class="btn btn-sm btn-outline-danger" data-toggle="tooltip" data-placement="top" title="Delete user"><i class="fa fa-trash"></i></button>
           </div>
         </ng-template>
       </ngx-datatable-column>
@@ -61,81 +84,57 @@
   </div>
 </div>
 
-<!-- Edit User Details -->
-<ng-template #editModal let-c="close" let-d="dismiss">
-  <!-- <div class="modal-header">
-    <h4 class="modal-title">Edit User Details</h4>
-    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div> -->
-  <div class="modal-body">
-    <form [formGroup] = "form" (ngSubmit) = "editUser(form.value)">
-      <!-- First and Last Names -->
-      <div class="input-group mb-2">
-        <div class="input-group-prepend">
-            <span class="input-group-text"><i class="fa fa-user fa-lg"></i></span>
-        </div>
-        <input type="text" class="form-control" formControlName="firstName" placeholder="Surname">
-        <input type="text" class="form-control" formControlName="lastName" placeholder="Other Names">
-      </div>
-      <!-- Role -->
-      <div class="input-group mt-2 mb-0">
-        <div class="input-group-prepend">
-            <span class="input-group-text"><i class="fa fa-cog"></i></span>
-        </div>
-        <select id="role" class="form-control" formControlName="role">
-            <option value="0" selected>Select role</option>
-            <option *ngFor="let role of roles" >{{role}}</option>
-        </select>
-      </div>
-      <!-- Account Status -->
-      <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" formControlName="acntStatus" id="enabled" value="true">
-        <label class="form-check-label" for="once">enable</label>
-      </div>
-      <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" formControlName="acntStatus" id="disabled" value="false">
-        <label class="form-check-label" for="scheduled">disable</label>
-      </div>
-      <button class="btn btn-primary btn-block" type="submit" [disabled]="!form.valid">Save Edit</button>
-    </form>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" (click)="c('Save click')">Dismiss</button>
-  </div>
-</ng-template>
-
 <!-- Reset User Password -->
-<ng-template #resetModal let-c="close" let-d="dismiss">
+<ng-template #resetModal let-c="close">
   <div class="modal-header">
-    <h4 class="modal-title">Edit User Details</h4>
-    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
+        <button type="button" class="close" aria-label="Close" (click)="c()">
+          <span aria-hidden="true">&times;</span>
+        </button>
   </div>
   <div class="modal-body">
-    <form>
+    <div class="row text-center mb-4">
+      <div class="col-sm-12">
+        <h2 class="modal-title"><i class="fa fa-lock fa-4x"></i></h2>
+      </div>
+      <div class="col-sm-12">
+        <h5>Reset Password</h5>       
+      </div>
+    </div>
+    <div class="input-group mb-2 px-5">
+      <div class="input-group-prepend">
+          <span class="input-group-text"><i class="fa fa-user fa-lg"></i></span>
+      </div>
+      <input type="text" class="form-control text-primary" name="email" [(ngModel)]="email" readonly>
+    </div>
+    <form [formGroup] = "form" (ngSubmit) = "reset(form.value)">
+      <div class="input-group mb-2 px-5">
+        <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-lock fa-lg"></i></span>
+        </div>
+        <input type="text" class="form-control" formControlName="resetPass" placeholder="enter reset password">
+      </div>
+      <hr>
+      <button type="submit" class="btn btn-warning text-center" [disabled]="!form.valid">Reset <i class="fa fa-refresh"></i></button>
     </form>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" (click)="c('Save click')">Save</button>
   </div>
 </ng-template>
 
 <!-- Delete User -->
 <ng-template #deleteModal let-c="close" let-d="dismiss">
-  <div class="modal-header">
-    <h4 class="modal-title">Edit User Details</h4>
+  <div class="modal-header bg-danger text-white">
+    <h5 class="modal-title"><i class="fa fa-warning fa-lg"></i> Confirm Deletion</h5>
     <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
-    <form>
-    </form>
+    Are you sure you want to delete <span class="bg-light border rounded px-2"> <b>{{deleteUser.firstName}}</b></span>  
+    <span class="bg-light border rounded px-2"> <b>{{deleteUser.lastName}}</b></span> 
+    of email <span class="bg-light border rounded px-2"> <b>{{deleteUser.email}}</b></span> ?    
+  <hr>
+  <div class="d-flex justify-content-between">
+      <button type="button" class="btn btn-outline-danger" (click)="delete()">Delete</button>
+      <button type="button" class="btn btn-success" (click)="c('Save click')">Dismiss</button>
   </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" (click)="c('Save click')">Save</button>
   </div>
 </ng-template>

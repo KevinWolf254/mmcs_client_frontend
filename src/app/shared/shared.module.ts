@@ -11,6 +11,7 @@ import { ClientsComponent } from './clients/clients.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { DataTablesModule } from 'angular-datatables';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 @NgModule({
   imports: [
@@ -22,7 +23,8 @@ import { DataTablesModule } from 'angular-datatables';
     NgbModule,
     NavigationModule,
     CampaignsModule,
-    ClientsModule
+    ClientsModule,
+    NgxDatatableModule
   ],
   exports: [
     SignInComponent
