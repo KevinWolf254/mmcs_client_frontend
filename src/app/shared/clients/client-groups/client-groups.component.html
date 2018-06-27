@@ -1,7 +1,7 @@
 <div class="card border-top-0 shadow">
   <div class="card-body">
     <p class="bg-light p-2 rounded"><b>Create Group:</b></p>
-    <form [formGroup] = "createForm" (ngSubmit) = "create(createForm.value)">
+    <form [formGroup] = "createForm" (ngSubmit) = "createGroup(createForm.value)">
         <div class="form-group">
           <div class="input-group mb-3">
             <input type="text" formControlName="name" class="form-control" placeholder="Group Name">
@@ -13,10 +13,10 @@
     </form>
     <hr class="mb-4">
     <p class="bg-light p-2 rounded"><b>Grouped Clients:</b></p>    
-    <form [formGroup] = "deleteForm" (ngSubmit) = "delete(deleteForm.value)">
+    <form [formGroup] = "deleteForm" (ngSubmit) = "deleteGroup(deleteForm.value)">
       <div class="form-group ">
         <div class="input-group mb-3">
-          <select class="form-control" id="selectGroup" formControlName="group">
+          <select class="form-control" id="selectGroup" formControlName="group" (change)="getGroupClients($event)">
             <option value='0' selected>Choose Group...</option>
             <option *ngFor="let group of groups" [value]="group.id">{{group.name}}</option> 
           </select>
@@ -27,32 +27,86 @@
       </div>
     </form>
     <!-- Members of group: Table -->
-    <table datatable class="table table-striped table-hover table-responsive">
-      <thead>
-        <tr>
-          <th scope="col">Client Id</th>
-          <th scope="col">Full Names</th>
-          <th scope="col">Country Code</th>
-          <th scope="col">Phone No</th>
-          <th scope="col">Service Provider</th>
-          <th scope="col">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row">1</th>
-          <td>Mark Otto</td>
-          <td>+254</td>
-          <td>724155698</td>
-          <td>Safaricom-ke</td>
-          <td>
-            <div class="btn-group" role="group" aria-label="Actions">
-              <button class="btn btn-sm btn-outline-info" data-toggle="tooltip" data-placement="top" title="View client details"><i class="fa fa-info"></i></button>
-              <button class="btn btn-sm btn-outline-danger" data-toggle="tooltip" data-placement="top" title="Delete client from group"><i class="fa fa-trash"></i></button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="d-flex justify-content-between">
+      <!-- Per Page Entries -->
+      <div class="input-group col-sm-5">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Show</span>
+        </div>
+        <select class="custom-select" (change)="changeEntriesPerPage($event)">
+          <option *ngFor="let pageNo of perPageNos">{{pageNo}}</option>
+        </select>
+        <div class="input-group-append">
+          <span class="input-group-text">Entries</span>
+        </div>
+      </div>
+      <!-- Search -->
+      <div class="input-group col-sm-7">
+        <input type="text" class="form-control" placeholder="Search by Name" (keyup)='searchClient($event)' aria-label="Search by Email" aria-describedby="search">
+        <div class="input-group-append">
+          <span class="input-group-text" id="search"><i class="fa fa-search"></i></span>
+        </div>
+      </div>
+    </div>
+    <!-- Scheduled Campaigns Table -->
+    <ngx-datatable class="bootstrap mt-3" [rows]="groupClients" [limit]="entriesPerPage" [columnMode]="'force'"
+      [rowHeight]="55" [cssClasses]="customPagerIcons" [footerHeight]="40" [scrollbarH]="true">
+      <ngx-datatable-column name="Id" [width]="40">
+        <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+          {{row.clientId}}
+        </ng-template></ngx-datatable-column>
+      <ngx-datatable-column name="Phone Number">
+        <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+          {{row.countryCode}} {{row.phoneNo.toString().slice(0,3)}} {{row.phoneNo.toString().slice(3,6)}} {{row.phoneNo.toString().slice(6,9)}}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Full Name"></ngx-datatable-column>
+      <ngx-datatable-column name="Telecom"></ngx-datatable-column>
+      <ngx-datatable-column name="actions">
+        <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+          <div class="btn-group" role="group" aria-label="actions">
+            <button (click)="openClientDetailsDialog(clientDetailsModal, row, rowIndex)" class="btn btn-sm btn-outline-info" data-toggle="tooltip" data-placement="top" title="View client details"><i class="fa fa-info"></i></button>
+            <button (click)="openRemoveClientDialog(removeClientModal, row, rowIndex)" class="btn btn-sm btn-outline-danger" data-toggle="tooltip" data-placement="top" title="Remove client from group"><i class="fa fa-trash"></i></button>
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
   </div>
 </div>
+<!-- View Client -->
+<ng-template #clientDetailsModal let-c="close" let-d="dismiss">
+    <div class="modal-header bg-info text-white">
+      <h5 class="modal-title"><i class="fa fa-pencil fa-lg"></i> Edit Client Details</h5>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!-- Are you sure you want to delete <span class="bg-light border rounded px-2"> <b>{{}}</b></span> , 
+      <span class="bg-light border rounded px-2"> <b>{{deleteSchedule.jobName}}</b></span>? 
+      <hr>
+      <div class="d-flex justify-content-between">
+        <button type="button" class="btn btn-outline-danger" (click)="delete()">Delete</button>
+        <button type="button" class="btn btn-success" (click)="c('Save click')">Dismiss</button>
+      </div> -->
+    </div>
+  </ng-template>
+
+<!-- Delete Client from group -->
+<ng-template #removeClientModal let-c="close" let-d="dismiss">
+  <div class="modal-header bg-danger text-white">
+    <h5 class="modal-title"><i class="fa fa-warning fa-lg"></i> Confirm Deletion</h5>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!-- Are you sure you want to delete <span class="bg-light border rounded px-2"> <b>{{}}</b></span> , 
+    <span class="bg-light border rounded px-2"> <b>{{deleteSchedule.jobName}}</b></span>? 
+    <hr>
+    <div class="d-flex justify-content-between">
+      <button type="button" class="btn btn-outline-danger" (click)="delete()">Delete</button>
+      <button type="button" class="btn btn-success" (click)="c('Save click')">Dismiss</button>
+    </div> -->
+  </div>
+</ng-template>

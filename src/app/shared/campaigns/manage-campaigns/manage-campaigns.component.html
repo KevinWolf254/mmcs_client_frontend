@@ -22,20 +22,30 @@
         </div>
       </div>
     </div>
-    <!-- Schedules Table -->
-    <ngx-datatable class="bootstrap mt-3" [rows]="schedules" [limit]="perPage" [columnMode]="'flex'"
+    <!-- Scheduled Campaigns Table -->
+    <ngx-datatable class="bootstrap mt-3" [rows]="schedules" [limit]="perPage" [columnMode]="'force'"
       [rowHeight]="55" [cssClasses]="customPagerIcons" [footerHeight]="40" [scrollbarH]="true">
-      <ngx-datatable-column name="jobName" [flexGrow]="2"></ngx-datatable-column>
-      <ngx-datatable-column name="groupName" [flexGrow]="2"></ngx-datatable-column>
-      <ngx-datatable-column name="scheduleTime" [flexGrow]="3">
+      <ngx-datatable-column name="Campaign Name">
         <ng-template ngx-datatable-cell-template let-row="row" let-value="value" let-rowIndex="rowIndex">
+          {{row.jobName}}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Schedule Type">
+        <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+          <button *ngIf='row.groupName == "DAILY"' class="btn btn-sm btn-outline-danger mx-1"  type="button"><i class="fa fa-chevron-circle-right"></i> Daily</button> 
+          <button *ngIf='row.groupName == "WEEKLY"' class="btn btn-sm btn-outline-warning mx-1"  type="button"><i class="fa fa-chevron-circle-right"></i> Weekly</button> 
+          <button *ngIf='row.groupName == "MONTHLY"' class="btn btn-sm btn-outline-info mx-1"  type="button"><i class="fa fa-chevron-circle-right"></i> Monthly</button> 
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Scheduled Time">
+        <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
           <span class="border rounded bg-light p-2">
-            <i class="fa fa-clock-o fa-lg text-primary"></i> {{value.getHours()}}:{{value.getMinutes()}} 
-            <i class="fa fa-calendar fa-lg text-primary"></i> {{value.toISOString().slice(0,10)}}
+            <i class="fa fa-clock-o fa-lg text-primary"></i> {{row.scheduleTime.getHours()}}:{{row.scheduleTime.getMinutes()}} 
+            <i class="fa fa-calendar fa-lg text-primary"></i> {{row.scheduleTime.toISOString().slice(0,10)}}
           </span> 
         </ng-template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="lastFiredTime" [flexGrow]="3">
+      <ngx-datatable-column name="Last Fired Time">
         <ng-template ngx-datatable-cell-template let-row="row" let-value="value" let-rowIndex="rowIndex">
           <span class="border rounded bg-light p-2">
             <i class="fa fa-clock-o fa-lg text-danger"></i> {{value.getHours()}}:{{value.getMinutes()}} 
@@ -43,7 +53,7 @@
           </span> 
         </ng-template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="nextFireTime" [flexGrow]="3">
+      <ngx-datatable-column name="Next Fire Time">
         <ng-template ngx-datatable-cell-template let-row="row" let-value="value" let-rowIndex="rowIndex">
           <span class="border rounded bg-light p-2">
             <i class="fa fa-clock-o fa-lg text-success"></i> {{value.getHours()}}:{{value.getMinutes()}} 
@@ -51,7 +61,7 @@
           </span> 
         </ng-template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="jobStatus" [flexGrow]="3.5">
+      <ngx-datatable-column name="jobStatus">
         <ng-template ngx-datatable-cell-template let-row="row" let-value="value" let-rowIndex="rowIndex"> 
           <button *ngIf='value == "RUNNING" && !scheduleStopped[rowIndex]' (click)="pauseSchedule(row, rowIndex)" class="btn btn-sm btn-success mx-1"  type="button" data-toggle="tooltip" data-placement="top" title="Click to Pause schedule"><i class="fa fa-ellipsis-h fa-lg"></i> Running</button>
           <button *ngIf='scheduleStopped[rowIndex] || value == "PAUSED"' (click)="runSchedule(row, rowIndex)" class="btn btn-sm btn-warning mx-1"  type="button" data-toggle="tooltip" data-placement="top" title="Click to resume running schedule"><i class="fa fa-circle"></i> Resume</button>
@@ -62,31 +72,210 @@
           <button *ngIf='value == "ERROR"' class="btn btn-sm btn-danger mx-1"  type="button" data-toggle="tooltip" data-placement="top" title="Schedule has an error"><i class="fa fa-warning"></i> Error</button>
         </ng-template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="actions" [flexGrow]="1.5">
-          <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
-            <div class="btn-group" role="group" aria-label="actions">
-              <button (click)="editSchedule(editModal, row, rowIndex)" [disabled]='row.jobStatus == "COMPLETE"' class="btn btn-sm btn-outline-info" data-toggle="tooltip" data-placement="top" title="Edit schedule"><i class="fa fa-pencil"></i></button>
-              <button (click)="confirmDelete(deleteModal, row, rowIndex)" class="btn btn-sm btn-outline-danger" data-toggle="tooltip" data-placement="top" title="Delete schedule"><i class="fa fa-trash"></i></button>
-            </div>
-          </ng-template>
-        </ngx-datatable-column>
+      <ngx-datatable-column name="actions">
+        <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+          <div class="btn-group" role="group" aria-label="actions">
+            <button (click)="editSchedule(editModal, row, rowIndex)" [disabled]='row.jobStatus == "COMPLETE"' class="btn btn-sm btn-outline-info" data-toggle="tooltip" data-placement="top" title="Edit schedule"><i class="fa fa-pencil"></i></button>
+            <button (click)="openDeletionDialog(deleteModal, row, rowIndex)" class="btn btn-sm btn-outline-danger" data-toggle="tooltip" data-placement="top" title="Delete schedule"><i class="fa fa-trash"></i></button>
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
     </ngx-datatable>
   </div>
 </div>
 
 <!-- Edit Schedule Details -->
 <ng-template #editModal let-c="close" let-d="dismiss">
-  <div class="modal-header">
-    <h4 class="modal-title">Edit User Details</h4>
+  <div class="modal-header bg-info">
+    <h5 class="modal-title text-white"><i class="fa fa-pencil fa-lg"></i> Edit Schedule</h5>
     <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
-    <form>
-    </form>
+    <!-- Scheduled Campaign -->
+    <div class="card mt-3 shadow">
+      <h6 class="card-header">Scheduled Campaign</h6>
+      <div class="card-body">
+        <h6 class="mb-0 border rounded bg-info text-white p-2">Initial details:</h6>
+        <div class="card border-top-0 mb-4 mx-2">
+          <div class="card-body bg-light">
+            <fieldset disabled>
+              <!-- Campaign Name -->        
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="campaignName">Campaign</span>
+                </div>
+                <input type="text" class="form-control" aria-label="campaignName" aria-describedby="campaignName" [(ngModel)]="editCampaign.jobName">
+              </div>
+              <h6 class="mb-0 bg-dark p-2 mb-1 text-white rounded">Schedule type: <b>{{editCampaign.groupName}}</b></h6>
+              <!-- Daily -->
+              <div class="input-group mb-3" *ngIf="editCampaign.groupName == 'DAILY'">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="dailyTime">Time</span>
+                </div>
+                <input type="text" class="form-control" aria-label="dailyTime" aria-describedby="dailyTime" [(ngModel)]="time">
+              </div>
+              <!-- Weekly -->
+              <div class="form-row" *ngIf="editCampaign.groupName == 'WEEKLY'">
+                <div class="input-group col-sm-6 mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="weeklyTime">Time</span>
+                  </div>
+                  <input type="text" class="form-control" aria-label="weeklyTime" aria-describedby="weeklyTime" [(ngModel)]="time">
+                </div>
+                <div class="input-group col-sm-6 mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="day">Day</span>
+                  </div>
+                  <input type="text" class="form-control" aria-label="day" aria-describedby="day" [(ngModel)]="day">
+                </div>
+              </div>
+              <!-- Monthly -->
+              <div class="form-row" *ngIf="editCampaign.groupName == 'MONTHLY'">
+                <div class="input-group col-sm-6 mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="monthlyTime">Time</span>
+                  </div>
+                  <input type="text" class="form-control" aria-label="monthlyTime" aria-describedby="monthlyTime" [(ngModel)]="time">
+                </div>
+                <div class="input-group col-sm-6 mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="date">Date</span>
+                  </div>
+                  <input type="text" class="form-control" aria-label="date" aria-describedby="date" [(ngModel)]="date">
+                </div>
+              </div>
+            </fieldset> 
+          </div>
+        </div>
+        <!-- Form -->
+        <form [formGroup] = "form" (ngSubmit) = "sendEditedCampaign(form.value)">
+          <h6 class="mb-0 bg-light p-2">Change campaign schedule type:</h6>
+          <!-- Schedule options -->
+          <div class="card border-top-0 mb-4">
+            <div class="card-body">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" formControlName="schedule" id="daily" value="DAILY">
+                <label class="form-check-label" for="daily">Daily</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" formControlName="schedule" id="weekly" value="WEEKLY">
+                <label class="form-check-label" for="weekly">Weekly</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" formControlName="schedule" id="monthly" value="MONTHLY">
+                <label class="form-check-label" for="monthly">Monthly</label>
+              </div>
+              <!-- Daily Schedule -->
+              <div class="card mt-2" *ngIf="form.value.schedule == 'DAILY'">
+                <div class="card-body">
+                  <p class="bg-light p-2"><b>Daily Campaign - Time:</b></p>
+                    <ngb-timepicker formControlName="dailyTime" [meridian]="meridian"></ngb-timepicker>
+                </div>
+              </div>
+              <!-- Weekly Schedule -->
+              <div class="card mt-2" *ngIf="form.value.schedule == 'WEEKLY'">
+                <div class="card-body">
+                    <p class="bg-light p-2"><b>Weekly Campaign:</b></p>
+                  <div class="row">
+                    <div class="col-sm-12 mt-2">
+                      <label for="selectDayOfWeek">Choose Day and time:</label>
+                      <select class="form-control" formControlName="dayOfWeek" id="selectDayOfWeek" aria-describedby="selectDayOfWeekHelp">
+                        <option value='0' selected>Choose Day of Week...</option>
+                        <option *ngFor="let day of week" [value]="day">{{day}}</option>                                
+                      </select>
+                      <small id="selectDayOfWeekHelp" class="form-text text-muted">
+                        Select the day of the week to send weekly Sms. 
+                      </small>
+                    </div> 
+                    <div class="col">
+                      <ngb-timepicker formControlName="weeklyTime" [meridian]="meridian"></ngb-timepicker>                                        
+                    </div>    
+                  </div>
+                  
+                </div>
+              </div>
+              <!-- Monthly Schedule -->
+              <div class="card-sm-12 mt-2" *ngIf="form.value.schedule == 'MONTHLY'">
+                <div class="card-body">
+                  <p class="bg-light p-2"><b>Monthly Campaign:</b></p>
+                  <div class="row">
+                    <div class="col-sm-12 mt-3">
+                      Pick Date and Time:
+                      <div class="form-group">
+                        <div class="input-group">
+                          <input class="form-control" formControlName="monthlyDate" placeholder="yyyy-mm-dd" name="oneTimeDatePicker" ngbDatepicker #monthlyDate="ngbDatepicker">
+                          <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" (click)="monthlyDate.toggle()" type="button">
+                              <i class="fa fa-calendar"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12">
+                      <ngb-timepicker formControlName="monthlyTime" [meridian]="meridian"></ngb-timepicker>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Compose message -->
+          <h6 class="mb-4 bg-light p-2 rounded">Edit message:</h6>
+          <div class="form-group">
+            <textarea class="form-control" formControlName="message" rows="5" [(ngModel)]="message"></textarea>
+          </div>
+          <hr class="mb-4">
+          <h6 class="mb-4 bg-light p-2">Edit Groups to send to:</h6>
+          <div class="input-group mb-3">
+            <select class="form-control" formControlName="group" aria-describedby="groupSelectHelp" [(ngModel)]="selected">
+              <option value='0' selected>Select Group</option>
+              <option *ngFor="let group of allgroups" [value]="group.id">{{group.name}}</option>
+            </select>
+            <div class="input-group-append">
+              <button class="btn btn-info px-4" (click)="addToCampaignGroups()" [disabled]="selected == 0" type="button">
+                Add to Campaign
+              </button>
+            </div> 
+          </div>
+          <small id="groupSelectHelp" class="form-text text-muted mb-4">
+            Select groups of clients that should receive the above message. 
+          </small>
+          <div *ngIf="groups.length != 0">
+            <h6 class="mb-2 bg-light p-2">Campaign Groups:</h6>
+            <span *ngFor="let group of groups" class="badge badge-pill badge-info px-2 m-1">
+              {{group.name}}
+              <span class="btn btn-sm btn-info" (click)="remove(group)">&times;</span>
+            </span>
+          </div>
+          <hr class="mb-4">
+          <button class="btn btn-primary btn-block" type="submit" [disabled]="!form.valid || groups.length == 0">Save Campaign</button>
+        </form>
+      </div>
+    </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" (click)="c('Save click')">Save</button>
+    <button type="button" class="btn btn-outline-danger" (click)="c('Save click')">Dismiss</button>
+  </div>
+</ng-template>
+
+<!-- Delete Schedule -->
+<ng-template #deleteModal let-c="close" let-d="dismiss">
+  <div class="modal-header bg-danger text-white">
+    <h5 class="modal-title"><i class="fa fa-warning fa-lg"></i> Confirm Deletion</h5>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    Are you sure you want to delete <span class="bg-light border rounded px-2"> <b>{{deleteSchedule.groupName}}</b></span> schedule, 
+    <span class="bg-light border rounded px-2"> <b>{{deleteSchedule.jobName}}</b></span>  ?    
+  <hr>
+  <div class="d-flex justify-content-between">
+      <button type="button" class="btn btn-outline-danger" (click)="deleteCampaign()">Delete</button>
+      <button type="button" class="btn btn-success" (click)="c('Save click')">Dismiss</button>
+  </div>
   </div>
 </ng-template>

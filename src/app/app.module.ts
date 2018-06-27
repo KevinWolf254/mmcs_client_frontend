@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModule, NgbCollapseModule} from '@ng-bootstrap/ng-bootstrap';
 
 import { AppRoutingModule } from './app-routing.module';
 import { DataTablesModule } from 'angular-datatables';
@@ -17,6 +17,7 @@ import { AdminModule } from './Admin/admin.module';
   ],
   imports: [
     BrowserModule,
+    NgbCollapseModule,
     NgxDatatableModule,
     AppRoutingModule,
     NgbModule.forRoot(),

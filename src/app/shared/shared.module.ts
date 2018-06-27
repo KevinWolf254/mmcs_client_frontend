@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SignInComponent } from './sign-in/sign-in.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { NavigationModule } from './navigation/navigation.module';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { CampaignsComponent } from './campaigns/campaigns.component';
@@ -18,6 +18,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
     CommonModule,
     FormsModule,
     BrowserModule,
+    NgbCollapseModule,
     DataTablesModule,
     ReactiveFormsModule,
     NgbModule,

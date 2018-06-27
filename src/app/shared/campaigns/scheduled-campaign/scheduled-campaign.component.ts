@@ -22,7 +22,7 @@ export class ScheduledCampaignComponent implements OnInit {
   private week: string[] = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
   private recipientsIds: number[] = [];  
-  private form: FormGroup;
+  private form: FormGroup; 
 
   private defaultTime = {hour: 12, minute: 30};
   private meridian: boolean = true;
