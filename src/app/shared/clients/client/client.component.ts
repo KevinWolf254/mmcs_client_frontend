@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { selectValidator } from '../../validators/select-validator';
+import { Subject } from 'rxjs/Subject';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-client',
@@ -14,6 +16,9 @@ export class ClientComponent implements OnInit {
 
   private codes: string[] = ["+254", "+255", "+256", "+257"];
 
+  private _success = new Subject<string>();
+  private successMessage: string;
+
   constructor(private _fb: FormBuilder) { 
     this.form = _fb.group({
       'names': [null],
@@ -26,15 +31,22 @@ export class ClientComponent implements OnInit {
   }
 
   ngOnInit() {
+    this._success.subscribe((message) => this.successMessage = message);
+    this._success.pipe(
+      debounceTime(5000)
+    ).subscribe(() => this.successMessage = null);
   }
 
-  private create(form){
+  private createClient(form){
     console.log(form.names);
     console.log(form.code);
-    console.log(form.phone);
+    console.log(form.phone);    
+    this._success.next("Successfully created Client "+form.names+" Phone No: "+form.phone);
+    this.form.reset();
   }
 
-  private createFromFile(form){
-
+  private createClients(form){
+    this._success.next("Successfully created Clients");
+    this.fileForm.reset();
   }
 }

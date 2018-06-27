@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-top-navbar',
@@ -9,9 +10,20 @@ export class TopNavbarComponent implements OnInit {
 
   private isCollapsed: boolean = true;
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
+  }
+
+  private signout(){
+    localStorage.removeItem('userRole');
+    this.router.navigate(['sigin']);
+  }
+
+  private isAdmin(): boolean{
+    if(localStorage.getItem('userRole') == 'admin')
+      return true;
+    return false;
   }
 
 }

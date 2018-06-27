@@ -75,7 +75,7 @@
       <ngx-datatable-column name="actions">
         <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
           <div class="btn-group" role="group" aria-label="actions">
-            <button (click)="editSchedule(editModal, row, rowIndex)" [disabled]='row.jobStatus == "COMPLETE"' class="btn btn-sm btn-outline-info" data-toggle="tooltip" data-placement="top" title="Edit schedule"><i class="fa fa-pencil"></i></button>
+            <button (click)="openEditDialog(editModal, row, rowIndex)" [disabled]='row.jobStatus == "COMPLETE"' class="btn btn-sm btn-outline-info" data-toggle="tooltip" data-placement="top" title="Edit schedule"><i class="fa fa-pencil"></i></button>
             <button (click)="openDeletionDialog(deleteModal, row, rowIndex)" class="btn btn-sm btn-outline-danger" data-toggle="tooltip" data-placement="top" title="Delete schedule"><i class="fa fa-trash"></i></button>
           </div>
         </ng-template>
@@ -106,23 +106,23 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text" id="campaignName">Campaign</span>
                 </div>
-                <input type="text" class="form-control" aria-label="campaignName" aria-describedby="campaignName" [(ngModel)]="editCampaign.jobName">
+                <input type="text" class="form-control" aria-label="campaignName" aria-describedby="campaignName" [(ngModel)]="editableCampaign.title">
               </div>
-              <h6 class="mb-0 bg-dark p-2 mb-1 text-white rounded">Schedule type: <b>{{editCampaign.groupName}}</b></h6>
+              <h6 class="mb-0 bg-dark p-2 mb-1 text-white rounded">Schedule type: <b>{{editableCampaign.scheduleType}}</b></h6>
               <!-- Daily -->
-              <div class="input-group mb-3" *ngIf="editCampaign.groupName == 'DAILY'">
+              <div class="input-group mb-3" *ngIf="editableCampaign.scheduleType == 'DAILY'">
                 <div class="input-group-prepend">
                   <span class="input-group-text" id="dailyTime">Time</span>
                 </div>
-                <input type="text" class="form-control" aria-label="dailyTime" aria-describedby="dailyTime" [(ngModel)]="time">
+                <input type="text" class="form-control" aria-label="dailyTime" aria-describedby="dailyTime" [(ngModel)]="editableCampaign.time">
               </div>
               <!-- Weekly -->
-              <div class="form-row" *ngIf="editCampaign.groupName == 'WEEKLY'">
+              <div class="form-row" *ngIf="editableCampaign.scheduleType == 'WEEKLY'">
                 <div class="input-group col-sm-6 mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="weeklyTime">Time</span>
                   </div>
-                  <input type="text" class="form-control" aria-label="weeklyTime" aria-describedby="weeklyTime" [(ngModel)]="time">
+                  <input type="text" class="form-control" aria-label="weeklyTime" aria-describedby="weeklyTime" [(ngModel)]="editableCampaign.time">
                 </div>
                 <div class="input-group col-sm-6 mb-3">
                   <div class="input-group-prepend">
@@ -132,18 +132,18 @@
                 </div>
               </div>
               <!-- Monthly -->
-              <div class="form-row" *ngIf="editCampaign.groupName == 'MONTHLY'">
+              <div class="form-row" *ngIf="editableCampaign.scheduleType == 'MONTHLY'">
                 <div class="input-group col-sm-6 mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="monthlyTime">Time</span>
                   </div>
-                  <input type="text" class="form-control" aria-label="monthlyTime" aria-describedby="monthlyTime" [(ngModel)]="time">
+                  <input type="text" class="form-control" aria-label="monthlyTime" aria-describedby="monthlyTime" [(ngModel)]="editableCampaign.time">
                 </div>
                 <div class="input-group col-sm-6 mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="date">Date</span>
                   </div>
-                  <input type="text" class="form-control" aria-label="date" aria-describedby="date" [(ngModel)]="date">
+                  <input type="text" class="form-control" aria-label="date" aria-describedby="date" [(ngModel)]="editableCampaign.date">
                 </div>
               </div>
             </fieldset> 
@@ -235,7 +235,7 @@
               <option *ngFor="let group of allgroups" [value]="group.id">{{group.name}}</option>
             </select>
             <div class="input-group-append">
-              <button class="btn btn-info px-4" (click)="addToCampaignGroups()" [disabled]="selected == 0" type="button">
+              <button class="btn btn-info px-4" (click)="addGroupToCampaign()" [disabled]="selected == 0" type="button">
                 Add to Campaign
               </button>
             </div> 
@@ -243,15 +243,15 @@
           <small id="groupSelectHelp" class="form-text text-muted mb-4">
             Select groups of clients that should receive the above message. 
           </small>
-          <div *ngIf="groups.length != 0">
+          <div *ngIf="groupsOfSelectedCampaign.length != 0">
             <h6 class="mb-2 bg-light p-2">Campaign Groups:</h6>
-            <span *ngFor="let group of groups" class="badge badge-pill badge-info px-2 m-1">
+            <span *ngFor="let group of groupsOfSelectedCampaign" class="badge badge-pill badge-info px-2 m-1">
               {{group.name}}
               <span class="btn btn-sm btn-info" (click)="remove(group)">&times;</span>
             </span>
           </div>
           <hr class="mb-4">
-          <button class="btn btn-primary btn-block" type="submit" [disabled]="!form.valid || groups.length == 0">Save Campaign</button>
+          <button class="btn btn-primary btn-block" type="submit" [disabled]="!form.valid || groupsOfSelectedCampaign.length == 0">Save Campaign</button>
         </form>
       </div>
     </div>

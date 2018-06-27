@@ -20,14 +20,11 @@
       "prefix": "app",
       "styles": [
         "../node_modules/font-awesome/scss/font-awesome.scss",
-        "../node_modules/datatables.net-dt/css/jquery.dataTables.css",
         "styles.scss"
       ],
       "scripts": [
         "../node_modules/chart.js/dist/Chart.js",
-        "../node_modules/hammerjs/hammer.min.js",
-        "../node_modules/jquery/dist/jquery.js",
-        "../node_modules/datatables.net/js/jquery.dataTables.js"
+        "../node_modules/hammerjs/hammer.min.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {

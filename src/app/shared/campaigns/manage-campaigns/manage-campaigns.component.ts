@@ -5,6 +5,9 @@ import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Group } from '../../models/group.model';
 import { selectValidator } from '../../validators/select-validator';
+import { GroupManagerService } from '../../services/group/group-manager.service';
+import { CampaignService } from '../../services/campaign/campaign.service';
+import { Campaign } from '../../models/campaign.model';
 
 @Component({
   selector: 'app-manage-campaigns',
@@ -17,7 +20,7 @@ export class ManageCampaignsComponent implements OnInit {
 
   private perPage: number;
   private perPageNos: number[] = [10, 25, 50, 100];
-  private temp = [];
+  private tempCampaigns = [];
   @ViewChild(DatatableComponent) table: DatatableComponent;
   private customPagerIcons = {
     sortAscending: 'fa fa-sort-asc', sortDescending: 'fa fa-sort-desc', pagerLeftArrow: 'fa fa-chevron-left', 
@@ -29,7 +32,8 @@ export class ManageCampaignsComponent implements OnInit {
   private modalRefEdit: NgbModalRef;
   private modalRefDel: NgbModalRef;
 
-  private editCampaign: Schedule;
+  // private editCampaign: Schedule;
+  private editableCampaign: Campaign;
   private week: string[] = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];  
   private form: FormGroup;
   private defaultTime = {hour: 12, minute: 30};
@@ -37,12 +41,13 @@ export class ManageCampaignsComponent implements OnInit {
   
   private selected = 0;
   private message: string;
-  private groups: Group[] = [];
+  private groupsOfSelectedCampaign: Group[] = [];
   private allgroups: Group[] = [];
 
-  private time: string = '';
+  // private time: string = '';
   private day: string = '';
-  private date: number = null;
+  private scheduleType: string = '';
+  // private date: number = null;
 
   private deleteSchedule: Schedule;
   private deleteRow: number;
@@ -51,7 +56,8 @@ export class ManageCampaignsComponent implements OnInit {
       this.meridian = !this.meridian;
   }
 
-  constructor(private modalService: NgbModal, private _fb: FormBuilder) {
+  constructor(private modalService: NgbModal, private _fb: FormBuilder, private _groupService: GroupManagerService,
+  private _campaignService: CampaignService) {
     this.form = _fb.group({
     'schedule': [null],
     'message': [null,Validators.compose([Validators.required, Validators.maxLength(160)])],
@@ -61,8 +67,8 @@ export class ManageCampaignsComponent implements OnInit {
 
   ngOnInit() {
     this.getSchedules();
+    this.allgroups =  this._groupService.getGroups();
     this.perPage = this.perPageNos[0];
-    this.getAllGroups();
 
     this.form.get('schedule').valueChanges.subscribe( type =>{
         if(type == 'DAILY'){
@@ -97,35 +103,10 @@ export class ManageCampaignsComponent implements OnInit {
     );
   }
 
-  private getAllGroups(){
-    for(let i=1; i<=25; i++){
-      this.allgroups.push({id: i, name: 'Group '+i});
-    }
-  }
-  private edit(editModal){
-    this.modalService.open(editModal);
-  }
-
   private getSchedules(){
-    // let date: string = (new Date().toISOString().slice(0,10));
-    let date: Date = new Date();
-    for(let i = 1; i <= 50; i++){
-      let schedule;
-      if(i % 2 == 0){      
-        schedule = new Schedule("Campaign "+i, "MONTHLY", date, date, "SCHEDULED", date);
-      }else if(i % 3 == 0){
-        schedule = new Schedule("Campaign "+i, "WEEKLY", date, date, "COMPLETE", date);
-      }else if(i % 7 == 0){
-        schedule = new Schedule("Campaign "+i, "WEEKLY", date, date, "ERROR", date);
-      }else if(i == 1){
-        schedule = new Schedule("Campaign "+i, "MONTHLY", date, date, "PAUSED", date);
-      }else{        
-        schedule = new Schedule("Campaign "+i, "DAILY", date, date, "RUNNING", date);
-      }        
-      this.schedules.push(schedule);
-    }
+    this.schedules = this._campaignService.getCampaigns();
     // cache our schedules
-    this.temp = [...this.schedules];
+    this.tempCampaigns = [...this.schedules];
   }
 
   private changePageEntries(event){
@@ -136,7 +117,7 @@ export class ManageCampaignsComponent implements OnInit {
     let searchParam = event.target.value.toLowerCase();
 
     // filter our data
-    let temp = this.temp.filter(schedule => {
+    let temp = this.tempCampaigns.filter(schedule => {
       return schedule.jobName.toLowerCase().indexOf(searchParam) !== -1 || !searchParam;
     });
 
@@ -167,69 +148,74 @@ export class ManageCampaignsComponent implements OnInit {
     this.scheduleStopped[rowIndex] = false;
   }
 
-  private editSchedule(modal, schedule: Schedule, rowIndex){
+  private openEditDialog(modal, schedule: Schedule, rowIndex){
     this.modalRefEdit = this.modalService.open(modal);
-    this.editCampaign = new Schedule(schedule.jobName, schedule.groupName, schedule.scheduleTime, schedule.lastFiredTime, schedule.jobStatus, schedule.nextFireTime);
-    this.getCampaignDetails(schedule);
-    let date = schedule.scheduleTime;
-    if(schedule.groupName == 'DAILY'){
-      let hour = schedule.scheduleTime.getHours();
-      let minutes = schedule.scheduleTime.getMinutes()
-      this.time = ''+hour+':'+minutes;
-    }else if(schedule.groupName == 'WEEKLY'){
-      let hour = schedule.scheduleTime.getHours();
-      let minutes = schedule.scheduleTime.getMinutes()
-      this.time = ''+hour+':'+minutes;
-      this.day = 'Fri'
-    }else if(schedule.groupName == 'MONTHLY'){
-      let hour = schedule.scheduleTime.getHours();
-      let minutes = schedule.scheduleTime.getMinutes()
-      this.time = ''+hour+':'+minutes;
-      this.date = schedule.scheduleTime.getDate();//.toISOString().slice(0,10);
-    }
+    // this.editCampaign = new Schedule(schedule.jobName, schedule.groupName, schedule.scheduleTime, schedule.lastFiredTime, schedule.jobStatus, schedule.nextFireTime);
+    this.editableCampaign = this._campaignService.getCampaignByName(schedule);
+    this.scheduleType = this.editableCampaign.scheduleType;
+
+    this.groupsOfSelectedCampaign = [];
+    this.groupsOfSelectedCampaign = this.editableCampaign.groups;
+
+    console.log("EditableCampaign TYPE: "+this.editableCampaign.scheduleType);
+    console.log("EditableCampaign TIME: "+this.editableCampaign.time);
+
+    // this.getCampaignDetails(schedule);
+    // let date = schedule.scheduleTime;
+    // if(schedule.groupName == 'DAILY'){
+    //   let hour = schedule.scheduleTime.getHours();
+    //   let minutes = schedule.scheduleTime.getMinutes()
+    //   this.time = ''+hour+':'+minutes;
+    // }else if(schedule.groupName == 'WEEKLY'){
+    //   let hour = schedule.scheduleTime.getHours();
+    //   let minutes = schedule.scheduleTime.getMinutes()
+    //   this.time = ''+hour+':'+minutes;
+    //   this.day = 'Fri'
+    // }else if(schedule.groupName == 'MONTHLY'){
+    //   let hour = schedule.scheduleTime.getHours();
+    //   let minutes = schedule.scheduleTime.getMinutes()
+    //   this.time = ''+hour+':'+minutes;
+    //   this.date = schedule.scheduleTime.getDate();
+    //   //.toISOString().slice(0,10);
+    // }
   }
 
-  private getCampaignDetails(schedule: Schedule){
-    let title: string = schedule.jobName;
-    this.message = 'Dear customer, kindly take note that all our products have a 50% discount'+
-    ' starting from June 20th until August 1st. visit our website, www.shoptiludrop.co.ke';
-    this.groups = [];
-    for(let i=1; i<=10; i++){
-      this.groups.push({id: i, name: 'Group '+i});
-    }
-  }
+  // private getCampaignDetails(schedule: Schedule){
+  //   let campaign: Campaign = this._campaignService.getCampaignByName(schedule);
 
-  private addToCampaignGroups(){
+  //   let title: string = campaign.title;
+  //   this.message = campaign.message;
+  //   this.groupsOfSelectedCampaign = [];
+  //   // this.groupsOfSelectedCampaign = campaign.groups;
+  //   for(let i=1; i<=10; i++){
+  //     this.groupsOfSelectedCampaign.push({id: i, name: 'Group '+i});
+  //   }
+  // }
+
+  private addGroupToCampaign(){
     //find group with selected id
-    let group: Group = this.findInList();
+    let group: Group = this._groupService.findGroup(this.selected);
     //check if recipients has a group of recipients added to it
-    if(this.groups.length !=0){
+    if(this.groupsOfSelectedCampaign.length !=0){
         //check and remove duplicates
-        this.groups = this.removeDuplicate();
+        this.groupsOfSelectedCampaign = this.removeDuplicate();
     }
-    this.groups.push(group);
+    this.groupsOfSelectedCampaign.push(group);
     this.selected = 0;
     // this.form.get('group').setValue(0);
   }
 
-  private findInList(): Group{
-    let foundGroup: Group = this.allgroups.find((group: Group) =>{
-      return group.id == this.selected;
-    });
-    return foundGroup;
-  }
-
   private removeDuplicate(): Group[]{
-    return this.groups = this.groups.filter((group: Group)=>{
+    return this.groupsOfSelectedCampaign = this.groupsOfSelectedCampaign.filter((group: Group)=>{
         return group.id != this.selected;
     });
   }
 
   /**removes group from array of selected groups */
   private remove(removeGroup: Group){
-    this.groups.forEach((group, index)=>{
+    this.groupsOfSelectedCampaign.forEach((group, index)=>{
       if(group.id == removeGroup.id){
-        this.groups.splice(index, 1);
+        this.groupsOfSelectedCampaign.splice(index, 1);
       }
     }); 
   } 
@@ -247,6 +233,7 @@ export class ManageCampaignsComponent implements OnInit {
   private deleteCampaign(){
     this.schedules.splice(this.deleteRow, 1);
     this.schedules = [...this.schedules];
+    this.tempCampaigns = [...this.schedules];
     this.modalRefDel.close(); 
   }
 }

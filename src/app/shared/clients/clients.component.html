@@ -24,34 +24,39 @@
             <div class="card border-top-0 shadow">
               <div class="card-body">
                 <p class="bg-light p-2 rounded"><b>Add Single Client:</b></p>
+                <ngb-alert *ngIf="successMessage" type="success" (close)="successMessage = null">{{ successMessage }}</ngb-alert>
                 <!-- Single Client Form -->
-                <form [formGroup] = "form" (ngSubmit) = "add(form.value)">
+                <form [formGroup] = "form" (ngSubmit) = "addClientToGroup(form.value)">
                     <div class="input-group mb-3">
                       <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fa fa-group"></i></span>
                       </div>
-                      <select class="form-control" formControlName="group">
+                      <select class="form-control" formControlName="group" [(ngModel)]="selectedGroupForSingleClient">
                         <option value='0' selected>Choose Group...</option>
                         <option *ngFor="let group of groups" [value]="group.id">{{group.name}}</option> 
-                      </select>
+                      </select> 
                     </div>
                     <div class="input-group mb-2">
                       <div class="input-group-prepend">
-                          <span class="input-group-text"><i class="fa fa-phone px-1"></i></span>
+                          <span class="input-group-text"><i class="fa fa-phone fa-lg"></i></span>
                       </div>
-                      <input type="number" class="form-control col-sm-10" formControlName="phone" placeholder="720100100">
+                      <input type="number" class="form-control" formControlName="phone" placeholder="e.g. 720100100">
                       <div class="input-group-append">
                         <button class="btn btn-primary" type="button" (click)="check(form.value.phone)" 
-                        [disabled]="!form.controls['phone'].valid">
+                        [disabled]="!form.controls['phone'].valid" *ngIf="!phoneNoExists">
                           check
+                        </button>
+                        <button class="btn btn-success" type="button" *ngIf="phoneNoExists"
+                        [disabled]="!form.controls['phone'].valid">
+                        <i class="fa fa-check fa-lg"></i>
                         </button>
                       </div>
                     </div>
-                  <button type="submit" class="btn btn-primary btn-block mb-2" [disabled]="!form.valid">Add Client</button>
+                  <button type="submit" class="btn btn-primary btn-block mb-2" [disabled]="!form.valid || !phoneNoExists">Add Client</button>
                 </form>
                 <!-- Multiple Clients Form -->
                 <p class="bg-light p-2 mt-4 rounded"><b>Add Multiple Clients:</b></p>
-                <form [formGroup] = "fileForm" (ngSubmit) = "addClients(fileForm.value)">
+                <form [formGroup] = "fileForm" (ngSubmit) = "addClientsToGroup(fileForm.value)">
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-group"></i></span>

@@ -142,7 +142,7 @@
         <select class="form-control" id="groupSelect01" formControlName="group" 
         aria-describedby="groupSelectHelp" [(ngModel)]="selected">
           <option value='0' selected>Select Group</option>
-          <option *ngFor="let group of allGroups" [value]="group.id">{{group.name}}</option>
+          <option *ngFor="let group of groups" [value]="group.id">{{group.name}}</option>
         </select>
         <div class="input-group-append">
           <button class="btn btn-info px-4" (click)="add()" [disabled]="!form.controls['group'].valid" type="button">

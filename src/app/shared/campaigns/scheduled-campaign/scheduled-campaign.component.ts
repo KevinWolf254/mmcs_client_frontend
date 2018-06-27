@@ -8,6 +8,7 @@ import { SmsScheduled } from '../../models/sms-scheduled/sms-scheduled.model';
 import { Time } from '@angular/common';
 import { SmsScheduledWeekly } from '../../models/sms-scheduled/sms-scheduled-weekly.model';
 import { SmsScheduledMonthly } from '../../models/sms-scheduled/sms-scheduled-monthly.model';
+import { GroupManagerService } from '../../services/group/group-manager.service';
 
 @Component({
   selector: 'app-scheduled-campaign',
@@ -17,7 +18,7 @@ import { SmsScheduledMonthly } from '../../models/sms-scheduled/sms-scheduled-mo
 export class ScheduledCampaignComponent implements OnInit {
 
   private selected = 0;
-  private allGroups: Group[] = [];
+  private groups: Group[] = [];
   private selectedRecipients: Group[] = [];
   private week: string[] = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
@@ -30,7 +31,7 @@ export class ScheduledCampaignComponent implements OnInit {
   toggleMeridian() {
       this.meridian = !this.meridian;
   }
-  constructor(private _fb: FormBuilder) { 
+  constructor(private _fb: FormBuilder, private _groupManager: GroupManagerService) { 
     this.form = _fb.group({
       'campaignName': [null,Validators.required],
       'message': [null,Validators.compose([Validators.required, Validators.maxLength(160)])],
@@ -40,7 +41,7 @@ export class ScheduledCampaignComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getGroups();
+    this.groups = this._groupManager.getGroups();
 
     this.form.get('campaign').valueChanges.subscribe(
       campaign =>{
@@ -97,25 +98,18 @@ export class ScheduledCampaignComponent implements OnInit {
     let receivedGroup: Group;
     for(let i=1; i<11; i++){
         receivedGroup = new Group(i, "Group "+i);
-        this.allGroups.push(receivedGroup);
+        this.groups.push(receivedGroup);
     } 
   } 
   private add(){
     //find group with selected id
-    let group: Group = this.findInList();
+    let group: Group = this._groupManager.findGroup(this.selected);
     //check if recipients has a group of recipients added to it
     if(this.selectedRecipients.length !=0){
         //check and remove duplicates
         this.selectedRecipients = this.removeDuplicate();
     }
     this.selectedRecipients.push(group);
-  }
-
-  private findInList(): Group{
-    let foundGroup: Group = this.allGroups.find((group: Group) =>{
-      return group.id == this.selected;
-    });
-    return foundGroup;
   }
 
   private removeDuplicate(): Group[]{

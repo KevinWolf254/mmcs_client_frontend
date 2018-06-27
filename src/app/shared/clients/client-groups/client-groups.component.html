@@ -6,7 +6,7 @@
           <div class="input-group mb-3">
             <input type="text" formControlName="name" class="form-control" placeholder="Group Name">
             <div class="input-group-append">
-              <button type="submit" class="btn btn-info px-4" type="button" [disabled]="!createForm.valid">Create</button>
+              <button type="submit" class="btn btn-info px-4" [disabled]="!createForm.valid">Create</button>
             </div>
           </div>
         </div>
@@ -16,12 +16,12 @@
     <form [formGroup] = "deleteForm" (ngSubmit) = "deleteGroup(deleteForm.value)">
       <div class="form-group ">
         <div class="input-group mb-3">
-          <select class="form-control" id="selectGroup" formControlName="group" (change)="getGroupClients($event)">
+          <select class="form-control" id="selectGroup" formControlName="group" (change)="getGroupClients($event)" [(ngModel)]="selectedGroupId"> 
             <option value='0' selected>Choose Group...</option>
             <option *ngFor="let group of groups" [value]="group.id">{{group.name}}</option> 
           </select>
           <div class="input-group-append">
-            <button class="btn btn-danger px-4" type="button" [disabled]="!deleteForm.valid">Delete</button>
+            <button class="btn btn-danger px-4" type="submit" [disabled]="!deleteForm.valid">Delete</button>
           </div>
         </div>
       </div>
@@ -48,7 +48,7 @@
         </div>
       </div>
     </div>
-    <!-- Scheduled Campaigns Table -->
+    <!-- Grouped clients Table -->
     <ngx-datatable class="bootstrap mt-3" [rows]="groupClients" [limit]="entriesPerPage" [columnMode]="'force'"
       [rowHeight]="55" [cssClasses]="customPagerIcons" [footerHeight]="40" [scrollbarH]="true">
       <ngx-datatable-column name="Id" [width]="40">
@@ -73,7 +73,7 @@
     </ngx-datatable>
   </div>
 </div>
-<!-- View Client -->
+<!-- View Client Details-->
 <ng-template #clientDetailsModal let-c="close" let-d="dismiss">
     <div class="modal-header bg-info text-white">
       <h5 class="modal-title"><i class="fa fa-pencil fa-lg"></i> Edit Client Details</h5>
@@ -82,17 +82,10 @@
       </button>
     </div>
     <div class="modal-body">
-      <!-- Are you sure you want to delete <span class="bg-light border rounded px-2"> <b>{{}}</b></span> , 
-      <span class="bg-light border rounded px-2"> <b>{{deleteSchedule.jobName}}</b></span>? 
-      <hr>
-      <div class="d-flex justify-content-between">
-        <button type="button" class="btn btn-outline-danger" (click)="delete()">Delete</button>
-        <button type="button" class="btn btn-success" (click)="c('Save click')">Dismiss</button>
-      </div> -->
     </div>
   </ng-template>
 
-<!-- Delete Client from group -->
+<!-- Remove Client from group -->
 <ng-template #removeClientModal let-c="close" let-d="dismiss">
   <div class="modal-header bg-danger text-white">
     <h5 class="modal-title"><i class="fa fa-warning fa-lg"></i> Confirm Deletion</h5>
@@ -101,12 +94,13 @@
     </button>
   </div>
   <div class="modal-body">
-    <!-- Are you sure you want to delete <span class="bg-light border rounded px-2"> <b>{{}}</b></span> , 
-    <span class="bg-light border rounded px-2"> <b>{{deleteSchedule.jobName}}</b></span>? 
+    Are you sure you want to remove <span class="bg-light border rounded px-2"> <b>{{removableClient.phoneNo}}</b></span> , 
+    <span class="bg-light border rounded px-2"> <b>{{removableClient.fullName}}</b></span> from group
+    <span class="bg-light border rounded px-2"> <b>{{selectedGroupId}}</b></span> ? 
     <hr>
     <div class="d-flex justify-content-between">
-      <button type="button" class="btn btn-outline-danger" (click)="delete()">Delete</button>
-      <button type="button" class="btn btn-success" (click)="c('Save click')">Dismiss</button>
-    </div> -->
+      <button type="button" class="btn btn-outline-danger" (click)="removeClientFromGroup()">Delete</button>
+      <button type="button" class="btn btn-info" (click)="c('Save click')">Dismiss</button>
+    </div>
   </div>
 </ng-template>

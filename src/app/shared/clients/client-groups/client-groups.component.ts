@@ -5,6 +5,8 @@ import { selectValidator } from '../../validators/select-validator';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { ClientTeleco } from '../../models/client-teleco.model';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { GroupManagerService } from '../../services/group/group-manager.service';
+import { ClientService } from '../../services/client/client.service';
 
 @Component({
   selector: 'app-client-groups',
@@ -28,17 +30,19 @@ export class ClientGroupsComponent implements OnInit {
   private groups: Group[] = [];
   private createForm: FormGroup;
   private deleteForm: FormGroup;
+
+  private selectedGroupId: number = 0;
   
   private editableClientModal: NgbModalRef;
   private removableClientModal: NgbModalRef;
 
-  private editableClient: ClientTeleco = null;
+  private editableClient: ClientTeleco;
   private editableRow: number;
 
   private removableClient: ClientTeleco = null;
   private removableRow: number;
 
-  constructor(private _fb: FormBuilder, private modalService: NgbModal) { 
+  constructor(private _fb: FormBuilder, private modalService: NgbModal, private _groupManager: GroupManagerService, private _clientService: ClientService) { 
     this.createForm = _fb.group({
       'name': [null,Validators.required]
     });
@@ -47,17 +51,10 @@ export class ClientGroupsComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    this.getGroupsFromWebApi();
+  ngOnInit() {    
+    this.groups = this._groupManager.getGroups();
+
     this.entriesPerPage = this.perPageNos[0];
-  }
-  /*retrieves all groups from web service to select */
-  private getGroupsFromWebApi(){
-    let allGroups: Group;
-    for(let i=1; i<11; i++){
-      allGroups = new Group(i, "Group "+i);
-      this.groups.push(allGroups);
-    } 
   } 
 
   private getGroupClients(event){
@@ -66,13 +63,9 @@ export class ClientGroupsComponent implements OnInit {
   }
 
   private getGroupClientsFromWebApi(groupId: number){
-    let client: ClientTeleco;
-    this.groupClients = [];
-    for(let i=1; i<=50; i++){
-      client = new ClientTeleco(i, '+254', 724000000 + i, 'Client '+i, "Safaricom-Ke");
-      this.groupClients.push(client);
-    }
-    this.groupClients = [...this.groupClients];
+    this.groupClients = this._clientService.findClientsByGroupId(groupId);
+    // cache our clients
+    this.tempClients = [...this.groupClients];
   }
 
   private changeEntriesPerPage(event){
@@ -95,7 +88,8 @@ export class ClientGroupsComponent implements OnInit {
   }
 
   private createGroup(form){
-
+    this._groupManager.createGroup(form.name);
+    this.createForm.reset();
   }
 
   private openClientDetailsDialog(clientDetailsModal, selectedClient: ClientTeleco, rowIndex){
@@ -105,14 +99,24 @@ export class ClientGroupsComponent implements OnInit {
     this.editableClientModal = this.modalService.open(clientDetailsModal);
   }
 
-  private openRemoveClientDialog(deleteClientModal, selectedClient: ClientTeleco, rowIndex){
-    this.removableClient =new ClientTeleco(selectedClient.clientId, selectedClient.countryCode, 
+  private openRemoveClientDialog(removeClientModal, selectedClient: ClientTeleco, rowIndex){
+    this.removableClient = new ClientTeleco(selectedClient.clientId, selectedClient.countryCode, 
       selectedClient.phoneNo, selectedClient.fullName, selectedClient.telecom);
-    this.removableClient = rowIndex;    
-    this.removableClientModal = this.modalService.open(deleteClientModal);
+    this.removableRow = rowIndex;
+    this.removableClientModal = this.modalService.open(removeClientModal);
   }
   
   private deleteGroup(form){
+    this._groupManager.deleteGroup(form.group);
+    this.deleteForm.reset();
+    this.deleteForm.get(['group']).setValue(0);
+    this.groupClients = [];
+  }
 
+  private removeClientFromGroup(){    
+    this.groupClients.splice(this.removableRow, 1);
+    this.groupClients = [...this.groupClients];
+    this.tempClients = [...this.groupClients];
+    this.removableClientModal.close(); 
   }
 }

@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { UsersModule } from './users/users.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { NavigationModule } from '../shared/navigation/navigation.module';
-import { DataTablesModule } from 'angular-datatables';
 import { NgbModule, NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { UnitsComponent } from './units/units.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -17,7 +16,6 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
     UsersModule,
     NavigationModule,
     BrowserModule,
-    DataTablesModule,
     NgbModule,
     FormsModule,
     ReactiveFormsModule,

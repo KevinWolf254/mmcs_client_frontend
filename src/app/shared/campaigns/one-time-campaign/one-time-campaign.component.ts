@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Group } from '../../models/group.model';
 import { selectValidator } from '../../validators/select-validator';
 import { Sms } from '../../models/sms.model';
+import { GroupManagerService } from '../../services/group/group-manager.service';
 
 @Component({
   selector: 'app-one-time-campaign',
@@ -12,13 +13,13 @@ import { Sms } from '../../models/sms.model';
 export class OneTimeCampaignComponent implements OnInit{
 
   private selected = 0;
-  private allGroups: Group[] = [];
+  private groups: Group[] = [];
   private selectedRecipients: Group[] = [];
 
   private recipientsIds: number[] = [];  
   private form: FormGroup;
 
-  constructor(private _fb: FormBuilder) {
+  constructor(private _fb: FormBuilder, private _groupManager: GroupManagerService) {
     this.form = _fb.group({
       'message': [null,Validators.compose([Validators.required, Validators.maxLength(160)])],
       'group': ['0', selectValidator]
@@ -26,33 +27,18 @@ export class OneTimeCampaignComponent implements OnInit{
   }
 
   ngOnInit() {
-    this.getGroups(); 
-  }    
+    this.groups = this._groupManager.getGroups();
+  }   
 
-  /*retrieves all groups from web service to select */
-  private getGroups(){
-    let receivedGroup: Group;
-    for(let i=1; i<11; i++){
-        receivedGroup = new Group(i, "Group "+i);
-        this.allGroups.push(receivedGroup);
-    } 
-  } 
   private add(){
     //find group with selected id
-    let group: Group = this.findInList();
+    let group: Group = this._groupManager.findGroup(this.selected);
     //check if recipients has a group of recipients added to it
     if(this.selectedRecipients.length !=0){
         //check and remove duplicates
         this.selectedRecipients = this.removeDuplicate();
     }
     this.selectedRecipients.push(group);
-  }
-
-  private findInList(): Group{
-    let foundGroup: Group = this.allGroups.find((group: Group) =>{
-      return group.id == this.selected;
-    });
-    return foundGroup;
   }
 
   private removeDuplicate(): Group[]{
