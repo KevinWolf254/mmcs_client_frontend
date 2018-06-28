@@ -3,6 +3,7 @@ import { Chart } from "chart.js";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UnitsComponent } from '../units/units.component';
 import { CampaignService } from '../../shared/services/campaign/campaign.service';
+import { MonthlyExpenditure } from '../../shared/models/monthly-expenditure.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -56,6 +57,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getMonthlyCampaigns(year:number){
+      let expenditure: MonthlyExpenditure[];
       let heading: string = "Sent OnDemand SMS 2018";
       let heading02: string = "Sent Campaign SMS 2018";
       let months: string[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
@@ -70,7 +72,7 @@ export class DashboardComponent implements OnInit {
                 backgroundColor: 'rgba(75, 192, 192, 1)',
                 fill: false,
                 data: [12, 19, 3, 5, 2, 3]
-            },
+            }, 
             {
                 label: heading02,
                 borderColor: 'rgba(75, 192, 192, 1)',
