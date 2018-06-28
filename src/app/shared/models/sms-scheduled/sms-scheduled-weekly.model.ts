@@ -14,5 +14,5 @@ export class SmsScheduledWeekly extends SmsScheduled{
         let minute: number = this.time.minutes;
         // cron expression: fires weekly
         return "0 "+minute+" "+hour+" ? * "+this.dayOfWeek+" *";
-    }
+    } 
 }

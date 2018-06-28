@@ -5,15 +5,20 @@ export class Campaign {
     title: string;
     scheduleType: string;
     message: string;
-    date: Date;
+    oneTimeDate: Date;
+    dayOfWeek: string;
+    dateOfMonth: number;
     time: string;
     groups: Group[];
 
-    constructor(scheduleId?: number, title?: string, scheduleType?: string, message?: string, date?: Date, time?: string, groups?: Group[]){
+    constructor(scheduleId?: number, title?: string, scheduleType?: string, message?: string, oneTimeDate?: Date, dayOfWeek?: string, dateOfMonth?: number, time?: string, groups?: Group[]){
         this.scheduleId = scheduleId;
         this.title = title;
+        this.scheduleType = scheduleType;
         this.message = message;
-        this.date = date;
+        this.oneTimeDate = oneTimeDate;
+        this.dayOfWeek = dayOfWeek;
+        this.dateOfMonth = dateOfMonth;
         this.time = time;
         this.groups = groups
     }

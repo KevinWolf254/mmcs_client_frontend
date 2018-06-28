@@ -104,7 +104,7 @@
               <!-- Campaign Name -->        
               <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                  <span class="input-group-text" id="campaignName">Campaign</span>
+                  <span class="input-group-text bg-dark text-white" id="campaignName">Name</span>
                 </div>
                 <input type="text" class="form-control" aria-label="campaignName" aria-describedby="campaignName" [(ngModel)]="editableCampaign.title">
               </div>
@@ -112,7 +112,7 @@
               <!-- Daily -->
               <div class="input-group mb-3" *ngIf="editableCampaign.scheduleType == 'DAILY'">
                 <div class="input-group-prepend">
-                  <span class="input-group-text" id="dailyTime">Time</span>
+                  <span class="input-group-text bg-dark text-white" id="dailyTime">Time</span>
                 </div>
                 <input type="text" class="form-control" aria-label="dailyTime" aria-describedby="dailyTime" [(ngModel)]="editableCampaign.time">
               </div>
@@ -120,30 +120,30 @@
               <div class="form-row" *ngIf="editableCampaign.scheduleType == 'WEEKLY'">
                 <div class="input-group col-sm-6 mb-3">
                   <div class="input-group-prepend">
-                    <span class="input-group-text" id="weeklyTime">Time</span>
+                    <span class="input-group-text bg-dark text-white" id="weeklyTime">Time</span>
                   </div>
                   <input type="text" class="form-control" aria-label="weeklyTime" aria-describedby="weeklyTime" [(ngModel)]="editableCampaign.time">
                 </div>
                 <div class="input-group col-sm-6 mb-3">
                   <div class="input-group-prepend">
-                    <span class="input-group-text" id="day">Day</span>
+                    <span class="input-group-text bg-dark text-white" id="day">Day</span>
                   </div>
-                  <input type="text" class="form-control" aria-label="day" aria-describedby="day" [(ngModel)]="day">
+                  <input type="text" class="form-control" aria-label="day" aria-describedby="day" [(ngModel)]="editableCampaign.dayOfWeek">
                 </div>
               </div>
               <!-- Monthly -->
               <div class="form-row" *ngIf="editableCampaign.scheduleType == 'MONTHLY'">
                 <div class="input-group col-sm-6 mb-3">
                   <div class="input-group-prepend">
-                    <span class="input-group-text" id="monthlyTime">Time</span>
+                    <span class="input-group-text bg-dark text-white" id="monthlyTime">Time</span>
                   </div>
                   <input type="text" class="form-control" aria-label="monthlyTime" aria-describedby="monthlyTime" [(ngModel)]="editableCampaign.time">
                 </div>
                 <div class="input-group col-sm-6 mb-3">
                   <div class="input-group-prepend">
-                    <span class="input-group-text" id="date">Date</span>
+                    <span class="input-group-text bg-dark text-white" id="date">Date</span>
                   </div>
-                  <input type="text" class="form-control" aria-label="date" aria-describedby="date" [(ngModel)]="editableCampaign.date">
+                  <input type="text" class="form-control" aria-label="date" aria-describedby="date" [(ngModel)]="editableCampaign.dateOfMonth">
                 </div>
               </div>
             </fieldset> 
@@ -225,7 +225,7 @@
           <!-- Compose message -->
           <h6 class="mb-4 bg-light p-2 rounded">Edit message:</h6>
           <div class="form-group">
-            <textarea class="form-control" formControlName="message" rows="5" [(ngModel)]="message"></textarea>
+            <textarea class="form-control" formControlName="message" rows="5" [(ngModel)]="editableCampaign.message"></textarea>
           </div>
           <hr class="mb-4">
           <h6 class="mb-4 bg-light p-2">Edit Groups to send to:</h6>

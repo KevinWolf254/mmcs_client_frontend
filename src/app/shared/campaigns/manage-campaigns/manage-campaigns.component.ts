@@ -31,8 +31,7 @@ export class ManageCampaignsComponent implements OnInit {
   
   private modalRefEdit: NgbModalRef;
   private modalRefDel: NgbModalRef;
-
-  // private editCampaign: Schedule;
+  
   private editableCampaign: Campaign;
   private week: string[] = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];  
   private form: FormGroup;
@@ -43,11 +42,6 @@ export class ManageCampaignsComponent implements OnInit {
   private message: string;
   private groupsOfSelectedCampaign: Group[] = [];
   private allgroups: Group[] = [];
-
-  // private time: string = '';
-  private day: string = '';
-  private scheduleType: string = '';
-  // private date: number = null;
 
   private deleteSchedule: Schedule;
   private deleteRow: number;
@@ -115,12 +109,10 @@ export class ManageCampaignsComponent implements OnInit {
 
   private search(event) {
     let searchParam = event.target.value.toLowerCase();
-
     // filter our data
     let temp = this.tempCampaigns.filter(schedule => {
       return schedule.jobName.toLowerCase().indexOf(searchParam) !== -1 || !searchParam;
     });
-
     // update the rows
     this.schedules = temp;
     // Whenever the filter changes, always go back to the first page
@@ -150,47 +142,11 @@ export class ManageCampaignsComponent implements OnInit {
 
   private openEditDialog(modal, schedule: Schedule, rowIndex){
     this.modalRefEdit = this.modalService.open(modal);
-    // this.editCampaign = new Schedule(schedule.jobName, schedule.groupName, schedule.scheduleTime, schedule.lastFiredTime, schedule.jobStatus, schedule.nextFireTime);
     this.editableCampaign = this._campaignService.getCampaignByName(schedule);
-    this.scheduleType = this.editableCampaign.scheduleType;
 
     this.groupsOfSelectedCampaign = [];
     this.groupsOfSelectedCampaign = this.editableCampaign.groups;
-
-    console.log("EditableCampaign TYPE: "+this.editableCampaign.scheduleType);
-    console.log("EditableCampaign TIME: "+this.editableCampaign.time);
-
-    // this.getCampaignDetails(schedule);
-    // let date = schedule.scheduleTime;
-    // if(schedule.groupName == 'DAILY'){
-    //   let hour = schedule.scheduleTime.getHours();
-    //   let minutes = schedule.scheduleTime.getMinutes()
-    //   this.time = ''+hour+':'+minutes;
-    // }else if(schedule.groupName == 'WEEKLY'){
-    //   let hour = schedule.scheduleTime.getHours();
-    //   let minutes = schedule.scheduleTime.getMinutes()
-    //   this.time = ''+hour+':'+minutes;
-    //   this.day = 'Fri'
-    // }else if(schedule.groupName == 'MONTHLY'){
-    //   let hour = schedule.scheduleTime.getHours();
-    //   let minutes = schedule.scheduleTime.getMinutes()
-    //   this.time = ''+hour+':'+minutes;
-    //   this.date = schedule.scheduleTime.getDate();
-    //   //.toISOString().slice(0,10);
-    // }
   }
-
-  // private getCampaignDetails(schedule: Schedule){
-  //   let campaign: Campaign = this._campaignService.getCampaignByName(schedule);
-
-  //   let title: string = campaign.title;
-  //   this.message = campaign.message;
-  //   this.groupsOfSelectedCampaign = [];
-  //   // this.groupsOfSelectedCampaign = campaign.groups;
-  //   for(let i=1; i<=10; i++){
-  //     this.groupsOfSelectedCampaign.push({id: i, name: 'Group '+i});
-  //   }
-  // }
 
   private addGroupToCampaign(){
     //find group with selected id

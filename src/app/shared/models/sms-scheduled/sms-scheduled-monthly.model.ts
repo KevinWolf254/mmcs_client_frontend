@@ -14,5 +14,5 @@ export class SmsScheduledMonthly extends SmsScheduled{
         let minute: number = this.time.minutes;
         // cron expression: fires monthly
         return "0 "+minute+" "+hour+" "+this.dayOfMonth+" * ?";
-    }
+    } 
 }
