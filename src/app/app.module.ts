@@ -15,6 +15,7 @@ import { GroupManagerService } from './shared/services/group/group-manager.servi
 import { ClientService } from './shared/services/client/client.service';
 import { CampaignService } from './shared/services/campaign/campaign.service';
 import { UnitsService } from './shared/services/units/units.service';
+import { SignInService } from './shared/services/sign-in/sign-in.service';
 
 
 
@@ -38,7 +39,8 @@ import { UnitsService } from './shared/services/units/units.service';
     GroupManagerService,
     ClientService,
     CampaignService,
-    UnitsService
+    UnitsService,
+    SignInService
   ],
   bootstrap: [
     AppComponent

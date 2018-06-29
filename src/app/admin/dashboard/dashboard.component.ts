@@ -22,10 +22,10 @@ export class DashboardComponent implements OnInit {
     private requests: number;
     private requestedAmount: number;
 
-    private monthlyCampaigns: number[] = [12, 19, 5, 3, 6, 8];
+    // private monthlyCampaigns: number[] = [12, 19, 5, 3, 6, 8];
     private expenditures: MonthlyExpenditure[] = [];
 
-  constructor(private modalService: NgbModal, private campaignService: CampaignService) {
+  constructor(private modalService: NgbModal, private campaignService: CampaignService, private unitsService: UnitsService) {
    }
 
   ngOnInit() {
@@ -59,7 +59,7 @@ export class DashboardComponent implements OnInit {
       this.requestedAmount = 10000;
   }
 
-  getMonthlyCampaigns(year: number){        
+  private getMonthlyCampaigns(year: number){        
       this.expenditures = this.campaignService.getExpenditures(year);    
       let onDemandLabel: string = '';
       let campaignsLabel: string = '';
@@ -87,7 +87,7 @@ export class DashboardComponent implements OnInit {
                 backgroundColor: 'rgba(75, 192, 192, 1)',
                 fill: false,
                 data: onDemandMonthlyData
-            }, 
+            },  
             {
                 label: campaignsLabel,
                 borderColor: 'rgba(75, 192, 192, 1)',
