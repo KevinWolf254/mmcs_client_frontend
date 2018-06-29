@@ -9,6 +9,7 @@ import { MonthlyExpenditure } from '../../models/monthly-expenditure.model';
 export class CampaignService {
 
   private campaigns: Schedule[] = [];
+  private expenditures: MonthlyExpenditure[] = [];
 
   constructor(private _groupService: GroupManagerService) {
     this.setCampaigns();
@@ -63,25 +64,19 @@ export class CampaignService {
     return new Campaign(1, title, scheduleType, message, oneTimeDate, dayOfWeek, dateOfMonth, time, groups);
   }
 
-  getMonthlyExpenditure(): MonthlyExpenditure[]{
-    let expenditures: MonthlyExpenditure[] = [];
+  getExpenditures(year: number): MonthlyExpenditure[]{
     let expenditure: MonthlyExpenditure;
     for(let i=1; i<=2; i++){
+      expenditure = new MonthlyExpenditure();
+
       expenditure.label = 'Expenditure: '+i;
-      if(i == 1){
-        for(let j=10; j<=12; j++){
-          if(j % 2 == 0)
-            expenditure.monthlyExpenditure.push(j + 5);
-          expenditure.monthlyExpenditure.push(j - 5);
-        }
+      for(let j=0; j<=11; j++){
+        if(j % 2 == 0 )
+          expenditure.monthlyExpenditure.push(j+5);
+        expenditure.monthlyExpenditure.push(j+10);
       }
-      for(let j=10; j<=12; j++){
-        if(j % 2 == 0)
-          expenditure.monthlyExpenditure.push(j - 5);
-        expenditure.monthlyExpenditure.push(j + 9);
-      }
-      expenditures.push(expenditure);
+      this.expenditures.push(expenditure);
     }
-    return expenditures;
+    return this.expenditures;
   }
 }

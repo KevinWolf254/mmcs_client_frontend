@@ -1,10 +1,10 @@
 
 <div class="container mt-5 form-signin">
-  <div class="card text-center shadow mb-5 rounded">
+  <div @slide class="card text-center shadow mb-5 rounded">
     <h4 class="card-header">
       BULK-SMS
     </h4>
-    <div [@myAwesomeAnimation]='state' class="card-body" (click)='animateMe()'>
+    <div class="card-body">
       <p class="text-center">
         Send to multiple clients and its easy to use and manage.
       </p>   
@@ -14,7 +14,7 @@
         <li>Create sms sales and marketing campaigns</li>
         <li>Schedule sms's to be sent at particular dates</li>
       </ul>  
-      <hr>
+      <hr> 
       <h5 class="text-center mb-3">Sign in</h5>
       <form class="mx-4 mb-3" [formGroup] = "signInForm" (ngSubmit) = "signIn(signInForm.value)">
         <!-- Email -->

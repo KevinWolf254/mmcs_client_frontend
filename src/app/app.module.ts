@@ -14,6 +14,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GroupManagerService } from './shared/services/group/group-manager.service';
 import { ClientService } from './shared/services/client/client.service';
 import { CampaignService } from './shared/services/campaign/campaign.service';
+import { UnitsService } from './shared/services/units/units.service';
 
 
 
@@ -36,7 +37,8 @@ import { CampaignService } from './shared/services/campaign/campaign.service';
     SharedGuard,
     GroupManagerService,
     ClientService,
-    CampaignService
+    CampaignService,
+    UnitsService
   ],
   bootstrap: [
     AppComponent
