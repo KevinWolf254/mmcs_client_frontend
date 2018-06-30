@@ -27,7 +27,7 @@ export class UserProfileComponent implements OnInit {
     .subscribe(
       password => this.changePassForm.controls.confirmNewPass.updateValueAndValidity()
     );
-  }
+  } 
 
   ngOnInit() {
     this.getUserProfile();
@@ -38,9 +38,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   changePassword(values){
-    // save new password
-    console.log("current pass: "+values.currentPass+
-    " new Pass: "+values.newPass+" confirm pass: "+values.confirmNewPass);
+    this.signInService.changePassword(values.currentPass, values.newPass);
     this.changePassForm.reset();
   } 
 }

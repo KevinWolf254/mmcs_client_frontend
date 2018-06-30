@@ -42,5 +42,4 @@ export class SignInComponent implements OnInit {
       this.router.navigate(['profile']);
     }
   }
-
 }

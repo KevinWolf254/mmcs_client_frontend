@@ -23,5 +23,9 @@ export class SignInService {
 
   getUserDetails(): UserDetails{
     return this.userDetails;
+  } 
+
+  changePassword(currentPass: string, newPass: string){
+    //send to client webApi
   }
 }
