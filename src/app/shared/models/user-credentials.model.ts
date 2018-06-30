@@ -10,5 +10,5 @@ export class UserCredentials extends User{
         this.credentials.active = active;
         this.credentials.role = role;
         this.credentials.lastSignIn = lastSignIn;
-    }
+    } 
 }

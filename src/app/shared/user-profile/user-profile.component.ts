@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { confirmPasswordValidator } from '../validators/confirm-password-validator';
 import { User } from '../models/user.model';
 import { UserCredentials } from '../models/user-credentials.model';
+import { SignInService } from '../services/sign-in/sign-in.service';
+import { UserDetails } from '../models/user-details.model';
 
 @Component({
   selector: 'app-user-profile',
@@ -11,11 +13,10 @@ import { UserCredentials } from '../models/user-credentials.model';
 })
 export class UserProfileComponent implements OnInit {
 
-  // private user: User = new User();
-  private user: UserCredentials;
+  private userDetails: UserDetails;
   private changePassForm: FormGroup;
 
-  constructor(private _fb: FormBuilder) { 
+  constructor(private _fb: FormBuilder, private signInService: SignInService) { 
     this.changePassForm = _fb.group({
       'currentPass': [null, Validators.required],
       'newPass': [null,Validators.compose([Validators.required, Validators.minLength(8)])],
@@ -33,11 +34,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   getUserProfile(){
-    //retrieve user information 
-    let date: string = (new Date().toISOString().slice(0,10));
-    this.user = new UserCredentials(1, 'Kanyi', 'JavaGuru', 'admin@aeon-io.co.ke', 'Admin', true, date);
-    // this.user.credentials.active = true;
-    // this.user.credentials.lastSignIn = new Date();
+    this.userDetails = this.signInService.getUserDetails();
   }
 
   changePassword(values){

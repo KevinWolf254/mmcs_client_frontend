@@ -23,7 +23,6 @@ export class DashboardComponent implements OnInit {
     private requests: number;
     private requestedAmount: number;
 
-    // private monthlyCampaigns: number[] = [12, 19, 5, 3, 6, 8];
     private expenditures: MonthlyExpenditure[] = [];
 
   constructor(private modalService: NgbModal, private campaignService: CampaignService, private unitsService: UnitsService) {
@@ -33,19 +32,22 @@ export class DashboardComponent implements OnInit {
       this.getAvailableUnits();
       this.getSpentUnits();
       this.calculatePrevious10YearsForSelect();
-      this.getMonthlyCampaigns(this.currentYear);
+      this.getMonthlyExpenditures(this.currentYear);
       this.getPendingRequests();
   }
 
   /*Retrieve units available
   shared with campaign component 
   to verify if units are available to send sms */
-  getAvailableUnits(){
-      this.units = 10000;
+  private getAvailableUnits(){
+      this.units = this.unitsService.getUnitsAvailable();
   }
   
   getSpentUnits(){
-      this.unitsSpent = 5000;
+      let currentDate: Date = new Date();
+      let month: number = currentDate.getMonth();
+
+      this.unitsSpent = this.unitsService.getUnitsSpentForMonth(month);
   }
 
   private calculatePrevious10YearsForSelect(){
@@ -55,12 +57,13 @@ export class DashboardComponent implements OnInit {
       }
   }
 
-  getPendingRequests(){
-      this.requests = 1;
-      this.requestedAmount = 10000;
+  private getPendingRequests(){
+      let response = this.unitsService.getPendingRequestsForUnits();
+      this.requests = response.requests;
+      this.requestedAmount = response.totalRequestedAmount;
   }
 
-  private getMonthlyCampaigns(year: number){        
+  private getMonthlyExpenditures(year: number){        
       this.expenditures = this.campaignService.getExpenditures(year);    
       let onDemandLabel: string = '';
       let campaignsLabel: string = '';
@@ -100,8 +103,8 @@ export class DashboardComponent implements OnInit {
     });
   }
   
-  private onSelectYear(event){
-      this.getMonthlyCampaigns(event.target.value);
+  private changeMonthlyExpenditure(event){
+      this.getMonthlyExpenditures(event.target.value);
   }
 
   private openUnitsRequestModal(){

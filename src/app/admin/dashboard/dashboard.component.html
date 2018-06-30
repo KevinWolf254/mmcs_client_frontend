@@ -63,7 +63,8 @@
                 </div>
                 <div class="px-3 bd-highlight"> | </div>
                 <div class="px-2 bd-highlight">
-                  <select class="form-control form-control-sm px-3" id="selectYear" (change)="onSelectYear($event)">
+                  <select class="form-control form-control-sm px-3" id="selectYear" (change)="changeMonthlyExpenditure
+                  ($event)">
                     <option *ngFor="let year of years" [value]="year">{{year}}</option>
                   </select>
                 </div>

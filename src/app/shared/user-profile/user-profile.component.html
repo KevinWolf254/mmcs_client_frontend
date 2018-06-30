@@ -36,40 +36,41 @@
                       </div>
                       <div class="col-md-7">
                         <fieldset disabled>
-                          <!-- First Name -->
-                          <div class="input-group my-2">
+                          <!-- User Names -->
+                          <div class="input-group">
                             <div class="input-group-prepend">
                               <span class="input-group-text bg-info text-white"><i class="fa fa-user fa-lg"></i></span>
                             </div>
-                            <input type="text" class="form-control" [ngModel]="user.firstName">
+                            <input type="text" class="form-control" [ngModel]="userDetails.firstName">
+                            <input type="text" class="form-control" [ngModel]="userDetails.lastName">
                           </div>
-                          <!-- Other Names -->
+                          <!-- organisation -->
                           <div class="input-group my-2">
                             <div class="input-group-prepend">
-                              <span class="input-group-text bg-info text-white"><i class="fa fa-user-plus px-0"></i></span>
+                              <span class="input-group-text bg-info text-white"><i class="fa fa-home"></i></span>
                             </div>
-                            <input type="text" class="form-control" [ngModel]="user.lastName">
+                            <input type="text" class="form-control" [ngModel]="userDetails.organisation">
                           </div>
                           <!-- Email -->
                           <div class="input-group my-2">
                             <div class="input-group-prepend">
                               <span class="input-group-text bg-info text-white"><i class="fa fa-envelope"></i></span>
                             </div>
-                            <input type="text" class="form-control" [ngModel]="user.email">
+                            <input type="text" class="form-control" [ngModel]="userDetails.email">
                           </div>
                           <!-- Role -->
                           <div class="input-group my-2">
                             <div class="input-group-prepend">
                               <span class="input-group-text bg-info text-white"><i class="fa fa-cog"></i></span>
                             </div>
-                            <input type="text" class="form-control" [ngModel]="user.credentials.role">
+                            <input type="text" class="form-control" [ngModel]="userDetails.credentials.role">
                           </div>
                           <!-- Last Sign In -->
                           <div class="input-group my-2">
                             <div class="input-group-prepend">
                               <span class="input-group-text bg-info text-white"><i class="fa fa-calendar"></i></span>
                             </div>
-                            <input type="text" class="form-control" [ngModel]="user.credentials.lastSignIn">
+                            <input type="text" class="form-control" [ngModel]="userDetails.credentials.lastSignIn">
                           </div>
                         </fieldset>
                       </div>

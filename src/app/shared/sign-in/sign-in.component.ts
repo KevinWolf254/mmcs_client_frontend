@@ -33,7 +33,7 @@ export class SignInComponent implements OnInit {
     //save user role
     //if user role is admin route to dashboard
     //if user role is user, route to my profile
-    let role: string = this.signinService.sigin(form.email, form.password);
+    let role: string = this.signinService.sigin(form.email, form.password).credentials.role;
     if(role == 'admin'){      
       localStorage.setItem('userRole', role);
       this.router.navigate(['dashboard']);
