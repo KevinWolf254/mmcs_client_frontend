@@ -17,7 +17,7 @@ export class UnitsComponent implements OnInit {
   private email: string;
   private userDetails: UserDetails;
 
-  constructor(public activeModal: NgbActiveModal, private _fb: FormBuilder, private signInService: SignInService) { 
+  constructor(public activeModal: NgbActiveModal, private _fb: FormBuilder, private signInService: SignInService, private unitsService: UnitsService) { 
     this.requestForm = _fb.group({
       'units': [null, Validators.required],
       'mpesaTransNo': [null, Validators.required]
@@ -41,7 +41,7 @@ export class UnitsComponent implements OnInit {
     // @Param this.email
     console.log("Organisation: "+this.organisation+" Email: "+this.email+
     " mpesaTransNo: "+mpesaTransNo+" Units: "+units);
-    
+    this.unitsService.sendRequestForUnitsToClientWebApi(this.userDetails, value.units, value.mpesaTransNo);
     this.requestForm.reset();
     this.activeModal.close();
   }
