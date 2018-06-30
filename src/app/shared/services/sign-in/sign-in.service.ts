@@ -19,7 +19,7 @@ export class SignInService {
       this.userDetails = new UserDetails(2, 'Jane', 'Doe', 'user@aeon-tech.co.ke', 'user', true, '2018-06-30', 'aeon-tech');
     }
     return this.userDetails;
-  }
+  } 
 
   getUserDetails(): UserDetails{
     return this.userDetails;

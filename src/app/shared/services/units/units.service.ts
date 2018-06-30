@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { UserDetails } from '../../models/user-details.model';
 
 @Injectable()
 export class UnitsService {
@@ -31,12 +32,11 @@ export class UnitsService {
     return this.unitsSpentCurrentMonth = 2500;
   }
 
-  sendRequestForUnitsToClientWebApi(requestedUnits: number, mpesaTransNo: string){
+  sendRequestForUnitsToClientWebApi(userDetails: UserDetails, requestedUnits: number, mpesaTransNo: string){
     //sends request to client webApi
     //client webapi retrieves org name and id and admin email
     //and client webapi sends the request to aeontech webapi
     //aeontech responds to client with 'request received'
-
   }
 
   getPendingRequestsForUnits(){
