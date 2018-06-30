@@ -3,6 +3,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserDetails } from '../../shared/models/user-details.model';
 import { SignInService } from '../../shared/services/sign-in/sign-in.service';
+import { UnitsService } from '../../shared/services/units/units.service';
 
 @Component({
   selector: 'app-units',
@@ -14,8 +15,9 @@ export class UnitsComponent implements OnInit {
   private requestForm: FormGroup;
   private organisation: string;
   private email: string;
+  private userDetails: UserDetails;
 
-  constructor(public activeModal: NgbActiveModal, private _fb: FormBuilder) {
+  constructor(public activeModal: NgbActiveModal, private _fb: FormBuilder, private signInService: SignInService) { 
     this.requestForm = _fb.group({
       'units': [null, Validators.required],
       'mpesaTransNo': [null, Validators.required]
@@ -24,6 +26,7 @@ export class UnitsComponent implements OnInit {
 
   ngOnInit() {
     this.getAdminDetails();
+    this.userDetails = this.signInService.getUserDetails();
   }
 
   /*Send request
@@ -45,8 +48,8 @@ export class UnitsComponent implements OnInit {
 
   /*Retrieve admin details on bootstrap*/
   private getAdminDetails(){
-    this.organisation = "Aeon-I/O; tech that transends time";
-    this.email = "admin@aeon-io.co.ke";
+    this.organisation = this.userDetails.organisation;//"Aeon-I/O; tech that transends time";
+    this.email = this.userDetails.email;//"admin@aeon-io.co.ke";
   }
 
   
