@@ -16,35 +16,35 @@ import { Campaign } from '../../models/campaign.model';
 })
 export class ManageCampaignsComponent implements OnInit {
 
-  private schedules: Schedule[] = [];
+  schedules: Schedule[] = [];
 
-  private perPage: number;
-  private perPageNos: number[] = [10, 25, 50, 100];
-  private tempCampaigns = [];
+  perPage: number;
+  perPageNos: number[] = [10, 25, 50, 100];
+  tempCampaigns = [];
   @ViewChild(DatatableComponent) table: DatatableComponent;
-  private customPagerIcons = {
+  customPagerIcons = {
     sortAscending: 'fa fa-sort-asc', sortDescending: 'fa fa-sort-desc', pagerLeftArrow: 'fa fa-chevron-left', 
     pagerRightArrow: 'fa fa-chevron-right', pagerPrevious: 'fa fa-step-backward', pagerNext: 'fa fa-step-forward'
   };
 
-  private scheduleStopped = {};
+  scheduleStopped = {};
   
-  private modalRefEdit: NgbModalRef;
-  private modalRefDel: NgbModalRef;
+  modalRefEdit: NgbModalRef;
+  modalRefDel: NgbModalRef;
   
-  private editableCampaign: Campaign;
-  private week: string[] = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];  
-  private form: FormGroup;
-  private defaultTime = {hour: 12, minute: 30};
-  private meridian: boolean = true;
+  editableCampaign: Campaign;
+  week: string[] = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];  
+  form: FormGroup;
+  defaultTime = {hour: 12, minute: 30};
+  meridian: boolean = true;
   
-  private selected = 0;
-  private message: string;
-  private groupsOfSelectedCampaign: Group[] = [];
-  private allgroups: Group[] = [];
+  selected = 0;
+  message: string;
+  groupsOfSelectedCampaign: Group[] = [];
+  allgroups: Group[] = [];
 
-  private deleteSchedule: Schedule;
-  private deleteRow: number;
+  deleteSchedule: Schedule;
+  deleteRow: number;
 
   toggleMeridian() {
       this.meridian = !this.meridian;
@@ -97,17 +97,17 @@ export class ManageCampaignsComponent implements OnInit {
     );
   }
 
-  private getSchedules(){
+  getSchedules(){
     this.schedules = this._campaignService.getCampaigns();
     // cache our schedules
     this.tempCampaigns = [...this.schedules];
   }
 
-  private changePageEntries(event){
+  changePageEntries(event){
     this.perPage = event.target.value;
   }
 
-  private search(event) {
+  search(event) {
     let searchParam = event.target.value.toLowerCase();
     // filter our data
     let temp = this.tempCampaigns.filter(schedule => {
@@ -120,27 +120,27 @@ export class ManageCampaignsComponent implements OnInit {
   }
 
   /*Pauses a running schedule */
-  private pauseSchedule(schedule, rowIndex){
+  pauseSchedule(schedule, rowIndex){
     console.log("Schedule: "+schedule.jobName+" stopped!");
     this.schedules[rowIndex].jobStatus = "PAUSE";
     this.scheduleStopped[rowIndex] = true;
   }
 
   /*Runs a stopped/scheduled schedule */
-  private runSchedule(schedule, rowIndex){    
+  runSchedule(schedule, rowIndex){    
     console.log("Schedule: "+schedule.jobName+" resumed!");
     this.schedules[rowIndex].jobStatus = "RUNNING";
     this.scheduleStopped[rowIndex] = false;
   }
 
   /*Unschedules a running schedule */
-  private stopSchedule(schedule, rowIndex){
+  stopSchedule(schedule, rowIndex){
     console.log("Schedule: "+schedule.jobName+" stopped!");
     this.schedules[rowIndex].jobStatus = "SCHEDULED";
     this.scheduleStopped[rowIndex] = false;
   }
 
-  private openEditDialog(modal, schedule: Schedule, rowIndex){
+  openEditDialog(modal, schedule: Schedule, rowIndex){
     this.modalRefEdit = this.modalService.open(modal);
     this.editableCampaign = this._campaignService.getCampaignByName(schedule);
 
@@ -148,7 +148,7 @@ export class ManageCampaignsComponent implements OnInit {
     this.groupsOfSelectedCampaign = this.editableCampaign.groups;
   }
 
-  private addGroupToCampaign(){
+  addGroupToCampaign(){
     //find group with selected id
     let group: Group = this._groupService.findGroup(this.selected);
     //check if recipients has a group of recipients added to it
@@ -161,14 +161,14 @@ export class ManageCampaignsComponent implements OnInit {
     // this.form.get('group').setValue(0);
   }
 
-  private removeDuplicate(): Group[]{
+  removeDuplicate(): Group[]{
     return this.groupsOfSelectedCampaign = this.groupsOfSelectedCampaign.filter((group: Group)=>{
         return group.id != this.selected;
     });
   }
 
   /**removes group from array of selected groups */
-  private remove(removeGroup: Group){
+  remove(removeGroup: Group){
     this.groupsOfSelectedCampaign.forEach((group, index)=>{
       if(group.id == removeGroup.id){
         this.groupsOfSelectedCampaign.splice(index, 1);
@@ -176,17 +176,17 @@ export class ManageCampaignsComponent implements OnInit {
     }); 
   } 
 
-  private sendEditedCampaign(form){
+  sendEditedCampaign(form){
 
   }
 
-  private openDeletionDialog(modal, schedule, rowIndex){
+  openDeletionDialog(modal, schedule, rowIndex){
     this.deleteSchedule = new Schedule(schedule.jobName, schedule.groupName, schedule.scheduleTime, schedule.lastFiredTime, schedule.jobStatus, schedule.nextFireTime);
     this.deleteRow = rowIndex;    
     this.modalRefDel = this.modalService.open(modal);
   }
 
-  private deleteCampaign(){
+  deleteCampaign(){
     this.schedules.splice(this.deleteRow, 1);
     this.schedules = [...this.schedules];
     this.tempCampaigns = [...this.schedules];

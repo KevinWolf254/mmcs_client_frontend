@@ -14,7 +14,7 @@ import { SignInService } from '../services/sign-in/sign-in.service';
 })
 export class SignInComponent implements OnInit {
 
-  private signInForm: FormGroup;
+  signInForm: FormGroup;
 
   constructor(private _fb: FormBuilder, private router: Router, private signinService: SignInService) {
     this.signInForm = _fb.group({

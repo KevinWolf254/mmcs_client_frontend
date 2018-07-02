@@ -13,15 +13,15 @@ import { GroupManagerService } from '../services/group/group-manager.service';
 })
 export class ClientsComponent implements OnInit {
 
-  private form: FormGroup;
-  private fileForm: FormGroup;
-  private selectedGroupForSingleClient: number = 0;
-  private selectedGroupForMultiClients: number = 0;
-  private groups: Group[] = [];
-  private phoneNoExists: boolean = false;
+  form: FormGroup;
+  fileForm: FormGroup;
+  selectedGroupForSingleClient: number = 0;
+  selectedGroupForMultiClients: number = 0;
+  groups: Group[] = [];
+  phoneNoExists: boolean = false;
 
-  private _success = new Subject<string>();
-  private successMessage: string;
+  _success = new Subject<string>();
+  successMessage: string;
 
   constructor(private _fb: FormBuilder, private _groupManager: GroupManagerService) { 
     this.form = _fb.group({
@@ -43,36 +43,36 @@ export class ClientsComponent implements OnInit {
     ).subscribe(() => this.successMessage = null);
   }
 
-  private addClientToGroup(form){
+  addClientToGroup(form){
     console.log(form.phone);
     let selectedGroup = this.findGroupInList();
     this._success.next("Successfully added "+form.phone+" to "+selectedGroup.name);
     this.resetSingleClientForm();
   }
 
-  private findGroupInList(): Group{
+  findGroupInList(): Group{
     let foundGroup: Group = this.groups.find((group: Group) =>{
       return group.id == this.selectedGroupForSingleClient;
     });
     return foundGroup;
   }
 
-  private addClientsToGroup(form){
+  addClientsToGroup(form){
     this.resetMultipleClientForm();
   }
 
-  private check(phone){
+  check(phone){
     console.log(phone);
     this.phoneNoExists = true;
   } 
 
-  private resetSingleClientForm(){
+  resetSingleClientForm(){
     this.form.reset();
     this.phoneNoExists = false;
     this.form.get("group").setValue(0);
   }
 
-  private resetMultipleClientForm(){
+  resetMultipleClientForm(){
     this.fileForm.reset();
     this.fileForm.get("group").setValue(0);
   }

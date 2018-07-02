@@ -8,19 +8,19 @@ import { Router } from '@angular/router';
 })
 export class TopNavbarComponent implements OnInit {
 
-  private isCollapsed: boolean = true;
+  isCollapsed: boolean = true;
 
   constructor(private router: Router) { }
 
   ngOnInit() {
   }
 
-  private signout(){
+  signout(){
     localStorage.removeItem('userRole');
     this.router.navigate(['sigin']);
   }
 
-  private isAdmin(): boolean{
+  isAdmin(): boolean{
     if(localStorage.getItem('userRole') == 'admin')
       return true;
     return false;

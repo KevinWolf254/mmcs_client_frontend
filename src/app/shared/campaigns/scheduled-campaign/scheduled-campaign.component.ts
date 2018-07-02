@@ -17,16 +17,16 @@ import { GroupManagerService } from '../../services/group/group-manager.service'
 })
 export class ScheduledCampaignComponent implements OnInit {
 
-  private selected = 0;
-  private groups: Group[] = [];
-  private selectedRecipients: Group[] = [];
-  private week: string[] = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+  selected = 0;
+  groups: Group[] = [];
+  selectedRecipients: Group[] = [];
+  week: string[] = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
-  private recipientsIds: number[] = [];  
-  private form: FormGroup; 
+  recipientsIds: number[] = [];  
+  form: FormGroup; 
 
-  private defaultTime = {hour: 12, minute: 30};
-  private meridian: boolean = true;
+  defaultTime = {hour: 12, minute: 30};
+  meridian: boolean = true;
 
   toggleMeridian() {
       this.meridian = !this.meridian;
@@ -94,14 +94,14 @@ export class ScheduledCampaignComponent implements OnInit {
   }
 
   /*retrieves all groups from web service to select */
-  private getGroups(){
+  getGroups(){
     let receivedGroup: Group;
     for(let i=1; i<11; i++){
         receivedGroup = new Group(i, "Group "+i);
         this.groups.push(receivedGroup);
     } 
   } 
-  private add(){
+  add(){
     //find group with selected id
     let group: Group = this._groupManager.findGroup(this.selected);
     //check if recipients has a group of recipients added to it
@@ -112,14 +112,14 @@ export class ScheduledCampaignComponent implements OnInit {
     this.selectedRecipients.push(group);
   }
 
-  private removeDuplicate(): Group[]{
+  removeDuplicate(): Group[]{
     return this.selectedRecipients = this.selectedRecipients.filter((group: Group)=>{
         return group.id != this.selected;
     });
   }
 
   /**removes group from array of selected groups */
-  private remove(removeGroup: Group){
+  remove(removeGroup: Group){
     this.selectedRecipients.forEach((group, index)=>{
       if(group.id == removeGroup.id){
         this.selectedRecipients.splice(index, 1);
@@ -127,7 +127,7 @@ export class ScheduledCampaignComponent implements OnInit {
     }); 
   } 
 
-  private sendSms(value){
+  sendSms(value){
     this.selectedRecipients.forEach((group, index)=>{
       this.recipientsIds.push(group.id);
     });
@@ -137,17 +137,19 @@ export class ScheduledCampaignComponent implements OnInit {
     this.resetDataValues();
   }
    
-  private resetForm(){
+  resetForm(){
     this.form.reset();
     this.form.get("group").setValue(0);
   }
 
-  private resetDataValues(){
+  resetDataValues(){
     this.selectedRecipients = [];
     this.recipientsIds = [];
   }
 
-  private sendScheduledSms(form){
+  checkName(){}
+
+  sendScheduledSms(form){
     // Scheduled at particular date
     let campaignName: string = form.campaignName;
     let smsMessage: string = form.message;

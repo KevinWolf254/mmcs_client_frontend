@@ -12,8 +12,8 @@ import { UnitsService } from '../../shared/services/units/units.service';
 })
 export class UnitsComponent implements OnInit {
 
-  private requestForm: FormGroup;
-  private userDetails: UserDetails;
+  requestForm: FormGroup;
+  userDetails: UserDetails;
 
   constructor(public activeModal: NgbActiveModal, private _fb: FormBuilder, private signInService: SignInService, private unitsService: UnitsService) { 
     this.requestForm = _fb.group({
@@ -28,7 +28,7 @@ export class UnitsComponent implements OnInit {
 
   /*Send request
   @Param value to get value.units */
-  private sendRequest(value){
+  sendRequest(value){
     this.unitsService.sendRequestForUnitsToClientWebApi(this.userDetails, value.units, value.mpesaTransNo);
     this.requestForm.reset();
     this.activeModal.close();

@@ -5,7 +5,7 @@ import { GroupManagerService } from '../group/group-manager.service';
 @Injectable()
 export class ClientService {
 
-  private clients: ClientTeleco[] = [];
+  clients: ClientTeleco[] = [];
 
   constructor(private _groupManager: GroupManagerService) { }
 

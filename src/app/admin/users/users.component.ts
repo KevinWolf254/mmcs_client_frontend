@@ -13,22 +13,22 @@ import { DatatableComponent } from '@swimlane/ngx-datatable';
 })
 export class UsersComponent implements OnInit {
 
-  private users: UserCredentials[] = [];
-  private deleteUser: UserCredentials;
-  private deleteRow: number = null;
-  private perPage: number;
-  private perPageNos: number[] = [10, 25, 50, 100];
-  private edit = {};
-  private email: string = '';
-  private form: FormGroup;
-  private modalRefDel: NgbModalRef;
-  private modalRefReset: NgbModalRef;
+  users: UserCredentials[] = [];
+  deleteUser: UserCredentials;
+  deleteRow: number = null;
+  perPage: number;
+  perPageNos: number[] = [10, 25, 50, 100];
+  edit = {};
+  email: string = '';
+  form: FormGroup;
+  modalRefDel: NgbModalRef;
+  modalRefReset: NgbModalRef;
 
-  private temp = [];
+  temp = [];
   @ViewChild(DatatableComponent) table: DatatableComponent;
   
   // Custom icons for ngx-datatable
-  private customPagerIcons = {
+  customPagerIcons = {
     sortAscending: 'fa fa-sort-asc', sortDescending: 'fa fa-sort-desc', pagerLeftArrow: 'fa fa-chevron-left', 
     pagerRightArrow: 'fa fa-chevron-right', pagerPrevious: 'fa fa-step-backward', pagerNext: 'fa fa-step-forward'
   };
@@ -46,7 +46,7 @@ export class UsersComponent implements OnInit {
   }
 
   // retrieves all users from server
-  private getUsers(){
+  getUsers(){
     let user: UserCredentials;
     let date: string = (new Date().toISOString().slice(0,10));
     for(let i=1; i<=50; i++){
@@ -57,57 +57,57 @@ export class UsersComponent implements OnInit {
     this.temp = [...this.users];
   }
 
-  private editUser(rowIndex){
+  editUser(rowIndex){
     this.edit[rowIndex] = true;
   }
 
-  private setFName(event, rowIndex){
+  setFName(event, rowIndex){
     this.users[rowIndex]["firstName"] = event.target.value;
   }
 
-  private setLName(event, rowIndex){
+  setLName(event, rowIndex){
     this.users[rowIndex]["lastName"] = event.target.value;
   }
 
-  private setRole(event, rowIndex){
+  setRole(event, rowIndex){
     this.users[rowIndex].credentials.role = event.target.value;
   }
 
-  private updateUser(rowIndex){
+  updateUser(rowIndex){
     this.users = [...this.users];
     this.edit[rowIndex] = false;
   }
   
-  private openReset(modal, user, rowIndex){
+  openReset(modal, user, rowIndex){
     this.form.reset(); 
     this.modalRefReset = this.modalService.open(modal);
     this.email = user.email;
   }
 
-  private reset(form){
+  reset(form){
     console.log("User email: "+this.email);
     console.log("Reset Pass: "+form.resetPass);
     this.form.reset(); 
     this.modalRefReset.close();   
   }
 
-  private confirmDelete(modal, user, rowIndex){
+  confirmDelete(modal, user, rowIndex){
     this.deleteUser = new UserCredentials(user.id, user.firstName, user.lastName, user.email, user.credentials.role, user.credentials.active, user.credentials.lastSignIn);
     this.deleteRow = rowIndex;    
     this.modalRefDel = this.modalService.open(modal);
   }
 
-  private delete(){
+  delete(){
     this.users.splice(this.deleteRow, 1);
     this.users = [...this.users];
     this.modalRefDel.close(); 
   }
 
-  private changePageEntries(event){
+  changePageEntries(event){
     this.perPage = event.target.value;
   }
 
-  private search(event) {
+  search(event) {
     let searchParam = event.target.value.toLowerCase();
 
     // filter our data

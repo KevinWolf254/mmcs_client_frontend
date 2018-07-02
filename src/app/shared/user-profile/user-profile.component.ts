@@ -13,8 +13,8 @@ import { UserDetails } from '../models/user-details.model';
 })
 export class UserProfileComponent implements OnInit {
 
-  private userDetails: UserDetails;
-  private changePassForm: FormGroup;
+  userDetails: UserDetails;
+  changePassForm: FormGroup;
 
   constructor(private _fb: FormBuilder, private signInService: SignInService) { 
     this.changePassForm = _fb.group({

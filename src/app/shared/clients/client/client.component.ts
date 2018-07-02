@@ -11,13 +11,13 @@ import { debounceTime } from 'rxjs/operators';
 })
 export class ClientComponent implements OnInit {
 
-  private form: FormGroup;
-  private fileForm: FormGroup;
+  form: FormGroup;
+  fileForm: FormGroup;
 
-  private codes: string[] = ["+254", "+255", "+256", "+257"];
+  codes: string[] = ["+254", "+255", "+256", "+257"];
 
-  private _success = new Subject<string>();
-  private successMessage: string;
+  _success = new Subject<string>();
+  successMessage: string;
 
   constructor(private _fb: FormBuilder) { 
     this.form = _fb.group({
@@ -37,15 +37,12 @@ export class ClientComponent implements OnInit {
     ).subscribe(() => this.successMessage = null);
   }
 
-  private createClient(form){
-    console.log(form.names);
-    console.log(form.code);
-    console.log(form.phone);    
+  createClient(form){   
     this._success.next("Successfully created Client "+form.names+" Phone No: "+form.phone);
     this.form.reset();
   }
 
-  private createClients(form){
+  createClients(form){
     this._success.next("Successfully created Clients");
     this.fileForm.reset();
   }

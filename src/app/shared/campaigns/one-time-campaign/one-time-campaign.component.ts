@@ -12,12 +12,12 @@ import { GroupManagerService } from '../../services/group/group-manager.service'
 })
 export class OneTimeCampaignComponent implements OnInit{
 
-  private selected = 0;
-  private groups: Group[] = [];
-  private selectedRecipients: Group[] = [];
+  selected = 0;
+  groups: Group[] = [];
+  selectedRecipients: Group[] = [];
 
-  private recipientsIds: number[] = [];  
-  private form: FormGroup;
+  recipientsIds: number[] = [];  
+  form: FormGroup;
 
   constructor(private _fb: FormBuilder, private _groupManager: GroupManagerService) {
     this.form = _fb.group({
@@ -30,7 +30,7 @@ export class OneTimeCampaignComponent implements OnInit{
     this.groups = this._groupManager.getGroups();
   }   
 
-  private add(){
+  add(){
     //find group with selected id
     let group: Group = this._groupManager.findGroup(this.selected);
     //check if recipients has a group of recipients added to it
@@ -41,14 +41,14 @@ export class OneTimeCampaignComponent implements OnInit{
     this.selectedRecipients.push(group);
   }
 
-  private removeDuplicate(): Group[]{
+  removeDuplicate(): Group[]{
     return this.selectedRecipients = this.selectedRecipients.filter((group: Group)=>{
         return group.id != this.selected;
     });
   }
 
   /**removes group from array of selected groups */
-  private remove(removeGroup: Group){
+  remove(removeGroup: Group){
     this.selectedRecipients.forEach((group, index)=>{
       if(group.id == removeGroup.id){
         this.selectedRecipients.splice(index, 1);
@@ -56,7 +56,7 @@ export class OneTimeCampaignComponent implements OnInit{
     });
   } 
 
-  private sendSms(formValues){
+  sendSms(formValues){
     this.selectedRecipients.forEach((group, index)=>{
       this.recipientsIds.push(group.id);
     });
@@ -66,12 +66,12 @@ export class OneTimeCampaignComponent implements OnInit{
     this.resetDataValues();
   }
    
-  private resetForm(){
+  resetForm(){
     this.form.reset();
     this.form.get("group").setValue(0);
   }
 
-  private resetDataValues(){
+  resetDataValues(){
     this.selectedRecipients = [];
     this.recipientsIds = [];
   }

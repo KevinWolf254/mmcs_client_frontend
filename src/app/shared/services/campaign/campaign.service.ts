@@ -8,8 +8,8 @@ import { MonthlyExpenditure } from '../../models/monthly-expenditure.model';
 @Injectable()
 export class CampaignService {
 
-  private campaigns: Schedule[] = [];
-  private expenditures: MonthlyExpenditure[] = [];
+  campaigns: Schedule[] = [];
+  expenditures: MonthlyExpenditure[] = [];
 
   constructor(private _groupService: GroupManagerService) {
     this.setCampaigns();

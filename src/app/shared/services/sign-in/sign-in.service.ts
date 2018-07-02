@@ -4,8 +4,8 @@ import { UserDetails } from '../../models/user-details.model';
 @Injectable()
 export class SignInService {
   
-  private admin = {email:"admin@aeon-tech.co.ke", password: "admin123", role: "admin"};
-  private user = {email:"user@aeon-tech.co.ke", password: "user123", role: "user"};
+  admin = {email:"admin@aeon-tech.co.ke", password: "admin123", role: "admin"};
+  user = {email:"user@aeon-tech.co.ke", password: "user123", role: "user"};
 
   userDetails: UserDetails;
 

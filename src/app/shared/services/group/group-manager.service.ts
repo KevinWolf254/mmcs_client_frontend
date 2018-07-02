@@ -4,7 +4,7 @@ import { Group } from '../../models/group.model';
 @Injectable()
 export class GroupManagerService {
 
-  private groups: Group[] = [];
+  groups: Group[] = [];
 
   constructor() {    
     this.setGroups();

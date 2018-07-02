@@ -15,32 +15,32 @@ import { ClientService } from '../../services/client/client.service';
 })
 export class ClientGroupsComponent implements OnInit {
 
-  private entriesPerPage: number;
-  private perPageNos: number[] = [10, 25, 50, 100];
-  private tempClients: ClientTeleco[] = [];
+  entriesPerPage: number;
+  perPageNos: number[] = [10, 25, 50, 100];
+  tempClients: ClientTeleco[] = [];
   @ViewChild(DatatableComponent) table: DatatableComponent;
-  private customPagerIcons = {
+  customPagerIcons = {
     sortAscending: 'fa fa-sort-asc', sortDescending: 'fa fa-sort-desc', pagerLeftArrow: 'fa fa-chevron-left', 
     pagerRightArrow: 'fa fa-chevron-right', pagerPrevious: 'fa fa-step-backward', pagerNext: 'fa fa-step-forward'
   };
 
-  private groupClients: ClientTeleco[] = [];
+  groupClients: ClientTeleco[] = [];
 
-  private selected: number = 0;
-  private groups: Group[] = [];
-  private createForm: FormGroup;
-  private deleteForm: FormGroup;
+  selected: number = 0;
+  groups: Group[] = [];
+  createForm: FormGroup;
+  deleteForm: FormGroup;
 
-  private selectedGroupId: number = 0;
+  selectedGroupId: number = 0;
   
-  private editableClientModal: NgbModalRef;
-  private removableClientModal: NgbModalRef;
+  editableClientModal: NgbModalRef;
+  removableClientModal: NgbModalRef;
 
-  private editableClient: ClientTeleco;
-  private editableRow: number;
+  editableClient: ClientTeleco;
+  editableRow: number;
 
-  private removableClient: ClientTeleco = null;
-  private removableRow: number;
+  removableClient: ClientTeleco = null;
+  removableRow: number;
 
   constructor(private _fb: FormBuilder, private modalService: NgbModal, private _groupManager: GroupManagerService, private _clientService: ClientService) { 
     this.createForm = _fb.group({
@@ -57,22 +57,22 @@ export class ClientGroupsComponent implements OnInit {
     this.entriesPerPage = this.perPageNos[0];
   } 
 
-  private getGroupClients(event){
+  getGroupClients(event){
     let groupId = event.target.value;
     this.getGroupClientsFromWebApi(groupId);
   }
 
-  private getGroupClientsFromWebApi(groupId: number){
+  getGroupClientsFromWebApi(groupId: number){
     this.groupClients = this._clientService.findClientsByGroupId(groupId);
     // cache our clients
     this.tempClients = [...this.groupClients];
   }
 
-  private changeEntriesPerPage(event){
+  changeEntriesPerPage(event){
     this.entriesPerPage = event.target.value;
   }
 
-  private searchClient(event) {
+  searchClient(event) {
 
     let searchParam = event.target.value.toLowerCase();
 
@@ -87,33 +87,33 @@ export class ClientGroupsComponent implements OnInit {
     this.table.offset = 0;
   }
 
-  private createGroup(form){
+  createGroup(form){
     this._groupManager.createGroup(form.name);
     this.createForm.reset();
   }
 
-  private openClientDetailsDialog(clientDetailsModal, selectedClient: ClientTeleco, rowIndex){
+  openClientDetailsDialog(clientDetailsModal, selectedClient: ClientTeleco, rowIndex){
     this.editableClient = new ClientTeleco(selectedClient.clientId, selectedClient.countryCode, 
       selectedClient.phoneNo, selectedClient.fullName, selectedClient.telecom);
     this.editableRow = rowIndex;    
     this.editableClientModal = this.modalService.open(clientDetailsModal);
   }
 
-  private openRemoveClientDialog(removeClientModal, selectedClient: ClientTeleco, rowIndex){
+  openRemoveClientDialog(removeClientModal, selectedClient: ClientTeleco, rowIndex){
     this.removableClient = new ClientTeleco(selectedClient.clientId, selectedClient.countryCode, 
       selectedClient.phoneNo, selectedClient.fullName, selectedClient.telecom);
     this.removableRow = rowIndex;
     this.removableClientModal = this.modalService.open(removeClientModal);
   }
   
-  private deleteGroup(form){
+  deleteGroup(form){
     this._groupManager.deleteGroup(form.group);
     this.deleteForm.reset();
     this.deleteForm.get(['group']).setValue(0);
     this.groupClients = [];
   }
 
-  private removeClientFromGroup(){    
+  removeClientFromGroup(){    
     this.groupClients.splice(this.removableRow, 1);
     this.groupClients = [...this.groupClients];
     this.tempClients = [...this.groupClients];

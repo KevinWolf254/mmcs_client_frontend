@@ -13,17 +13,17 @@ import { UnitsService } from '../../shared/services/units/units.service';
 })
 export class DashboardComponent implements OnInit {
 
-    private units: number;
-    private unitsSpent: number;
-    private years: number[] = new Array(10);
+    units: number;
+    unitsSpent: number;
+    years: number[] = new Array(10);
 
-    private date: Date = new Date();
-    private currentYear: number = this.date.getFullYear();
+    date: Date = new Date();
+    currentYear: number = this.date.getFullYear();
 
-    private requests: number;
-    private requestedAmount: number;
+    requests: number;
+    requestedAmount: number;
 
-    private expenditures: MonthlyExpenditure[] = [];
+    expenditures: MonthlyExpenditure[] = [];
 
   constructor(private modalService: NgbModal, private campaignService: CampaignService, private unitsService: UnitsService) {
    }
@@ -39,7 +39,7 @@ export class DashboardComponent implements OnInit {
   /*Retrieve units available
   shared with campaign component 
   to verify if units are available to send sms */
-  private getAvailableUnits(){
+  getAvailableUnits(){
       this.units = this.unitsService.getUnitsAvailable();
   }
   
@@ -50,20 +50,20 @@ export class DashboardComponent implements OnInit {
       this.unitsSpent = this.unitsService.getUnitsSpentForMonth(month);
   }
 
-  private calculatePrevious10YearsForSelect(){
+  calculatePrevious10YearsForSelect(){
       for(let i=0; i<10; i++){
         this.years[i] = this.currentYear;
           this.currentYear --;
       }
   }
 
-  private getPendingRequests(){
+  getPendingRequests(){
       let response = this.unitsService.getPendingRequestsForUnits();
       this.requests = response.requests;
       this.requestedAmount = response.totalRequestedAmount;
   }
 
-  private getMonthlyExpenditures(year: number){        
+  getMonthlyExpenditures(year: number){        
       this.expenditures = this.campaignService.getExpenditures(year);    
       let onDemandLabel: string = '';
       let campaignsLabel: string = '';
@@ -103,11 +103,11 @@ export class DashboardComponent implements OnInit {
     });
   }
   
-  private changeMonthlyExpenditure(event){
+  changeMonthlyExpenditure(event){
       this.getMonthlyExpenditures(event.target.value);
   }
 
-  private openUnitsRequestModal(){
+  openUnitsRequestModal(){
     this.modalService.open(UnitsComponent);
   }
 }
