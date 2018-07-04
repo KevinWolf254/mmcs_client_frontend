@@ -13,7 +13,7 @@ export class SideNavbarComponent implements OnInit {
   }
 
   isAdmin(): boolean{
-    if(localStorage.getItem('userRole') == 'admin')
+    if(localStorage.getItem('userRole') == 'ROLE_ADMIN')
       return true;
     return false;
   }

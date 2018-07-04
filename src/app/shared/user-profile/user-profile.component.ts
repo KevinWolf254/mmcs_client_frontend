@@ -5,6 +5,7 @@ import { User } from '../models/user.model';
 import { UserCredentials } from '../models/user-credentials.model';
 import { SignInService } from '../services/sign-in/sign-in.service';
 import { UserDetails } from '../models/user-details.model';
+import { Employer } from '../models/employer.model';
 
 @Component({
   selector: 'app-user-profile',
@@ -13,7 +14,10 @@ import { UserDetails } from '../models/user-details.model';
 })
 export class UserProfileComponent implements OnInit {
 
-  userDetails: UserDetails = new UserDetails();
+  employer: Employer= {id: 0, name: ''};
+  userDetails: UserDetails = new UserDetails(0,'','','','',false,new Date(), this.employer);
+  lastSignIn: Date = new Date();
+  date=''
   changePassForm: FormGroup;
 
   constructor(private _fb: FormBuilder, private signInService: SignInService) { 
@@ -33,8 +37,19 @@ export class UserProfileComponent implements OnInit {
     this.getUserProfile();
   }
 
-  getUserProfile(){
-    this.userDetails = this.signInService.getUserDetails();
+  private getUserProfile(){
+    // this.userDetails = this.signInService.getUserDetails();
+    this.signInService.getUserDetailsFromWebApi().subscribe(
+      (userDetails: UserDetails) =>{
+        let date = new Date();
+        this.userDetails = userDetails;
+        this.lastSignIn = userDetails.credentials.lastSignIn;
+        this.date = date.toISOString().slice(0,10);
+        console.log('Last Sign In: '+this.lastSignIn);
+      },(error)=>{
+        console.log('ERROR: '+error)
+      }
+    );
   }
 
   changePassword(values){

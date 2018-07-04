@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { fadeInOut } from '../animations/fade-in-out'; 
 import { SignInService } from '../services/sign-in/sign-in.service';
+import { UserDetails } from '../models/user-details.model';
 
 @Component({
   selector: 'app-sign-in',
@@ -14,7 +15,7 @@ import { SignInService } from '../services/sign-in/sign-in.service';
 })
 export class SignInComponent implements OnInit {
 
-  signInForm: FormGroup;
+  public signInForm: FormGroup;
 
   constructor(private _fb: FormBuilder, private router: Router, private signinService: SignInService) {
     this.signInForm = _fb.group({
@@ -26,19 +27,28 @@ export class SignInComponent implements OnInit {
   ngOnInit() {
   }
 
-  signIn(form){
-    //send signin info
-    //receive access token
-    //send request for user details including access token in the request
-    //if user role is admin route to dashboard
-    //if user role is user, route to my profile
-    let role: string = this.signinService.signIn(form.email, form.password).credentials.role;
-    if(role == 'admin'){      
-      localStorage.setItem('userRole', role);
-      this.router.navigate(['dashboard']);
-    }else{      
-      localStorage.setItem('userRole', role);
-      this.router.navigate(['profile']);
-    }
+  public signIn(form){
+
+    this.signinService.authenticateUser(form.email, form.password).subscribe(
+      (successData: any)=>{
+        localStorage.setItem('userToken', successData.access_token);
+        this.signinService.getUserDetailsFromWebApi().subscribe(
+          (userDetails: UserDetails)=>{
+            localStorage.setItem('userRole', userDetails.credentials.role);
+            if(userDetails.credentials.role == "ROLE_ADMIN"){
+              this.router.navigate(['dashboard']);
+              // this._toaster.success("Welcome:", "Successfully Signed In");
+            }else{
+              this.router.navigate(['profile']);            }
+          }
+        );
+    }, error =>{
+      if(error.error.status == 401)
+        console.log("Unauthorized");
+        // this._toaster.error("Wrong username or password", "Access Denied");      
+      // this._toaster.error("Something went wrong. Check Connection", "Connection Error");
+        console.log("ERROR: "+error);
+    });
   }
+  
 }

@@ -23,7 +23,12 @@ export class UnitsComponent implements OnInit {
    }
 
   ngOnInit() {
-    this.userDetails = this.signInService.getUserDetails();
+    // this.userDetails = this.signInService.getUserDetails();
+    this.signInService.getUserDetailsFromWebApi().subscribe(
+      userDetails =>{
+        this.userDetails = userDetails;
+      }
+    );
   }
 
   /*Send request

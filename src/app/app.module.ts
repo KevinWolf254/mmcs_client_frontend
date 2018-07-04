@@ -16,6 +16,8 @@ import { ClientService } from './shared/services/client/client.service';
 import { CampaignService } from './shared/services/campaign/campaign.service';
 import { UnitsService } from './shared/services/units/units.service';
 import { SignInService } from './shared/services/sign-in/sign-in.service';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { AuthInterceptor } from './shared/services/auth-interceptor';
 
 
 
@@ -28,6 +30,7 @@ import { SignInService } from './shared/services/sign-in/sign-in.service';
     NgbCollapseModule,
     NgxDatatableModule,
     AppRoutingModule,
+    HttpClientModule,
     NgbModule.forRoot(),
     AdminModule,
     SharedModule,
@@ -40,7 +43,11 @@ import { SignInService } from './shared/services/sign-in/sign-in.service';
     ClientService,
     CampaignService,
     UnitsService,
-    SignInService
+    SignInService,{
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [
     AppComponent
