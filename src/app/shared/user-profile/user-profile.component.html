@@ -49,7 +49,7 @@
                             <div class="input-group-prepend">
                               <span class="input-group-text bg-info text-white"><i class="fa fa-home"></i></span>
                             </div>
-                            <input type="text" class="form-control" [ngModel]="userDetails.organisation">
+                            <input type="text" class="form-control" [ngModel]="userDetails.employer.name">
                           </div>
                           <!-- Email -->
                           <div class="input-group my-2">
@@ -70,7 +70,7 @@
                             <div class="input-group-prepend">
                               <span class="input-group-text bg-info text-white"><i class="fa fa-calendar"></i></span>
                             </div>
-                            <input type="text" class="form-control" [ngModel]="userDetails.credentials.lastSignIn">
+                            <input type="text" class="form-control" [ngModel]="userDetails.credentials.lastSignIn.toISOString().slice(0,10)">
                           </div>
                         </fieldset>
                       </div>

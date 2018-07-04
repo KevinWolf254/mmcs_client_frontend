@@ -48,7 +48,8 @@ export class UsersComponent implements OnInit {
   // retrieves all users from server
   getUsers(){
     let user: UserCredentials;
-    let date: string = (new Date().toISOString().slice(0,10));
+    // let date: string = (new Date().toISOString().slice(0,10));
+    let date: Date = new Date();
     for(let i=1; i<=50; i++){
       user = new UserCredentials(i, 'User', ''+i, 'user'+i+'@company.com', 'Admin', true, date);
       this.users.push(user);

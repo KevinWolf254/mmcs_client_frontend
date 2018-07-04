@@ -1,22 +1,25 @@
 import { Injectable } from '@angular/core';
 import { UserDetails } from '../../models/user-details.model';
+import { Employer } from '../../models/employer.model';
 
 @Injectable()
 export class SignInService {
   
-  admin = {email:"admin@aeon-tech.co.ke", password: "admin123", role: "admin"};
-  user = {email:"user@aeon-tech.co.ke", password: "user123", role: "user"};
+  private admin = {email:"admin@aeon-tech.co.ke", password: "admin123", role: "admin"};
+  private user = {email:"user@aeon-tech.co.ke", password: "user123", role: "user"};
+  private employer: Employer = {id: 1, name: 'aeon i/o technology solutions'}
 
   userDetails: UserDetails;
 
   constructor() { }
 
-  sigin(email: string, password: string): UserDetails{
+  signIn(email: string, password: string): UserDetails{
     let role: string = '';
+    let date: Date = new Date();
     if(email == this.admin.email && password == this.admin.password){
-      this.userDetails = new UserDetails(1, 'John', 'Doe', 'admin@aeon-tech.co.ke', 'admin', true, '2018-06-30', 'aeon-tech');
+      this.userDetails = new UserDetails(1, 'John', 'Doe', 'admin@aeon-tech.co.ke', 'admin', true, date, this.employer);
     }else if(email == this.user.email && password == this.user.password){
-      this.userDetails = new UserDetails(2, 'Jane', 'Doe', 'user@aeon-tech.co.ke', 'user', true, '2018-06-30', 'aeon-tech');
+      this.userDetails = new UserDetails(2, 'Jane', 'Doe', 'user@aeon-tech.co.ke', 'user', true, date, this.employer);
     }
     return this.userDetails;
   } 

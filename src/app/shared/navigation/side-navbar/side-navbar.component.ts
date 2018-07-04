@@ -12,4 +12,10 @@ export class SideNavbarComponent implements OnInit {
   ngOnInit() {
   }
 
+  isAdmin(): boolean{
+    if(localStorage.getItem('userRole') == 'admin')
+      return true;
+    return false;
+  }
+
 }

@@ -3,10 +3,10 @@
   <div class="sidebar-sticky">
     <ul class="nav flex-column">
       <li class="nav-item">
-        <a routerLink="/dashboard" routerLinkActive="active blue" class="nav-link" >
+        <a *ngIf="isAdmin()" routerLink="/dashboard" routerLinkActive="active blue" class="nav-link" >
           <i class="fa fa-bar-chart fa-lg"></i> 
           <span class="clearfix d-none d-sm-inline-block">Dashboard</span>
-        </a>
+        </a> 
       </li>
       <li class="nav-item">
         <a routerLink="/profile" routerLinkActive="active blue" class="nav-link">
@@ -15,7 +15,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a routerLink="/admin" routerLinkActive="active blue" class="nav-link">
+        <a *ngIf="isAdmin()" routerLink="/admin" routerLinkActive="active blue" class="nav-link">
           <i class="fa fa-cogs fa-lg"></i>
           Administration
         </a> 

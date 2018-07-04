@@ -9,7 +9,7 @@ export class UnitsService {
   private pendingRequestsResponse: any;
 
   constructor() {
-    this.setUnitsAvailableFromWebApi();
+    this.setUnitsAvailableFromWebApi(); 
   }
 
   getUnitsAvailable(): number{

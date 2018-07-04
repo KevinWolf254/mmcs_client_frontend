@@ -5,7 +5,7 @@ export class UserCredentials extends User{
 
     credentials: Credentials = new Credentials();
     
-    constructor(id?: number, firstName?: string, lastName?: string, email?: string, role?: string, active?: boolean, lastSignIn?: string){
+    constructor(id?: number, firstName?: string, lastName?: string, email?: string, role?: string, active?: boolean, lastSignIn?: Date){
         super(id, firstName, lastName, email);
         this.credentials.active = active;
         this.credentials.role = role;

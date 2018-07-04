@@ -13,7 +13,7 @@ import { UserDetails } from '../models/user-details.model';
 })
 export class UserProfileComponent implements OnInit {
 
-  userDetails: UserDetails;
+  userDetails: UserDetails = new UserDetails();
   changePassForm: FormGroup;
 
   constructor(private _fb: FormBuilder, private signInService: SignInService) { 
@@ -39,6 +39,6 @@ export class UserProfileComponent implements OnInit {
 
   changePassword(values){
     this.signInService.changePassword(values.currentPass, values.newPass);
-    this.changePassForm.reset();
+    this.changePassForm.reset(); 
   } 
 }
