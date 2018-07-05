@@ -2,6 +2,7 @@
 
 @import 'variables';
 @import "~bootstrap/scss/bootstrap.scss"; 
+@import "~ngx-toastr/toastr-bs4-alert";
 
 .sidebar {
     position: fixed;

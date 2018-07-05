@@ -18,6 +18,7 @@ import { UnitsService } from './shared/services/units/units.service';
 import { SignInService } from './shared/services/sign-in/sign-in.service';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthInterceptor } from './shared/services/auth-interceptor';
+import { ToastrModule } from 'ngx-toastr';
 
 
 
@@ -34,7 +35,8 @@ import { AuthInterceptor } from './shared/services/auth-interceptor';
     NgbModule.forRoot(),
     AdminModule,
     SharedModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ToastrModule.forRoot()
   ],
   providers: [
     AdminGuard,

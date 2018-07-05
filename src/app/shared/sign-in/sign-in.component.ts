@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { fadeInOut } from '../animations/fade-in-out'; 
 import { SignInService } from '../services/sign-in/sign-in.service';
 import { UserDetails } from '../models/user-details.model';
+import { JsonWebToken } from '../models/json-web-token.model';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-sign-in',
@@ -17,7 +19,7 @@ export class SignInComponent implements OnInit {
 
   public signInForm: FormGroup;
 
-  constructor(private _fb: FormBuilder, private router: Router, private signinService: SignInService) {
+  constructor(private _fb: FormBuilder, private router: Router, private signinService: SignInService, private notify: ToastrService) {
     this.signInForm = _fb.group({
       'email': [null, Validators.email],
       'password': [null, Validators.compose([Validators.required, Validators.minLength(6)])]
@@ -28,27 +30,41 @@ export class SignInComponent implements OnInit {
   }
 
   public signIn(form){
-
     this.signinService.authenticateUser(form.email, form.password).subscribe(
-      (successData: any)=>{
-        localStorage.setItem('userToken', successData.access_token);
-        this.signinService.getUserDetailsFromWebApi().subscribe(
-          (userDetails: UserDetails)=>{
-            localStorage.setItem('userRole', userDetails.credentials.role);
-            if(userDetails.credentials.role == "ROLE_ADMIN"){
-              this.router.navigate(['dashboard']);
-              // this._toaster.success("Welcome:", "Successfully Signed In");
-            }else{
-              this.router.navigate(['profile']);            }
-          }
-        );
-    }, error =>{
-      if(error.error.status == 401)
-        console.log("Unauthorized");
-        // this._toaster.error("Wrong username or password", "Access Denied");      
-      // this._toaster.error("Something went wrong. Check Connection", "Connection Error");
-        console.log("ERROR: "+error);
-    });
+      (jwt: JsonWebToken)=>{
+        localStorage.setItem('userToken', jwt.access_token);
+        if(this.isAdmin){
+          this.router.navigate(['dashboard']);
+        }else{
+          this.router.navigate(['profile']);
+        }
+        this.notify.success("Welcome: " +this.signinService.getSignedInUserDetails().firstName+' '+
+        this.signinService.getSignedInUserDetails().lastName);
+
+        // this.signinService.getUserDetails().subscribe(
+        //   (userDetails: UserDetails)=>{
+        //     localStorage.setItem('userRole', userDetails.credentials.role);
+        //     if(userDetails.credentials.role == "ROLE_ADMIN"){
+        //       this.router.navigate(['dashboard']);
+        //       this.notify.success("Welcome: " +userDetails.firstName+' '+userDetails.lastName);
+        //     }else{
+        //       this.router.navigate(['profile']);
+        //     }
+        //   }
+        // );
+
+      },error =>{
+        if(error.status == '400' || error.status == '401'){
+          this.notify.error('The email or password is incorrect');
+        }
+      }
+    );
+  }
+
+  private isAdmin(): boolean{
+    if(this.signinService.getSignedInUserDetails().credentials.role == 'ROLE_ADMIN')
+      return true;
+    return false
   }
   
 }

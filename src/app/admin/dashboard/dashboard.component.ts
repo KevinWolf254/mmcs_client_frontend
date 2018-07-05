@@ -5,7 +5,8 @@ import { UnitsComponent } from '../units/units.component';
 import { CampaignService } from '../../shared/services/campaign/campaign.service';
 import { MonthlyExpenditure } from '../../shared/models/monthly-expenditure.model';
 import { UnitsService } from '../../shared/services/units/units.service';
-import { UnitsAvailableResponse, UnitsRequest, UnitsAvailableRequest } from '../../models/employer.model';
+import { UnitsAvailableRequest } from '../../shared/models/employer.model';
+import { UnitsService } from './shared/services/units/units.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,29 +15,27 @@ import { UnitsAvailableResponse, UnitsRequest, UnitsAvailableRequest } from '../
 })
 export class DashboardComponent implements OnInit {
 
-    private unitsRequest: UnitsAvailableRequest;
-    
-    public units: number;
-    unitsSpent: number;
-    years: number[] = new Array(10);
+    private units: number;
+    private unitsSpent: number;
+    private years: number[] = new Array(10);
 
-    date: Date = new Date();
-    currentYear: number = this.date.getFullYear();
+    private date: Date = new Date();
+    private currentYear: number = this.date.getFullYear();
 
-    requests: number;
-    requestedAmount: number;
+    private requests: number;
+    private requestedAmount: number;
 
-    expenditures: MonthlyExpenditure[] = [];
+    // private monthlyCampaigns: number[] = [12, 19, 5, 3, 6, 8];
+    private expenditures: MonthlyExpenditure[] = [];
 
   constructor(private modalService: NgbModal, private campaignService: CampaignService, private unitsService: UnitsService) {
    }
 
   ngOnInit() {
-
       this.getAvailableUnits();
       this.getSpentUnits();
       this.calculatePrevious10YearsForSelect();
-      this.getMonthlyExpenditures(this.currentYear);
+      this.getMonthlyCampaigns(this.currentYear);
       this.getPendingRequests();
   }
 
@@ -44,18 +43,14 @@ export class DashboardComponent implements OnInit {
   shared with campaign component 
   to verify if units are available to send sms */
   getAvailableUnits(){
-    //   this.units = this.unitsService.getUnitsAvailable();
-    this.unitsService.getUnitsAvailable();
+      this.units = 10000;
   }
   
   getSpentUnits(){
-      let currentDate: Date = new Date();
-      let month: number = currentDate.getMonth();
-
-      this.unitsSpent = this.unitsService.getUnitsSpentForMonth(month);
+      this.unitsSpent = 5000;
   }
 
-  calculatePrevious10YearsForSelect(){
+  private calculatePrevious10YearsForSelect(){
       for(let i=0; i<10; i++){
         this.years[i] = this.currentYear;
           this.currentYear --;
@@ -63,12 +58,11 @@ export class DashboardComponent implements OnInit {
   }
 
   getPendingRequests(){
-      let response = this.unitsService.getPendingRequestsForUnits();
-      this.requests = response.requests;
-      this.requestedAmount = response.totalRequestedAmount;
+      this.requests = 1;
+      this.requestedAmount = 10000;
   }
 
-  getMonthlyExpenditures(year: number){        
+  private getMonthlyCampaigns(year: number){        
       this.expenditures = this.campaignService.getExpenditures(year);    
       let onDemandLabel: string = '';
       let campaignsLabel: string = '';
@@ -108,11 +102,11 @@ export class DashboardComponent implements OnInit {
     });
   }
   
-  changeMonthlyExpenditure(event){
-      this.getMonthlyExpenditures(event.target.value);
+  private onSelectYear(event){
+      this.getMonthlyCampaigns(event.target.value);
   }
 
-  openUnitsRequestModal(){
+  private openUnitsRequestModal(){
     this.modalService.open(UnitsComponent);
   }
 }

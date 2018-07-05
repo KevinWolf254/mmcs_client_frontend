@@ -1,48 +1,55 @@
 import { Injectable } from '@angular/core';
 import { UserDetails } from '../../models/user-details.model';
-// import { Employer } from '../../models/employer.model';
-import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { HttpHeaders, HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
+import { _throw } from 'rxjs/observable/throw';
+import { JsonWebToken } from '../../models/json-web-token.model';
+import { catchError, retry } from 'rxjs/operators';
 
 @Injectable()
 export class SignInService {
   private basicUri: string = "http://localhost:8081/bulk-sms";
   private authHeader = {headers: new HttpHeaders({'Content-Type':'application/x-www-form-urlencoded', 'Authorization':'Basic dGVzdDAxOnRlc3QwMQ==', 'No-Auth':'true'})};
+  private userDetails: UserDetails;
   
-  // private admin = {email:"admin@aeon-tech.co.ke", password: "admin123", role: "admin"};
-  // private user = {email:"user@aeon-tech.co.ke", password: "user123", role: "user"};
-  // private employer: Employer = {id: 1, name: 'aeon i/o technology solutions'}
-
-  userDetails: UserDetails;
-
   constructor(private _http: HttpClient) { }
 
-  public authenticateUser(email: String, password: String): Observable<any>{
+  public authenticateUser(email: String, password: String): Observable<JsonWebToken>{
     let authUri: string = this.basicUri+"/oauth/token";
     let oAuthData = "grant_type=password"+"&username="+email+"&password="+password;
-    return this._http.post(authUri, oAuthData, this.authHeader);
+    return this._http.post<JsonWebToken>(authUri, oAuthData, this.authHeader);
   }
 
-  public getUserDetailsFromWebApi(): Observable<any>{
+  private sendRequestForUserDetails(): Observable<UserDetails>{
     let credentialsUri: string = this.basicUri+"/api/credentials";
-    return this._http.get(credentialsUri);
-
+    return this._http.get<UserDetails>(credentialsUri)
+    .pipe(
+      retry(3),
+      catchError(this.handleError)
+    );
   }
 
-  // signIn(email: string, password: string): UserDetails{    
-  //   let role: string = '';
-  //   let date: Date = new Date();
-  //   if(email == this.admin.email && password == this.admin.password){
-  //     this.userDetails = new UserDetails(1, 'John', 'Doe', 'admin@aeon-tech.co.ke', 'admin', true, date, this.employer);
-  //   }else if(email == this.user.email && password == this.user.password){
-  //     this.userDetails = new UserDetails(2, 'Jane', 'Doe', 'user@aeon-tech.co.ke', 'user', true, date, this.employer);
-  //   }
-  //   return this.userDetails;
-  // } 
-
-  // getUserDetails(): UserDetails{
-  //   return this.userDetails;
-  // } 
+  public setUserDetails(){
+    this.sendRequestForUserDetails().subscribe(
+      (userDetails: UserDetails)=>{
+        localStorage.setItem('userRole', userDetails.credentials.role);
+        this.userDetails = userDetails;
+      }
+    );
+  }
+  public getSignedInUserDetails(): UserDetails{
+    return this.userDetails;
+  }
+  private handleError(error: HttpErrorResponse) {
+    if (error.error instanceof ErrorEvent) {
+      console.error('Client Side Error: ', error.error.message);
+    } else {
+      console.error(
+        `Backend returned code ${error.status}, ` +
+        `body was: ${error.error}`);
+    }
+    return _throw('Something bad happened; please try again later.');
+  };
 
   changePassword(currentPass: string, newPass: string){
     //send to client webApi
