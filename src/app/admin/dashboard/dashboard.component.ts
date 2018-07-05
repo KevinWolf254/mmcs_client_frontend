@@ -26,8 +26,7 @@ export class DashboardComponent implements OnInit {
     // private monthlyCampaigns: number[] = [12, 19, 5, 3, 6, 8];
     private expenditures: MonthlyExpenditure[] = [];
 
-  constructor(private modalService: NgbModal, private campaignService: CampaignService) {
-   }
+  constructor(private modalService: NgbModal, private campaignService: CampaignService, ) {}
 
   ngOnInit() {
       this.getAvailableUnits(); 
