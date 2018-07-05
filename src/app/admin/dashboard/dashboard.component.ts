@@ -26,7 +26,7 @@ export class DashboardComponent implements OnInit {
     // private monthlyCampaigns: number[] = [12, 19, 5, 3, 6, 8];
     private expenditures: MonthlyExpenditure[] = [];
 
-  constructor(private modalService: NgbModal, private campaignService: CampaignService, ) {}
+  constructor(private modalService: NgbModal, private campaignService: CampaignService, private unitsService: UnitsService) {}
 
   ngOnInit() {
       this.getAvailableUnits(); 
@@ -36,10 +36,8 @@ export class DashboardComponent implements OnInit {
       this.getPendingRequests();
   }
 
-  /*Retrieve units available
-  shared with campaign component 
-  to verify if units are available to send sms */
   getAvailableUnits(){
+      this.unitsService.getUnitsAvailable();
       this.units = 10000;
   }
   
