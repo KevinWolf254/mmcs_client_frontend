@@ -5,6 +5,7 @@ import { UserDetails } from '../../shared/models/user-details.model';
 import { SignInService } from '../../shared/services/sign-in/sign-in.service';
 import { UnitsService } from '../../shared/services/units/units.service';
 import { Employer } from '../../shared/models/employer.model';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-units',
@@ -13,8 +14,9 @@ import { Employer } from '../../shared/models/employer.model';
 })
 export class UnitsComponent implements OnInit {
 
-  requestForm: FormGroup; 
-  userDetails: UserDetails;
+  public requestForm: FormGroup; 
+  private employer: Employer = new Employer();
+  public userDetails: UserDetails = new UserDetails(0, '', '', '', '', false, new Date(), this.employer);
 
   constructor(public activeModal: NgbActiveModal, private _fb: FormBuilder, private signInService: SignInService, private unitsService: UnitsService) { 
     this.requestForm = _fb.group({
@@ -24,18 +26,21 @@ export class UnitsComponent implements OnInit {
    }
 
   ngOnInit() {
-    this.userDetails = this.signInService.getSignedInUserDetails();
-    // this.signInService.getUserDetailsFromWebApi().subscribe(
-    //   userDetails =>{ 
-    //     this.userDetails = userDetails;
-    //   }
-    // );
+    this.signInService.sendRequestForUserDetails().subscribe(
+      userDetails =>{ 
+        this.userDetails = userDetails;
+      }
+    );
   }
 
   /*Send request
   @Param value to get value.units */
-  sendRequest(value){
-    this.unitsService.sendRequestForUnitsToClientWebApi(this.userDetails, value.units, value.mpesaTransNo);
+  public sendRequestForMoreUnits(form){
+    this.unitsService.sendRequestForUnitsToClientWebApi(this.userDetails, form.units, form.mpesaTransNo).subscribe(
+      response =>{
+
+      }
+    );
     this.requestForm.reset();
     this.activeModal.close();
   }  
