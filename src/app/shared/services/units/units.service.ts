@@ -18,10 +18,7 @@ export class UnitsService {
    unitsSpentCurrentMonth: number = 0;
    pendingRequestsResponse: any;
 
-  constructor(private _http: HttpClient) {
-    // this.setUnitsAvailableFromWebApi(); 
-    console.log("Units: "+this.unitsAvailable); 
-  }
+  constructor(private _http: HttpClient) {}
 
   private sendUnitsRequest(request: UnitsAvailableRequest): Observable<UnitsAvailableResponse>{
     return this._http.post<UnitsAvailableResponse>(this.basicUri, request, this.httpHeader).pipe(
@@ -57,7 +54,7 @@ export class UnitsService {
   }
   
   public sendRequestForUnitsToClientWebApi(userDetails: UserDetails, requestedUnits: number, mpesaTransNo: string){
-    let unitsRequest: UnitsRequest = new UnitsRequest(this.unitsRequestDetails.id, this.unitsRequestDetails.name,
+    let unitsRequest: UnitsRequest = new UnitsRequest(userDetails.employer.id, userDetails.employer.name,
       userDetails.email, requestedUnits, mpesaTransNo);
     return this._http.post(this.aeonTechUri, unitsRequest, this.httpHeader).pipe(
       retry(2)

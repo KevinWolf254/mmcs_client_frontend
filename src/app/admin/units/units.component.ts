@@ -18,7 +18,8 @@ export class UnitsComponent implements OnInit {
   private employer: Employer = new Employer();
   public userDetails: UserDetails = new UserDetails(0, '', '', '', '', false, new Date(), this.employer);
 
-  constructor(public activeModal: NgbActiveModal, private _fb: FormBuilder, private signInService: SignInService, private unitsService: UnitsService) { 
+  constructor(public activeModal: NgbActiveModal, private _fb: FormBuilder, private signInService: SignInService, 
+    private unitsService: UnitsService, private notify: ToastrService) { 
     this.requestForm = _fb.group({
       'units': [null, Validators.required],
       'mpesaTransNo': [null, Validators.required]
@@ -32,16 +33,16 @@ export class UnitsComponent implements OnInit {
       }
     );
   }
-
-  /*Send request
-  @Param value to get value.units */
+  
   public sendRequestForMoreUnits(form){
     this.unitsService.sendRequestForUnitsToClientWebApi(this.userDetails, form.units, form.mpesaTransNo).subscribe(
       response =>{
-
+        this.notify.success('Request sent successfully.');
+        this.requestForm.reset();
+        this.activeModal.close();
+      }, error =>{
+        this.notify.error('Something wrong happened!');
       }
     );
-    this.requestForm.reset();
-    this.activeModal.close();
   }  
 }
