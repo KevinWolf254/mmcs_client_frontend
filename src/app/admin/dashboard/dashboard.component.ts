@@ -4,9 +4,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UnitsComponent } from '../units/units.component';
 import { CampaignService } from '../../shared/services/campaign/campaign.service';
 import { MonthlyExpenditure } from '../../shared/models/monthly-expenditure.model';
-import { UnitsService } from '../../shared/services/units/units.service';
-import { UnitsAvailableRequest } from '../../shared/models/employer.model';
-import { UnitsService } from './shared/services/units/units.service';
 
 @Component({
   selector: 'app-dashboard',
