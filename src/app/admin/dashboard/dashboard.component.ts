@@ -13,6 +13,8 @@ import { UnitsService } from '../../shared/services/units/units.service';
 })
 export class DashboardComponent implements OnInit {
 
+    // unitsAvailableRequest: UnitsAvailableRequest
+
     private units: number;
     private unitsSpent: number;
     private years: number[] = new Array(10);
