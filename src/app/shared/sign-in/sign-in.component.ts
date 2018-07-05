@@ -18,6 +18,7 @@ import { ToastrService } from 'ngx-toastr';
 export class SignInComponent implements OnInit {
 
   public signInForm: FormGroup;
+  private userDetails: UserDetails;
 
   constructor(private _fb: FormBuilder, private router: Router, private signinService: SignInService, private notify: ToastrService) {
     this.signInForm = _fb.group({
@@ -32,27 +33,13 @@ export class SignInComponent implements OnInit {
   public signIn(form){
     this.signinService.authenticateUser(form.email, form.password).subscribe(
       (jwt: JsonWebToken)=>{
-        localStorage.setItem('userToken', jwt.access_token);
-        if(this.isAdmin){
-          this.router.navigate(['dashboard']);
-        }else{
-          this.router.navigate(['profile']);
-        }
-        this.notify.success("Welcome: " +this.signinService.getSignedInUserDetails().firstName+' '+
-        this.signinService.getSignedInUserDetails().lastName);
-
-        // this.signinService.getUserDetails().subscribe(
-        //   (userDetails: UserDetails)=>{
-        //     localStorage.setItem('userRole', userDetails.credentials.role);
-        //     if(userDetails.credentials.role == "ROLE_ADMIN"){
-        //       this.router.navigate(['dashboard']);
-        //       this.notify.success("Welcome: " +userDetails.firstName+' '+userDetails.lastName);
-        //     }else{
-        //       this.router.navigate(['profile']);
-        //     }
-        //   }
-        // );
-
+        localStorage.setItem('userToken', jwt.access_token);        
+        this.signinService.sendRequestForUserDetails().subscribe(
+          (userDetails: UserDetails)=>{
+            this.setUserDetails(userDetails);
+            this.routeUser();
+          }
+        ); 
       },error =>{
         if(error.status == '400' || error.status == '401'){
           this.notify.error('The email or password is incorrect');
@@ -61,10 +48,23 @@ export class SignInComponent implements OnInit {
     );
   }
 
+  private setUserDetails(userDetails){
+    this.userDetails = userDetails;
+    localStorage.setItem('userRole', userDetails.credentials.role);
+  }
+
   private isAdmin(): boolean{
-    if(this.signinService.getSignedInUserDetails().credentials.role == 'ROLE_ADMIN')
+    if(this.userDetails.credentials.role == 'ROLE_ADMIN')
       return true;
     return false
+  } 
+
+  private routeUser(){
+    if(this.isAdmin()){
+      this.router.navigate(['dashboard']);
+    }else{
+      this.router.navigate(['profile']);
+    }
+    this.notify.success("Welcome: " +this.userDetails.firstName+' '+this.userDetails.lastName);
   }
-  
 }

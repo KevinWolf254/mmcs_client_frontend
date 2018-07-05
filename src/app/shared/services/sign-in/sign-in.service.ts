@@ -20,24 +20,29 @@ export class SignInService {
     return this._http.post<JsonWebToken>(authUri, oAuthData, this.authHeader);
   }
 
-  private sendRequestForUserDetails(): Observable<UserDetails>{
+  public sendRequestForUserDetails(): Observable<UserDetails>{
     let credentialsUri: string = this.basicUri+"/api/credentials";
     return this._http.get<UserDetails>(credentialsUri)
     .pipe(
       retry(3),
-      catchError(this.handleError)
+      catchError(this.handleError) 
     );
   }
 
-  public setUserDetails(){
+  public setUserDetails(userDetails: UserDetails){
+    this.userDetails = userDetails;
+  }
+
+  private sendRequest(){
     this.sendRequestForUserDetails().subscribe(
       (userDetails: UserDetails)=>{
-        localStorage.setItem('userRole', userDetails.credentials.role);
         this.userDetails = userDetails;
       }
     );
   }
   public getSignedInUserDetails(): UserDetails{
+    if(this.userDetails == null)
+      this.sendRequest();
     return this.userDetails;
   }
   private handleError(error: HttpErrorResponse) {

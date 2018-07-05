@@ -38,18 +38,22 @@ export class UserProfileComponent implements OnInit {
   }
 
   private getUserProfile(){
-    // this.userDetails = this.signInService.getUserDetails();
-    this.signInService.getUserDetailsFromWebApi().subscribe(
-      (userDetails: UserDetails) =>{
-        let date = new Date();
-        this.userDetails = userDetails;
-        this.lastSignIn = userDetails.credentials.lastSignIn;
-        this.date = date.toISOString().slice(0,10);
-        console.log('Last Sign In: '+this.lastSignIn);
-      },(error)=>{
-        console.log('ERROR: '+error)
-      }
-    );
+    this.userDetails = this.signInService.getSignedInUserDetails();
+    this.lastSignIn = this.userDetails.credentials.lastSignIn;
+    let date = new Date();
+    this.date = date.toISOString().slice(0,10);
+
+    // this.signInService.getUserDetailsFromWebApi().subscribe(
+    //   (userDetails: UserDetails) =>{
+    //     this.userDetails = userDetails;
+    //     let date = new Date();
+    //     this.lastSignIn = userDetails.credentials.lastSignIn;
+    //     this.date = date.toISOString().slice(0,10);
+    //     console.log('Last Sign In: '+this.lastSignIn);
+    //   },(error)=>{
+    //     console.log('ERROR: '+error)
+    //   }
+    // );
   }
 
   changePassword(values){
