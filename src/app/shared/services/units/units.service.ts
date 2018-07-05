@@ -20,7 +20,7 @@ export class UnitsService {
 
   constructor(private _http: HttpClient) {
     // this.setUnitsAvailableFromWebApi(); 
-    console.log("Units: "+this.unitsAvailable);
+    console.log("Units: "+this.unitsAvailable); 
   }
 
   private sendUnitsRequest(request: UnitsAvailableRequest): Observable<UnitsAvailableResponse>{

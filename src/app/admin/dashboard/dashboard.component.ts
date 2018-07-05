@@ -29,7 +29,7 @@ export class DashboardComponent implements OnInit {
    }
 
   ngOnInit() {
-      this.getAvailableUnits();
+      this.getAvailableUnits(); 
       this.getSpentUnits();
       this.calculatePrevious10YearsForSelect();
       this.getMonthlyCampaigns(this.currentYear);
