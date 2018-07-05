@@ -5,6 +5,7 @@ import { UnitsComponent } from '../units/units.component';
 import { CampaignService } from '../../shared/services/campaign/campaign.service';
 import { MonthlyExpenditure } from '../../shared/models/monthly-expenditure.model';
 import { UnitsService } from '../../shared/services/units/units.service';
+import { UnitsAvailableResponse, UnitsRequest, UnitsAvailableRequest } from '../../models/employer.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,7 +14,9 @@ import { UnitsService } from '../../shared/services/units/units.service';
 })
 export class DashboardComponent implements OnInit {
 
-    units: number;
+    private unitsRequest: UnitsAvailableRequest;
+    
+    public units: number;
     unitsSpent: number;
     years: number[] = new Array(10);
 
@@ -29,6 +32,7 @@ export class DashboardComponent implements OnInit {
    }
 
   ngOnInit() {
+
       this.getAvailableUnits();
       this.getSpentUnits();
       this.calculatePrevious10YearsForSelect();
@@ -40,7 +44,8 @@ export class DashboardComponent implements OnInit {
   shared with campaign component 
   to verify if units are available to send sms */
   getAvailableUnits(){
-      this.units = this.unitsService.getUnitsAvailable();
+    //   this.units = this.unitsService.getUnitsAvailable();
+    this.unitsService.getUnitsAvailable();
   }
   
   getSpentUnits(){
