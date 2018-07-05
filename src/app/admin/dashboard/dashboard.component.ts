@@ -5,6 +5,7 @@ import { UnitsComponent } from '../units/units.component';
 import { CampaignService } from '../../shared/services/campaign/campaign.service';
 import { MonthlyExpenditure } from '../../shared/models/monthly-expenditure.model';
 import { UnitsService } from '../../shared/services/units/units.service';
+import { UnitsAvailableRequest } from '../../shared/models/employer.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,7 +14,7 @@ import { UnitsService } from '../../shared/services/units/units.service';
 })
 export class DashboardComponent implements OnInit {
 
-    // unitsAvailableRequest: UnitsAvailableRequest
+    unitsAvailableRequest: UnitsAvailableRequest
 
     private units: number;
     private unitsSpent: number;
