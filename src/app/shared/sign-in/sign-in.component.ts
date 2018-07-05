@@ -20,7 +20,8 @@ export class SignInComponent implements OnInit {
   public signInForm: FormGroup;
   private userDetails: UserDetails;
 
-  constructor(private _fb: FormBuilder, private router: Router, private signinService: SignInService, private notify: ToastrService) {
+  constructor(private _fb: FormBuilder, private router: Router, 
+    private signinService: SignInService, private notify: ToastrService) {
     this.signInForm = _fb.group({
       'email': [null, Validators.email],
       'password': [null, Validators.compose([Validators.required, Validators.minLength(6)])]
@@ -51,6 +52,7 @@ export class SignInComponent implements OnInit {
   private setUserDetails(userDetails){
     this.userDetails = userDetails;
     localStorage.setItem('userRole', userDetails.credentials.role);
+    this.signinService.setUserDetails(userDetails);
   }
 
   private isAdmin(): boolean{

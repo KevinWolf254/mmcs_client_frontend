@@ -10,9 +10,9 @@ import { catchError, retry } from 'rxjs/operators';
 export class SignInService {
   private basicUri: string = "http://localhost:8081/bulk-sms";
   private authHeader = {headers: new HttpHeaders({'Content-Type':'application/x-www-form-urlencoded', 'Authorization':'Basic dGVzdDAxOnRlc3QwMQ==', 'No-Auth':'true'})};
-  private userDetails: UserDetails;
+  private userDetails: UserDetails = null;
   
-  constructor(private _http: HttpClient) { }
+  constructor(private _http: HttpClient) {}
 
   public authenticateUser(email: String, password: String): Observable<JsonWebToken>{
     let authUri: string = this.basicUri+"/oauth/token";
