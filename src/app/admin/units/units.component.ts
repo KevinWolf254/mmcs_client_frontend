@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserDetails } from '../../shared/models/user-details.model';
 import { SignInService } from '../../shared/services/sign-in/sign-in.service';
 import { UnitsService } from '../../shared/services/units/units.service';
+import { Employer } from '../../shared/models/employer.model';
 
 @Component({
   selector: 'app-units',
@@ -12,7 +13,7 @@ import { UnitsService } from '../../shared/services/units/units.service';
 })
 export class UnitsComponent implements OnInit {
 
-  requestForm: FormGroup;
+  requestForm: FormGroup; 
   userDetails: UserDetails;
 
   constructor(public activeModal: NgbActiveModal, private _fb: FormBuilder, private signInService: SignInService, private unitsService: UnitsService) { 
