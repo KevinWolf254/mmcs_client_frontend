@@ -7,7 +7,7 @@ export class Employer {
     }
 }
 
-export class UnitsAvailableRequest extends Employer{
+export class UnitsDetailsRequest extends Employer{
     adminEmail: string;
     constructor(id?: number, name?: string, adminEmail?: string,){
         super(id, name);
@@ -15,13 +15,13 @@ export class UnitsAvailableRequest extends Employer{
     }
 }
 
-export class UnitsAvailableResponse extends UnitsAvailableRequest{
+export class UnitsDetailsResponse extends UnitsDetailsRequest{
     unitsAvailable: number;
     requestsPendingApproval: number;
     requestsPendingApprovalAmount: number;
 }
 
-export class UnitsRequest extends UnitsAvailableRequest{
+export class UnitsRequest extends UnitsDetailsRequest{
     unitsRequested: number;
     mpesaTransNo: string;
 

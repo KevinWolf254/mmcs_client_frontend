@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { UserDetails } from '../../models/user-details.model';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { retry } from 'rxjs/operators';
-import { UnitsAvailableResponse, UnitsRequest, UnitsAvailableRequest } from '../../models/employer.model';
+import { UnitsDetailsResponse, UnitsRequest, UnitsDetailsRequest } from '../../models/employer.model';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()
@@ -10,9 +10,9 @@ export class UnitsService {
   private basicUri: string = "http://localhost:8081/bulk-sms";
   private authHeader = {headers: new HttpHeaders({'Content-Type':'application/x-www-form-urlencoded', 'Authorization':'Basic dGVzdDAxOnRlc3QwMQ==', 'No-Auth':'true'})};
   private httpHeader = {headers: new HttpHeaders({'Content-type':'application/json'})};
-  private aeonTechUri = "http://localhost:8081/bulk-sms";
+  private aeonTechUri = "http://localhost:8081/aeon/bulk-sms";
 
-  private unitsRequestDetails: UnitsAvailableResponse;
+  private unitsRequestDetails: UnitsDetailsResponse;
 
    unitsAvailable: number = 0;
    unitsSpentCurrentMonth: number = 0;
@@ -20,32 +20,18 @@ export class UnitsService {
 
   constructor(private _http: HttpClient) {}
 
-  private sendUnitsRequest(request: UnitsAvailableRequest): Observable<UnitsAvailableResponse>{
-    return this._http.post<UnitsAvailableResponse>(this.basicUri, request, this.httpHeader).pipe(
+  public sendRequestForUnitsAvailable(request: UnitsDetailsRequest): Observable<UnitsDetailsResponse>{
+    return this._http.post<UnitsDetailsResponse>(this.basicUri, request, this.httpHeader).pipe(
       retry(2)
     );
   }
 
-  public updateUnitsAvailable(request: UnitsAvailableRequest){
-    this.sendUnitsRequest(request).subscribe(
-      (response: UnitsAvailableResponse)=>{
+  public updateUnitsAvailable(request: UnitsDetailsRequest){
+    this.sendRequestForUnitsAvailable(request).subscribe(
+      (response: UnitsDetailsResponse)=>{
        this.unitsRequestDetails = response;
       }
     );
-  }
-
-  private unitsExists(): boolean{
-    if(this.unitsAvailable == 0 || this.unitsAvailable == null)
-      return true;
-    return false;
-  }
-
-  public getUnitsAvailable(request: UnitsAvailableRequest): number{
-    if(!this.unitsExists)
-      return this.unitsAvailable;
-    else
-      this.updateUnitsAvailable(request);
-    return this.unitsAvailable;
   }
 
   public getPendingRequests(){
