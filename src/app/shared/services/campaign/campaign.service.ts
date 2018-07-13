@@ -4,15 +4,26 @@ import { Campaign } from '../../models/campaign.model';
 import { Group } from '../../models/group.model';
 import { GroupManagerService } from '../group/group-manager.service';
 import { MonthlyExpenditure } from '../../models/monthly-expenditure.model';
+import { HttpClient } from '@angular/common/http';
+import { retry, map } from 'rxjs/operators';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class CampaignService {
+  private basicUri: string = "http://localhost:8081/bulk-sms/api";
 
   campaigns: Schedule[] = [];
   expenditures: MonthlyExpenditure[] = [];
 
-  constructor(private _groupService: GroupManagerService) {
+  constructor(private _groupService: GroupManagerService, private _http: HttpClient) {
     this.setCampaigns();
+   }
+
+   public sendRequestForMonthlyExpenditure(year: number): Observable<MonthlyExpenditure[]>{
+    return this._http.get<MonthlyExpenditure[]>(this.basicUri+'/group/costs/'+year).pipe(
+      retry(2),
+      map(result => result)
+    );
    }
 
   getCampaigns(): Schedule[]{

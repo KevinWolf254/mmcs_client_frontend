@@ -1,0 +1,74 @@
+
+<div class="container form-signup">
+    <div @fade class="card text-center shadow mb-5 rounded">
+      <div class="card-body">
+        <h5 class="text-center mb-3">Sign up</h5>
+        <form class="mx-4 mb-3" [formGroup] = "signUpForm" (ngSubmit) = "signUp(signUpForm.value)">
+          <!-- Surname -->
+          <div class="input-group mt-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="surnameIcon"><i class="fa fa-envelope"></i></span>
+            </div>
+            <input type="email" class="form-control form-control-sm" formControlName="surname"
+             placeholder="Surname" aria-label="Surname" aria-describedby="surnameIcon">
+          </div>
+          <!-- Other Names -->
+          <div class="input-group mt-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="othernamesIcon"><i class="fa fa-lock fa-lg"></i></span>
+            </div>
+            <input type="text" class="form-control form-control-sm" formControlName="othernames"
+              placeholder="Other Names" aria-label="Other Names" aria-describedby="othernamesIcon">
+          </div>
+          <!-- organisation  -->
+          <div class="input-group mt-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="organisationIcon"><i class="fa fa-envelope"></i></span>
+            </div>
+            <input type="text" class="form-control form-control-sm" formControlName="organisation"
+             placeholder="Your Organisation" aria-label="organisation" aria-describedby="organisationIcon">
+          </div>
+          <!-- email -->
+          <div class="input-group mt-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="emailIcon"><i class="fa fa-envelope"></i></span>
+            </div>
+            <input type="email" class="form-control form-control-sm" formControlName="email"
+             placeholder="Organisation Email Address" aria-label="Surname" aria-describedby="emailIcon">
+          </div>
+          <!-- email validity -->
+          <div class=" d-flex flex-row-reverse" 
+          *ngIf="!signUpForm.controls['email'].valid && signUpForm.controls['email'].touched">
+            <span class="text text-danger mt-0 pt-0 pr-3" style="font-size:13px">
+                Please enter a valid email
+            </span>
+          </div>
+          <!-- password -->
+          <div class="input-group mt-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="passwordIcon"><i class="fa fa-envelope"></i></span>
+            </div>
+            <input type="password" class="form-control form-control-sm" formControlName="password"
+             placeholder="Password" aria-label="Password" aria-describedby="passwordIcon">
+          </div> 
+          <!-- password validity -->
+          <div class=" d-flex flex-row-reverse" 
+          *ngIf="!signUpForm.controls['password'].valid && signUpForm.controls['password'].touched">
+            <span class="text text-danger mt-0 pt-0 pr-3" style="font-size:13px">
+                Please enter a valid password
+            </span>
+          </div>         
+          <button class="btn btn-primary btn-sm btn-block mt-3" type="submit" [disabled]="!signUpForm.valid">Register</button>
+        </form>
+        <div class="text-center">Already registered? 
+          <a href="/signin">
+            Go back to Sign in
+          </a>
+        </div>
+      </div>
+      <div class="card-footer text-muted">
+        © 2018-2019
+      </div>
+    </div>  
+  </div>
+  

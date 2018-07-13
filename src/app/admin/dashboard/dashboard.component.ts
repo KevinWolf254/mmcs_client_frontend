@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Chart } from "chart.js";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Chart } from 'chart.js';
 import { UnitsComponent } from '../units/units.component';
 import { CampaignService } from '../../shared/services/campaign/campaign.service';
 import { MonthlyExpenditure } from '../../shared/models/monthly-expenditure.model';
@@ -16,8 +16,10 @@ import { SignInService } from '../../shared/services/sign-in/sign-in.service';
 })
 export class DashboardComponent implements OnInit {
 
-    public unitsDetails: UnitsDetailsResponse;
-    public unitsAvailableIsLoaded: boolean = true;
+    public unitsDetails: UnitsDetailsResponse = new UnitsDetailsResponse(0, '', '');
+    public unitsAvailableIsLoading: boolean = true;
+    public previousMonthUnitsIsLoading: boolean = true;
+    public expendituresAreLoading: boolean = true;
 
     public unitsSpentPreviousMonth: number = 0;
 
@@ -25,31 +27,41 @@ export class DashboardComponent implements OnInit {
 
     public date: Date = new Date();
     public currentYear: number = this.date.getFullYear();
+    private expenseChart = [];
+    public smsLabel: string = 'sms expense 2018';
+    public smsScheduledLabel: string = 'scheduled sms expense 2018';
 
-    private expenditures: MonthlyExpenditure[] = [];
+    public smsCostData: number[] = [];
+    public smsScheduledCostData: number[] = [];
+    public months: string[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
 
-    constructor(private modalService: NgbModal, private campaignService: CampaignService,
-        private signInService: SignInService, private unitsService: UnitsService) { }
+    constructor(private _modalService: NgbModal, private _campaignService: CampaignService,
+        private _signInService: SignInService, private _unitsService: UnitsService) { }
 
     ngOnInit() {
         this.getUnitsDetails();
-        this.getSpentUnits();
+        this.getSpentPreviousMonthUnits();
         this.calculatePrevious10YearsForSelect();
-        this.getMonthlyCampaigns(this.currentYear);
+        this.sendRequestForMonthlyExpenditure(this.currentYear);
     }
 
     private getUnitsDetails() {
-        this.signInService.sendRequestForUserDetails().subscribe((userDetails: UserDetails) => {
-            let request: UnitsDetailsRequest = new UnitsDetailsRequest(userDetails.employer.id, userDetails.employer.name, userDetails.email);
-            this.unitsService.sendRequestForUnitsAvailable(request).subscribe((response: UnitsDetailsResponse) => {
-                this.unitsDetails = response;
-                this.unitsAvailableIsLoaded = false;
-            });
-        });
+        this._signInService.sendRequestForUserDetails().subscribe(
+            (userDetails: UserDetails) => {
+                let request: UnitsDetailsRequest = new UnitsDetailsRequest(userDetails.employer.id, userDetails.employer.name, userDetails.email);
+                this._unitsService.sendRequestForUnitsAvailable(request).subscribe(
+                    (response: UnitsDetailsResponse) => {
+                        this.unitsDetails = response;
+                        this.unitsAvailableIsLoading = false;
+                    }
+                );
+            }
+        );
     }
 
-    private getSpentUnits() {
+    private getSpentPreviousMonthUnits() {
         this.unitsSpentPreviousMonth = 5000;
+        this.previousMonthUnitsIsLoading = false;
     }
 
     private calculatePrevious10YearsForSelect() {
@@ -59,51 +71,50 @@ export class DashboardComponent implements OnInit {
         }
     }
 
-    public getMonthlyCampaigns(year: number) {
-        this.expenditures = this.campaignService.getExpenditures(year);
-        let onDemandLabel: string = '';
-        let campaignsLabel: string = '';
-        let onDemandMonthlyData: number[] = [];
-        let campaignMonthlyData: number[] = [];
-
-        this.expenditures.forEach((expense, index) => {
-            if (index == 0) {
-                onDemandLabel = expense.label;
-                onDemandMonthlyData = expense.monthlyExpenditure;
-            } else {
-                campaignsLabel = expense.label;
-                campaignMonthlyData = expense.monthlyExpenditure;
+    public sendRequestForMonthlyExpenditure(year: number){
+        if(!this.expendituresAreLoading){
+            this.expendituresAreLoading = true;            
+        }
+        this._campaignService.sendRequestForMonthlyExpenditure(year).subscribe(
+            (expenditures: MonthlyExpenditure[]) => {               
+                this.expendituresAreLoading = false;
+                this.setLineChart(expenditures);
             }
-        });
-        let months: string[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
+        );
+    }
 
-        let myChart = new Chart('monthlyCampaigns', {
+    public setLineChart(expenditures: MonthlyExpenditure[]) {
+        
+        this.smsLabel = expenditures[0].label;
+        this.smsScheduledLabel = expenditures[1].label;
+
+        this.smsCostData = expenditures[0].monthlyExpenditure;
+        this.smsScheduledCostData = expenditures[1].monthlyExpenditure; 
+        this.expenseChart = new Chart('monthlySmsExpenditureChart', {
             type: 'line',
             data: {
-                labels: months,
+                labels: this.months,
                 datasets: [{
-                    label: onDemandLabel,
-                    borderColor: 'rgba(255, 99, 132, 0.2)',
-                    backgroundColor: 'rgba(75, 192, 192, 1)',
+                    label: this.smsLabel,
+                    borderColor: '#3cba9f',
                     fill: false,
-                    data: onDemandMonthlyData
+                    data: this.smsCostData
                 },
                 {
-                    label: campaignsLabel,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    label: this.smsScheduledLabel,
+                    borderColor: '#ffcc00',
                     fill: false,
-                    data: campaignMonthlyData
+                    data: this.smsScheduledCostData
                 }],
             },
         });
     }
 
-    public onSelectYear(event) {
-        this.getMonthlyCampaigns(event.target.value);
+    public changeMonthlyExpenditure(event) {
+        this.sendRequestForMonthlyExpenditure(event.target.value);
     }
 
     public openUnitsRequestModal() {
-        this.modalService.open(UnitsComponent);
+        this._modalService.open(UnitsComponent);
     }
 }

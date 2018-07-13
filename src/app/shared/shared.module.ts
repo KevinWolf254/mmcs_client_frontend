@@ -11,6 +11,7 @@ import { ClientsComponent } from './clients/clients.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { SignUpComponent } from './sign-up/sign-up.component';
 
 @NgModule({
   imports: [
@@ -32,7 +33,8 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
     SignInComponent, 
     UserProfileComponent, 
     CampaignsComponent,
-    ClientsComponent
+    ClientsComponent,
+    SignUpComponent
   ]
 })
 export class SharedModule { }

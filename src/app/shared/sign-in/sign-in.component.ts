@@ -17,7 +17,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class SignInComponent implements OnInit {
 
-  public signInForm: FormGroup;
+  public signInForm: FormGroup; 
   private userDetails: UserDetails;
 
   constructor(private _fb: FormBuilder, private router: Router, 

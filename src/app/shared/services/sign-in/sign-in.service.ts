@@ -19,7 +19,7 @@ export class SignInService {
     let oAuthData = "grant_type=password"+"&username="+email+"&password="+password;
     return this._http.post<JsonWebToken>(authUri, oAuthData, this.authHeader);
   }
-
+ 
   public sendRequestForUserDetails(): Observable<UserDetails>{
     let credentialsUri: string = this.basicUri+"/api/credentials";
     return this._http.get<UserDetails>(credentialsUri)

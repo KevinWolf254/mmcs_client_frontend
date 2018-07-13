@@ -8,8 +8,10 @@ import { ClientsComponent } from './shared/clients/clients.component';
 import { AdminComponent } from './Admin/admin.component';
 import { AdminGuard } from './auth/admin.guard';
 import { SharedGuard } from './auth/shared.guard';
+import { SignUpComponent } from './shared/sign-up/sign-up.component';
 
-const routes: Routes = [
+const routes: Routes = [  
+  {path:'signup', component:SignUpComponent},
   {path:'signin', component:SignInComponent},
   {path:'dashboard', component:DashboardComponent, canActivate: [AdminGuard]},
   {path:'profile', component:UserProfileComponent, canActivate: [SharedGuard]},

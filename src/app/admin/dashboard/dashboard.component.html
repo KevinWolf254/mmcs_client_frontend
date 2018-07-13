@@ -19,12 +19,12 @@
         <div class="col-sm-6">
           <div class="card shadow mb-5 rounded"> 
             <div class="card-body">
-              <div *ngIf="unitsAvailableIsLoaded" class="spinner">
+              <div *ngIf="unitsAvailableIsLoading" class="spinner mt-3">
                 <div class="bounce1"></div>
                 <div class="bounce2"></div>
                 <div class="bounce3"></div>
               </div>
-              <h4 class="card-title">{{units | currency:'ksh '}} </h4> 
+              <h4 class="card-title">{{unitsDetails.unitsAvailable | currency:'ksh '}} </h4> 
             </div>
             <div class="card-footer text-right text-muted">
               <h6 class="card-text text-right">
@@ -36,11 +36,16 @@
         <div class="col-sm-6">
           <div class="card shadow mb-3 rounded">
             <div class="card-body">
-              <h4 class="card-title">{{unitsDetails.unitsAvailable | currency:'ksh '}} </h4>
+              <div *ngIf="previousMonthUnitsIsLoading" class="spinner mt-3">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+              </div>
+              <h4 class="card-title">{{unitsSpentPreviousMonth | currency:'ksh '}} </h4>
             </div>
             <div class="card-footer text-right text-muted">
               <h6 class="card-text text-right">
-                  Units Spent this Month
+                  Units Spent Previous Month
               </h6>
             </div>
           </div>
@@ -53,9 +58,9 @@
               <div class="d-flex flex-row-reverse bd-highlight">
                 <div class="px-2 bd-highlight">
                   <button type="button" class="btn btn-sm btn-outline-secondary"
-                    data-toggle="tooltip" data-placement="top" title="Pending Requests" placement="left"
-                    ngbPopover="Total Amount Requested: {{unitsDetails.requestsPendingApprovalAmount | currency: 'ksh '}}" popoverTitle="Requested Amount">
-                    Requests <span class="badge badge-info">{{unitsDetails.requestsPendingApproval}}</span>
+                    data-toggle="tooltip" data-placement="top" title="Pending Requests" placement="left" ngbPopover="Total Amount Requested: {{unitsDetails.requestsPendingApprovalAmount | currency: 'ksh '}}" popoverTitle="Requested Amount">
+                    Requests 
+                    <span class="badge badge-info">{{unitsDetails.requestsPendingApproval}}</span>
                   </button>
                 </div>
                 <div class="px-3 bd-highlight"> | </div>
@@ -68,8 +73,7 @@
                 </div>
                 <div class="px-3 bd-highlight"> | </div>
                 <div class="px-2 bd-highlight">
-                  <select class="form-control form-control-sm px-3" id="selectYear" (change)="changeMonthlyExpenditure
-                  ($event)">
+                  <select class="form-control form-control-sm px-3" id="selectYear" (change)="changeMonthlyExpenditure($event)">
                     <option *ngFor="let year of years" [value]="year">{{year}}</option>
                   </select>
                 </div>
@@ -83,7 +87,14 @@
       </div>
       <div class="row mt-3 px-4">
         <div class="col">
-            <canvas id="monthlyCampaigns" class="chartjs-render-monitor"></canvas>
+            <div *ngIf="expendituresAreLoading" class="spinner mt-3">
+              <div class="bounce1"></div>
+              <div class="bounce2"></div>
+              <div class="bounce3"></div>
+            </div>
+            <div [hidden]="expendituresAreLoading">              
+              <canvas id="monthlySmsExpenditureChart" class="chartjs-render-monitor"></canvas>
+            </div>
         </div>
       </div>
     </div>
