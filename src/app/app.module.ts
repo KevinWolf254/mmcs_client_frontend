@@ -21,6 +21,7 @@ import { AuthInterceptor } from './shared/services/auth-interceptor';
 import { ToastrModule } from 'ngx-toastr';
 import { SignUpService } from './shared/services/sign-up/sign-up.service';
 import { AeonService } from './shared/services/aeon/aeon.service';
+import { UserService } from './shared/services/user/user.service';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { AeonService } from './shared/services/aeon/aeon.service';
     AeonService,
     SignInService,
     SignUpService,
+    UserService,
     GroupManagerService,
     ClientService,
     CampaignService,

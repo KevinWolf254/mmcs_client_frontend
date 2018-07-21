@@ -39,8 +39,4 @@ export class SignInService {
     }
     return _throw('Something bad happened; please try again later.');
   };
-
-  changePassword(currentPass: string, newPass: string){
-    //send to client webApi
-  }
 }

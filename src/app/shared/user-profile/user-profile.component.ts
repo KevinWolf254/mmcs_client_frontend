@@ -6,6 +6,8 @@ import { UserCredentials } from '../models/user-credentials.model';
 import { SignInService } from '../services/sign-in/sign-in.service';
 import { UserDetails } from '../models/user-details.model';
 import { Employer } from '../models/employer.model';
+import { UserService } from '../services/user/user.service';
+import { ToastrService } from '../../../../node_modules/ngx-toastr';
 
 @Component({
   selector: 'app-user-profile',
@@ -19,10 +21,11 @@ export class UserProfileComponent implements OnInit {
   lastSignIn: Date = new Date();
   date=''
   changePassForm: FormGroup;
+  public changingPass: boolean = false;
 
-  constructor(private _fb: FormBuilder, private signInService: SignInService) { 
+  constructor(private _fb: FormBuilder, private signInService: SignInService, private userService: UserService,
+    private notify: ToastrService) { 
     this.changePassForm = _fb.group({
-      'currentPass': [null, Validators.required],
       'newPass': [null,Validators.compose([Validators.required, Validators.minLength(8)])],
       'confirmNewPass': [null,Validators.compose([Validators.required, confirmPasswordValidator])]
     });
@@ -48,8 +51,17 @@ export class UserProfileComponent implements OnInit {
     this.date = date.toISOString().slice(0,10);
   }
 
-  changePassword(values){
-    this.signInService.changePassword(values.currentPass, values.newPass);
-    this.changePassForm.reset(); 
+  changePassword(form){
+    this.changingPass = true;
+    this.userService.changePassword(form.newPass).subscribe(
+      (response: any)=>{  
+        this.changingPass = false; 
+        this.notify.success('Password was successfully changed..');   
+        this.changePassForm.reset(); 
+      },errror =>{        
+        this.changingPass = false; 
+        this.notify.error('Something wrong happened..'); 
+      }
+    );
   } 
 }
