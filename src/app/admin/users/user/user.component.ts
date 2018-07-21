@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { selectValidator } from '../../../shared/validators/select-validator';
 import { User } from '../../../shared/models/user.model';
+import { UserService } from '../../../shared/services/user/user.service';
 
 @Component({
   selector: 'app-user',
@@ -14,10 +15,10 @@ export class UserComponent implements OnInit {
   roles: string[] = [];
   newUser: User;
 
-  constructor(private _fb: FormBuilder, private userService: UserService, private notify: ToastrService) {
+  constructor(private _fb: FormBuilder) {
     this.userForm = _fb.group({
-      'surname': [null],
-      'otherNames': [null],
+      'firstName': [null],
+      'lastName': [null],
       'role': ['0', Validators.compose([Validators.required, selectValidator])],
       'email': [null,Validators.compose([Validators.required, Validators.email])],
       'defaultPass': [null,Validators.compose([Validators.required, Validators.minLength(4)])]
