@@ -17,8 +17,8 @@ export class UserComponent implements OnInit {
 
   constructor(private _fb: FormBuilder) {
     this.userForm = _fb.group({
-      'firstName': [null],
-      'lastName': [null],
+      'surname': [null], 
+      'otherNames': [null],
       'role': ['0', Validators.compose([Validators.required, selectValidator])],
       'email': [null,Validators.compose([Validators.required, Validators.email])],
       'defaultPass': [null,Validators.compose([Validators.required, Validators.minLength(4)])]
