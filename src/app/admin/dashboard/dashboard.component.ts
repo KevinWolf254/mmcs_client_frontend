@@ -31,7 +31,7 @@ export class DashboardComponent implements OnInit {
     public smsLabel: string = 'sms expense 2018';
     public smsScheduledLabel: string = 'scheduled sms expense 2018';
 
-    public smsCostData: number[] = [];
+    public smsCostData: number[] = []; 
     public smsScheduledCostData: number[] = [];
     public months: string[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
 

@@ -20,6 +20,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthInterceptor } from './shared/services/auth-interceptor';
 import { ToastrModule } from 'ngx-toastr';
 import { SignUpService } from './shared/services/sign-up/sign-up.service';
+import { AeonService } from './shared/services/aeon/aeon.service';
 
 
 
@@ -42,12 +43,13 @@ import { SignUpService } from './shared/services/sign-up/sign-up.service';
   providers: [
     AdminGuard,
     SharedGuard,
+    AeonService,
+    SignInService,
+    SignUpService,
     GroupManagerService,
     ClientService,
     CampaignService,
     UnitsService,
-    SignInService,
-    SignUpService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

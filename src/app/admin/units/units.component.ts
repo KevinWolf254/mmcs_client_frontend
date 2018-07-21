@@ -35,7 +35,7 @@ export class UnitsComponent implements OnInit {
   }
   
   public sendRequestForMoreUnits(form){
-    this.unitsService.sendRequestForUnitsToClientWebApi(this.userDetails, form.units, form.mpesaTransNo).subscribe(
+    this.unitsService.sendRequestForUnits(this.userDetails, form.units, form.mpesaTransNo).subscribe(
       response =>{
         this.notify.success('Request sent successfully.');
         this.requestForm.reset();

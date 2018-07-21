@@ -6,6 +6,8 @@ import { SignInService } from '../services/sign-in/sign-in.service';
 import { UserDetails } from '../models/user-details.model';
 import { JsonWebToken } from '../models/json-web-token.model';
 import { ToastrService } from 'ngx-toastr';
+import { EmployerRegistration } from '../models/employer.model';
+import { AeonService } from '../services/aeon/aeon.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -19,8 +21,9 @@ export class SignInComponent implements OnInit {
 
   public signInForm: FormGroup; 
   private userDetails: UserDetails;
+  public isSigningIn: boolean = false;
 
-  constructor(private _fb: FormBuilder, private router: Router, 
+  constructor(private _fb: FormBuilder, private router: Router, private aeonService: AeonService,
     private signinService: SignInService, private notify: ToastrService) {
     this.signInForm = _fb.group({
       'email': [null, Validators.email],
@@ -32,19 +35,43 @@ export class SignInComponent implements OnInit {
   }
 
   public signIn(form){
-    this.signinService.authenticateUser(form.email, form.password).subscribe(
+    
+    this.aeonService.confirmRegisteration(form.email).subscribe(
+      (response: EmployerRegistration) =>{
+        console.log(response.enabled);
+        if(!response.enabled){          
+          this.notify.error('Account has not been activated. Please activate your account. Link was sent to your email address provided during registration.');
+        }else
+          this.authenticateUser(form.email, form.password);          
+        this.isSigningIn = false;
+      },error =>{
+        if(error.status == '400' || error.status == '401'){
+          this.notify.error('The email or password is incorrect 01');
+        }
+        console.log(error);
+        this.notify.error('The email or password is incorrect 02');
+        this.isSigningIn = false;
+      }
+    );
+  }
+
+  private authenticateUser(email: string, password: string){
+    this.isSigningIn = true;
+    this.signinService.authenticateUser(email, password).subscribe(
       (jwt: JsonWebToken)=>{
         localStorage.setItem('userToken', jwt.access_token);        
         this.signinService.sendRequestForUserDetails().subscribe(
           (userDetails: UserDetails)=>{
+            this.isSigningIn = false;
             this.setUserDetails(userDetails);
             this.routeUser();
           }
         ); 
       },error =>{
         if(error.status == '400' || error.status == '401'){
-          this.notify.error('The email or password is incorrect');
+          this.notify.error('The email or password is incorrect 03');
         }
+        this.isSigningIn = false;
       }
     );
   }
@@ -52,7 +79,6 @@ export class SignInComponent implements OnInit {
   private setUserDetails(userDetails){
     this.userDetails = userDetails;
     localStorage.setItem('userRole', userDetails.credentials.role);
-    this.signinService.setUserDetails(userDetails);
   }
 
   private isAdmin(): boolean{
@@ -62,11 +88,12 @@ export class SignInComponent implements OnInit {
   } 
 
   private routeUser(){
+    this.isSigningIn = false;
     if(this.isAdmin()){
       this.router.navigate(['dashboard']);
     }else{
       this.router.navigate(['profile']);
     }
-    this.notify.success("Welcome: " +this.userDetails.firstName+' '+this.userDetails.lastName);
+    this.notify.success("Welcome: " +this.userDetails.surname+' '+this.userDetails.otherNames);
   }
 }

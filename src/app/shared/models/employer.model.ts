@@ -6,6 +6,13 @@ export class Employer {
         this.name = name;
     }
 }
+export class EmployerRegistration extends Employer{
+    enabled: boolean;
+    constructor(id?: number, name?: string, enabled?: boolean){
+        super(id, name);
+        this.enabled = enabled;
+    }
+}
 
 export class UnitsDetailsRequest extends Employer{
     adminEmail: string;
@@ -27,7 +34,7 @@ export class UnitsRequest extends UnitsDetailsRequest{
 
     constructor(id?: number, name?: string, adminEmail?: string, unitsRequested?: number, mpesaTransNo?: string){
         super(id, name, adminEmail);
-        this.name = name;
+        // this.name = name;
         this.unitsRequested = unitsRequested;
         this.mpesaTransNo = mpesaTransNo;
         //in aeon api remember to add date
