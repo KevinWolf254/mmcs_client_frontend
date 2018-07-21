@@ -22,8 +22,6 @@ import { ToastrModule } from 'ngx-toastr';
 import { SignUpService } from './shared/services/sign-up/sign-up.service';
 import { AeonService } from './shared/services/aeon/aeon.service';
 
-
-
 @NgModule({
   declarations: [
     AppComponent

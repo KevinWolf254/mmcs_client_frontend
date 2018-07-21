@@ -8,6 +8,7 @@ import { JsonWebToken } from '../models/json-web-token.model';
 import { ToastrService } from 'ngx-toastr';
 import { EmployerRegistration } from '../models/employer.model';
 import { AeonService } from '../services/aeon/aeon.service';
+import { SignUpService } from '../services/sign-up/sign-up.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -35,14 +36,17 @@ export class SignInComponent implements OnInit {
   }
 
   public signIn(form){
-    
-    this.aeonService.confirmRegisteration(form.email).subscribe(
+    this.confirmIsRegistered(form.email, form.password);   
+  }
+
+  private confirmIsRegistered(email: string, password: string){
+    this.aeonService.confirmRegisteration(email).subscribe(
       (response: EmployerRegistration) =>{
         console.log(response.enabled);
         if(!response.enabled){          
           this.notify.error('Account has not been activated. Please activate your account. Link was sent to your email address provided during registration.');
         }else
-          this.authenticateUser(form.email, form.password);          
+          this.authenticateUser(email, password);          
         this.isSigningIn = false;
       },error =>{
         if(error.status == '400' || error.status == '401'){
