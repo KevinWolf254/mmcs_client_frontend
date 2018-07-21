@@ -4,6 +4,7 @@ import { selectValidator } from '../../../shared/validators/select-validator';
 import { User } from '../../../shared/models/user.model';
 import { UserService } from '../../../shared/services/user/user.service';
 import { AeonService } from '../../../shared/services/aeon/aeon.service';
+import { UserDetails } from '../../../shared/models/user-details.model';
 
 @Component({
   selector: 'app-user',
