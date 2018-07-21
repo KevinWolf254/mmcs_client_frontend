@@ -12,9 +12,10 @@ import { AeonService } from '../../../shared/services/aeon/aeon.service';
 })
 export class UserComponent implements OnInit {
 
-  userForm: FormGroup;
-  roles: string[] = [];
-  newUser: User;
+  public userForm: FormGroup;
+  public roles: string[] = [];
+  public newUser: User;
+  public adminUser: UserDetails
 
   constructor(private _fb: FormBuilder, private userService: UserService, private aeonService: AeonService) {
     this.userForm = _fb.group({
