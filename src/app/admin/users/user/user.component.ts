@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { selectValidator } from '../../../shared/validators/select-validator';
 import { User } from '../../../shared/models/user.model';
 import { UserService } from '../../../shared/services/user/user.service';
+import { AeonService } from '../../../shared/services/aeon/aeon.service';
 
 @Component({
   selector: 'app-user',
