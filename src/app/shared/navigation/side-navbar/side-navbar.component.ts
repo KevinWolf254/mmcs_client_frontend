@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Role } from '../../models/credentials.model';
 
 @Component({
   selector: 'app-side-navbar',
@@ -18,9 +19,4 @@ export class SideNavbarComponent implements OnInit {
     return false;
   }
 
-}
-
-export enum Role{
-  ADMIN = "ADMIN",
-  USER = "USER"
 }
