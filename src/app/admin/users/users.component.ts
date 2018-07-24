@@ -5,8 +5,6 @@ import { UserCredentials } from '../../shared/models/user-credentials.model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { selectValidator } from '../../shared/validators/select-validator';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
-import { UserService } from '../../shared/services/user/user.service';
-import { UserService } from '../../../shared/services/user/user.service';
 
 @Component({
   selector: 'app-users',
@@ -35,7 +33,7 @@ export class UsersComponent implements OnInit {
     pagerRightArrow: 'fa fa-chevron-right', pagerPrevious: 'fa fa-step-backward', pagerNext: 'fa fa-step-forward'
   };
 
-  constructor(private modalService: NgbModal, private _fb: FormBuilder, private userService: UserService) {
+  constructor(private modalService: NgbModal, private _fb: FormBuilder) {
     this.form = _fb.group({
       'resetPass': [null,Validators.compose([Validators.required, Validators.minLength(4)])]
     });
