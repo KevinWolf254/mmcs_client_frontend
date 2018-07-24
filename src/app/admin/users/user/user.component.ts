@@ -3,8 +3,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { selectValidator } from '../../../shared/validators/select-validator';
 import { User } from '../../../shared/models/user.model';
 import { UserService } from '../../../shared/services/user/user.service';
-import { AeonService } from '../../../shared/services/aeon/aeon.service';
 import { UserDetails } from '../../../shared/models/user-details.model';
+import { ToastrService } from '../../../../../node_modules/ngx-toastr';
 
 @Component({
   selector: 'app-user',
@@ -18,7 +18,7 @@ export class UserComponent implements OnInit {
   public newUser: User;
   public adminUser: UserDetails;
 
-  constructor(private _fb: FormBuilder, private userService: UserService, private aeonService: AeonService) {
+  constructor(private _fb: FormBuilder, private userService: UserService) {
     this.userForm = _fb.group({
       'surname': [null], 
       'otherNames': [null],
@@ -32,11 +32,17 @@ export class UserComponent implements OnInit {
     this.roles = ["Admin", "User"];
   }
 
-  createUser(form){
+  public createUser(form){
     this.newUser = new User(0, form.firstName, form.lastName, form.email);
     let role = form.role;
     let defaultPass = form.defaultPass;
-    this.userForm.reset();
+    this.userService.saveNewUser(form.surname, form.otherNames, form.email, form.role, form.defaultPass).subscribe(
+      response =>{        
+        this.userForm.reset();
+      },error =>{
+
+      }
+    );
   }
 }
 

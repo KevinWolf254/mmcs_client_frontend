@@ -14,4 +14,10 @@ export class UserService {
     let data = "NewPassword="+newPass;
     return this._http.post<any>(passUri, data, this.authHeader);
   }
+
+  public saveNewUser(surname: string, otherNames: string, email: string, role: string, password: string){
+    let userData = "surname="+surname+"&otherNames="+otherNames+"&email="+email+"&role="+role+
+    "&password="+password;
+    return this._http.post<any>(this.basicUri + "/secure/users/create", userData, this.authHeader);
+  }
 }
