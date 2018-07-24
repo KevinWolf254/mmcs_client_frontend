@@ -5,6 +5,7 @@ import { UserCredentials } from '../../shared/models/user-credentials.model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { selectValidator } from '../../shared/validators/select-validator';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
+import { UserService } from '../../shared/services/user/user.service';
 import { UserService } from '../../../shared/services/user/user.service';
 
 @Component({
@@ -48,6 +49,7 @@ export class UsersComponent implements OnInit {
 
   // retrieves all users from server
   private getUsers(){
+
 
     let user: UserCredentials;
     // let date: string = (new Date().toISOString().slice(0,10));
