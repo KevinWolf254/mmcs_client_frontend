@@ -5,6 +5,7 @@ import { UserCredentials } from '../../shared/models/user-credentials.model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { selectValidator } from '../../shared/validators/select-validator';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
+import { UserService } from '../../../shared/services/user/user.service';
 
 @Component({
   selector: 'app-users',
@@ -13,7 +14,7 @@ import { DatatableComponent } from '@swimlane/ngx-datatable';
 })
 export class UsersComponent implements OnInit {
 
-  users: UserCredentials[] = [];
+  public users: UserCredentials[] = [];
   deleteUser: UserCredentials;
   deleteRow: number = null;
   perPage: number;
@@ -33,7 +34,7 @@ export class UsersComponent implements OnInit {
     pagerRightArrow: 'fa fa-chevron-right', pagerPrevious: 'fa fa-step-backward', pagerNext: 'fa fa-step-forward'
   };
 
-  constructor(private modalService: NgbModal, private _fb: FormBuilder) {
+  constructor(private modalService: NgbModal, private _fb: FormBuilder, private userService: UserService) {
     this.form = _fb.group({
       'resetPass': [null,Validators.compose([Validators.required, Validators.minLength(4)])]
     });
@@ -46,11 +47,12 @@ export class UsersComponent implements OnInit {
   }
 
   // retrieves all users from server
-  getUsers(){
+  private getUsers(){
+
     let user: UserCredentials;
     // let date: string = (new Date().toISOString().slice(0,10));
     let date: Date = new Date();
-    for(let i=1; i<=50; i++){
+    for(let i=1; i<=50; i++){ 
       user = new UserCredentials(i, 'User', ''+i, 'user'+i+'@company.com', 'Admin', true, date);
       this.users.push(user);
     }

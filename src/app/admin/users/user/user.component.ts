@@ -17,8 +17,9 @@ export class UserComponent implements OnInit {
   public roles: string[] = [];
   public newUser: User;
   public adminUser: UserDetails;
+  public isCreating: boolean = false;
 
-  constructor(private _fb: FormBuilder, private userService: UserService) {
+  constructor(private _fb: FormBuilder, private userService: UserService, private notify: ToastrService) {
     this.userForm = _fb.group({
       'surname': [null], 
       'otherNames': [null],
@@ -33,14 +34,19 @@ export class UserComponent implements OnInit {
   }
 
   public createUser(form){
+    this.isCreating = true;
     this.newUser = new User(0, form.firstName, form.lastName, form.email);
     let role = form.role;
     let defaultPass = form.defaultPass;
     this.userService.saveNewUser(form.surname, form.otherNames, form.email, form.role, form.defaultPass).subscribe(
-      response =>{        
+      response =>{ 
+        this.notify.success('Created user Successfully...');       
         this.userForm.reset();
+        this.userForm.get("role").setValue(0);
+        this.isCreating = false;
       },error =>{
-
+        this.notify.error('User may already exist...');
+        this.isCreating = false;
       }
     );
   }

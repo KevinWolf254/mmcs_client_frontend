@@ -37,13 +37,13 @@
     <ngx-datatable class="bootstrap mt-3" [rows]="users" [limit]="perPage" [columnMode]="'flex'"
       [rowHeight]="55" [cssClasses]="customPagerIcons" [footerHeight]="40" [scrollbarH]="true">
       <ngx-datatable-column name="id" [flexGrow]="1"></ngx-datatable-column>
-      <ngx-datatable-column name="first name" [flexGrow]="2">        
+      <ngx-datatable-column name="Surname" [flexGrow]="2">        
         <ng-template ngx-datatable-cell-template let-row="row" let-value="value" let-rowIndex="rowIndex">
           <span *ngIf="!edit[rowIndex]">{{value}}</span>        
           <input *ngIf="edit[rowIndex]" type="text" class="form-control form-control-sm" [value]="value" (blur)="setFName($event, rowIndex)">
         </ng-template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="last name" [flexGrow]="2">
+      <ngx-datatable-column name="otherNames" [flexGrow]="2">
         <ng-template ngx-datatable-cell-template let-row="row" let-value="value" let-rowIndex="rowIndex">
           <span *ngIf="!edit[rowIndex]">{{value}}</span>        
           <input *ngIf="edit[rowIndex]" type="text" class="form-control form-control-sm" [value]="value" (blur)="setLName($event, rowIndex)">
