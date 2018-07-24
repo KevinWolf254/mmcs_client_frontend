@@ -6,7 +6,6 @@ import { UserService } from '../../../shared/services/user/user.service';
 import { UserDetails } from '../../../shared/models/user-details.model';
 import { ToastrService } from '../../../../../node_modules/ngx-toastr';
 import { Role } from '../../../shared/models/credentials.model';
-import { Role } from '../../../shared/navigation/side-navbar/side-navbar.component';
 
 @Component({
   selector: 'app-user',
