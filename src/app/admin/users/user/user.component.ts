@@ -5,6 +5,7 @@ import { User } from '../../../shared/models/user.model';
 import { UserService } from '../../../shared/services/user/user.service';
 import { UserDetails } from '../../../shared/models/user-details.model';
 import { ToastrService } from '../../../../../node_modules/ngx-toastr';
+import { Role } from '../../../shared/navigation/side-navbar/side-navbar.component';
 
 @Component({
   selector: 'app-user',
@@ -35,9 +36,6 @@ export class UserComponent implements OnInit {
 
   public createUser(form){
     this.isCreating = true;
-    this.newUser = new User(0, form.firstName, form.lastName, form.email);
-    let role = form.role;
-    let defaultPass = form.defaultPass;
     this.userService.saveNewUser(form.surname, form.otherNames, form.email, form.role, form.defaultPass).subscribe(
       response =>{ 
         this.notify.success('Created user Successfully...');       
