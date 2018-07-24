@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
+import { UserCredentials } from '../../models/user-credentials.model';
 
 @Injectable()
 export class UserService {
@@ -19,5 +20,13 @@ export class UserService {
     let userData = "surname="+surname+"&otherNames="+otherNames+"&email="+email+"&role="+role+
     "&password="+password;
     return this._http.post<any>(this.basicUri + "/secure/users/create", userData, this.authHeader);
+  }
+
+  public getUsers(){
+    return this._http.get(this.basicUri + "/secure/users");
+  }
+
+  public updateUser(user: UserCredentials){
+    return this._http.put(this.basicUri + "/secure/users", user);
   }
 }

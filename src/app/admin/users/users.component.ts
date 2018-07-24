@@ -5,6 +5,8 @@ import { UserCredentials } from '../../shared/models/user-credentials.model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { selectValidator } from '../../shared/validators/select-validator';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
+import { UserService } from '../../shared/services/user/user.service';
+import { ToastrService } from '../../../../node_modules/ngx-toastr';
 
 @Component({
   selector: 'app-users',
@@ -17,8 +19,8 @@ export class UsersComponent implements OnInit {
   deleteUser: UserCredentials;
   deleteRow: number = null;
   perPage: number;
-  perPageNos: number[] = [10, 25, 50, 100];
-  edit = {};
+  public perPageNos: number[] = [10, 25, 50, 100];
+  public edit = {};
   email: string = '';
   form: FormGroup;
   modalRefDel: NgbModalRef;
@@ -33,7 +35,7 @@ export class UsersComponent implements OnInit {
     pagerRightArrow: 'fa fa-chevron-right', pagerPrevious: 'fa fa-step-backward', pagerNext: 'fa fa-step-forward'
   };
 
-  constructor(private modalService: NgbModal, private _fb: FormBuilder) {
+  constructor(private modalService: NgbModal, private _fb: FormBuilder, private userService: UserService, private notify: ToastrService) {
     this.form = _fb.group({
       'resetPass': [null,Validators.compose([Validators.required, Validators.minLength(4)])]
     });
@@ -45,39 +47,41 @@ export class UsersComponent implements OnInit {
     this.perPage = this.perPageNos[0];
   }
 
-  // retrieves all users from server
   private getUsers(){
-
-
-    let user: UserCredentials;
-    // let date: string = (new Date().toISOString().slice(0,10));
-    let date: Date = new Date();
-    for(let i=1; i<=50; i++){ 
-      user = new UserCredentials(i, 'User', ''+i, 'user'+i+'@company.com', 'Admin', true, date);
-      this.users.push(user);
-    }
+    this.userService.getUsers().subscribe(
+      (users: UserCredentials[]) =>{
+        this.users = users;
+      }
+    );
     // cache our users
     this.temp = [...this.users];
   }
 
-  editUser(rowIndex){
+  public editUser(rowIndex){
     this.edit[rowIndex] = true;
   }
 
-  setFName(event, rowIndex){
-    this.users[rowIndex]["firstName"] = event.target.value;
+  public setFName(event, rowIndex){
+    this.users[rowIndex]["surname"] = event.target.value;
   }
 
-  setLName(event, rowIndex){
-    this.users[rowIndex]["lastName"] = event.target.value;
+  public setLName(event, rowIndex){
+    this.users[rowIndex]["otherNames"] = event.target.value;
   }
 
-  setRole(event, rowIndex){
+  public setRole(event, rowIndex){
     this.users[rowIndex].credentials.role = event.target.value;
   }
 
-  updateUser(rowIndex){
+  public updateUser(rowIndex){
     this.users = [...this.users];
+    this.userService.updateUser(this.users[rowIndex]).subscribe(
+      response=>{
+        this.notify.success("User was successfully updated...");
+      },error=>{
+        this.notify.error("Update failed...");
+      }
+    );
     this.edit[rowIndex] = false;
   }
   
@@ -95,7 +99,8 @@ export class UsersComponent implements OnInit {
   }
 
   confirmDelete(modal, user, rowIndex){
-    this.deleteUser = new UserCredentials(user.id, user.firstName, user.lastName, user.email, user.credentials.role, user.credentials.active, user.credentials.lastSignIn);
+    this.deleteUser = new UserCredentials(user.id, user.surname, user.otherNames, 
+      user.email, user.credentials.role, user.credentials.active, user.credentials.lastSignIn);
     this.deleteRow = rowIndex;    
     this.modalRefDel = this.modalService.open(modal);
   }

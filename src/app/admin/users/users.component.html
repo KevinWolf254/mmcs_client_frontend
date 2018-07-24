@@ -68,7 +68,7 @@
          </ng-template>
       </ngx-datatable-column>
       <ngx-datatable-column name="signed In" [flexGrow]="2">
-        <ng-template ngx-datatable-cell-template let-row="row">{{row.credentials.lastSignIn.toISOString().slice(0,10)}}</ng-template>
+        <ng-template ngx-datatable-cell-template let-row="row">{{row.credentials.lastSignIn}}</ng-template>
       </ngx-datatable-column>
       <ngx-datatable-column name="actions" [flexGrow]="3">
         <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
@@ -128,8 +128,8 @@
     </button>
   </div>
   <div class="modal-body">
-    Are you sure you want to delete <span class="bg-light border rounded px-2"> <b>{{deleteUser.firstName}}</b></span>  
-    <span class="bg-light border rounded px-2"> <b>{{deleteUser.lastName}}</b></span> 
+    Are you sure you want to delete <span class="bg-light border rounded px-2"> <b>{{deleteUser.surname}}</b></span>  
+    <span class="bg-light border rounded px-2"> <b>{{deleteUser.otherNames}}</b></span> 
     of email <span class="bg-light border rounded px-2"> <b>{{deleteUser.email}}</b></span> ?    
   <hr>
   <div class="d-flex justify-content-between">

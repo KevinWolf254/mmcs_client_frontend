@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { Role } from '../shared/navigation/side-navbar/side-navbar.component';
 
 @Injectable()
 export class AdminGuard implements CanActivate {
@@ -8,7 +9,7 @@ export class AdminGuard implements CanActivate {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-      if(localStorage.getItem('userRole') == "ROLE_ADMIN"){
+      if(localStorage.getItem('userRole') == Role.ADMIN){
         return true;
       }
       this.router.navigate(['signin']);

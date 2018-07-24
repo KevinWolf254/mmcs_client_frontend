@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Role } from '../side-navbar/side-navbar.component';
 
 @Component({
   selector: 'app-top-navbar',
@@ -21,7 +22,7 @@ export class TopNavbarComponent implements OnInit {
   }
 
   isAdmin(): boolean{
-    if(localStorage.getItem('userRole') == 'ROLE_ADMIN')
+    if(localStorage.getItem('userRole') == Role.ADMIN)
       return true;
     return false;
   }

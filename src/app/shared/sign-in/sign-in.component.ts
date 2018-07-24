@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { EmployerRegistration } from '../models/employer.model';
 import { AeonService } from '../services/aeon/aeon.service';
 import { SignUpService } from '../services/sign-up/sign-up.service';
+import { Role } from '../navigation/side-navbar/side-navbar.component';
 
 @Component({
   selector: 'app-sign-in',
@@ -86,9 +87,10 @@ export class SignInComponent implements OnInit {
   }
 
   private isAdmin(): boolean{
-    if(this.userDetails.credentials.role == 'ROLE_ADMIN')
+    if(this.userDetails.credentials.role === Role.ADMIN){
       return true;
-    return false
+    }
+    return false;
   } 
 
   private routeUser(){
