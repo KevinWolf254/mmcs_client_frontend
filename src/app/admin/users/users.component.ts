@@ -1,9 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { User } from '../../shared/models/user.model';
 import { UserCredentials } from '../../shared/models/user-credentials.model';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { selectValidator } from '../../shared/validators/select-validator';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { UserService } from '../../shared/services/user/user.service';
 import { ToastrService } from '../../../../node_modules/ngx-toastr';
@@ -16,17 +13,18 @@ import { ToastrService } from '../../../../node_modules/ngx-toastr';
 export class UsersComponent implements OnInit {
 
   public users: UserCredentials[] = [];
-  deleteUser: UserCredentials;
-  deleteRow: number = null;
-  perPage: number;
+  public deleteUser: UserCredentials;
+  public deleteRow: number = null;
+  private deleteUserId = null;
+  public perPage: number;
   public perPageNos: number[] = [10, 25, 50, 100];
   public edit = {};
-  email: string = '';
-  form: FormGroup;
-  modalRefDel: NgbModalRef;
-  modalRefReset: NgbModalRef;
+  public email: string = '';
+  // form: FormGroup;
+  public modalRefDel: NgbModalRef;
+  // modalRefReset: NgbModalRef;
 
-  temp = [];
+  public temp = [];
   @ViewChild(DatatableComponent) table: DatatableComponent;
   
   // Custom icons for ngx-datatable
@@ -35,10 +33,10 @@ export class UsersComponent implements OnInit {
     pagerRightArrow: 'fa fa-chevron-right', pagerPrevious: 'fa fa-step-backward', pagerNext: 'fa fa-step-forward'
   };
 
-  constructor(private modalService: NgbModal, private _fb: FormBuilder, private userService: UserService, private notify: ToastrService) {
-    this.form = _fb.group({
-      'resetPass': [null,Validators.compose([Validators.required, Validators.minLength(4)])]
-    });
+  constructor(private modalService: NgbModal, private userService: UserService, private notify: ToastrService) {
+    // this.form = _fb.group({
+    //   'resetPass': [null,Validators.compose([Validators.required, Validators.minLength(4)])]
+    // });
   }
 
   ngOnInit() {
@@ -51,10 +49,10 @@ export class UsersComponent implements OnInit {
     this.userService.getUsers().subscribe(
       (users: UserCredentials[]) =>{
         this.users = users;
+        // cache our users
+        this.temp = [...users];
       }
     );
-    // cache our users
-    this.temp = [...this.users];
   }
 
   public editUser(rowIndex){
@@ -74,41 +72,53 @@ export class UsersComponent implements OnInit {
   }
 
   public updateUser(rowIndex){
-    this.users = [...this.users];
     this.userService.updateUser(this.users[rowIndex]).subscribe(
-      response=>{
+      (userUpdated: UserCredentials)=>{
+        this.users[rowIndex] = userUpdated;        
+        this.users = [...this.users];        
+        this.edit[rowIndex] = false;
         this.notify.success("User was successfully updated...");
       },error=>{
         this.notify.error("Update failed...");
+        this.getUsers();
+        this.edit[rowIndex] = false;
       }
     );
-    this.edit[rowIndex] = false;
   }
   
-  openReset(modal, user, rowIndex){
-    this.form.reset(); 
-    this.modalRefReset = this.modalService.open(modal);
-    this.email = user.email;
-  }
+  // openReset(modal, user, rowIndex){
+  //   this.form.reset(); 
+  //   this.modalRefReset = this.modalService.open(modal);
+  //   this.email = user.email;
+  // }
 
-  reset(form){
-    console.log("User email: "+this.email);
-    console.log("Reset Pass: "+form.resetPass);
-    this.form.reset(); 
-    this.modalRefReset.close();   
-  }
+  // reset(form){
+  //   console.log("User email: "+this.email);
+  //   console.log("Reset Pass: "+form.resetPass);
+  //   this.form.reset(); 
+  //   this.modalRefReset.close();   
+  // }
 
-  confirmDelete(modal, user, rowIndex){
+  public confirmDelete(modal, user, rowIndex){
     this.deleteUser = new UserCredentials(user.id, user.surname, user.otherNames, 
       user.email, user.credentials.role, user.credentials.active, user.credentials.lastSignIn);
-    this.deleteRow = rowIndex;    
+      
+    this.deleteUserId = user.id;
+    this.deleteRow = rowIndex;        
     this.modalRefDel = this.modalService.open(modal);
   }
 
-  delete(){
-    this.users.splice(this.deleteRow, 1);
-    this.users = [...this.users];
-    this.modalRefDel.close(); 
+  public delete(){
+    this.userService.deletUser(this.deleteUserId).subscribe(
+      response=>{             
+        this.modalRefDel.close();
+        this.users.splice(this.deleteRow, 1);
+        this.users = [...this.users];
+        this.notify.success("Deleted");
+      },error=>{
+        this.notify.error("Deletion failed");
+      }
+    );
   }
 
   changePageEntries(event){
