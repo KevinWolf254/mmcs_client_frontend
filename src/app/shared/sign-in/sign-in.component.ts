@@ -9,7 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { EmployerRegistration } from '../models/employer.model';
 import { AeonService } from '../services/aeon/aeon.service';
 import { SignUpService } from '../services/sign-up/sign-up.service';
-import { Role } from '../navigation/side-navbar/side-navbar.component';
+import { Role } from '../models/credentials.model';
 
 @Component({
   selector: 'app-sign-in',

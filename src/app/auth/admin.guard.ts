@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { Role } from '../shared/navigation/side-navbar/side-navbar.component';
+import { Role } from '../shared/models/credentials.model';
 
 @Injectable()
 export class AdminGuard implements CanActivate {

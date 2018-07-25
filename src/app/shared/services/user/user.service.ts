@@ -27,6 +27,12 @@ export class UserService {
   }
 
   public updateUser(user: UserCredentials){
-    return this._http.put(this.basicUri + "/secure/users", user);
+    let userData = "surname="+user.surname+"&otherNames="+user.otherNames+"&email="+user.email+
+    "&role="+user.credentials.role+"&isactive="+user.credentials.active;
+    return this._http.put(this.basicUri + "/secure/users", userData, this.authHeader);
+  }
+
+  public deletUser(userId: number){
+    return this._http.delete(this.basicUri + "/secure/users/" + userId);
   }
 }
