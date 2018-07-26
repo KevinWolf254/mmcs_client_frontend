@@ -78,7 +78,7 @@ export class ClientGroupsComponent implements OnInit {
 
     // filter our data
     let tempClients = this.tempClients.filter((client: ClientTeleco) => {
-      return client.fullName.toLowerCase().indexOf(searchParam) !== -1 || !searchParam;
+      return client.name.toLowerCase().indexOf(searchParam) !== -1 || !searchParam;
     });
 
     // update the rows
@@ -93,15 +93,15 @@ export class ClientGroupsComponent implements OnInit {
   }
 
   openClientDetailsDialog(clientDetailsModal, selectedClient: ClientTeleco, rowIndex){
-    this.editableClient = new ClientTeleco(selectedClient.clientId, selectedClient.countryCode, 
-      selectedClient.phoneNo, selectedClient.fullName, selectedClient.telecom);
+    this.editableClient = new ClientTeleco(selectedClient.id, selectedClient.countryCode, 
+      selectedClient.phoneNumber, selectedClient.name, selectedClient.telecom);
     this.editableRow = rowIndex;    
     this.editableClientModal = this.modalService.open(clientDetailsModal);
   }
 
   openRemoveClientDialog(removeClientModal, selectedClient: ClientTeleco, rowIndex){
-    this.removableClient = new ClientTeleco(selectedClient.clientId, selectedClient.countryCode, 
-      selectedClient.phoneNo, selectedClient.fullName, selectedClient.telecom);
+    this.removableClient = new ClientTeleco(selectedClient.id, selectedClient.countryCode, 
+      selectedClient.phoneNumber, selectedClient.name, selectedClient.telecom);
     this.removableRow = rowIndex;
     this.removableClientModal = this.modalService.open(removeClientModal);
   }

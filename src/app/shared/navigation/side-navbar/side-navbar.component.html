@@ -1,35 +1,35 @@
 
-<nav class="col-md-3 d-none d-lg-block bg-light sidebar">
+<nav class="col-md-3 d-none d-md-block bg-light sidebar">
   <div class="sidebar-sticky">
     <ul class="nav flex-column">
       <li class="nav-item">
-        <a *ngIf="isAdmin()" routerLink="/dashboard" routerLinkActive="active blue" class="nav-link" >
+        <a *ngIf="isAdmin()" routerLink="/dashboard" routerLinkActive="active" class="nav-link" >
           <i class="fa fa-bar-chart fa-lg"></i> 
           <span class="clearfix d-none d-sm-inline-block">Dashboard</span>
         </a> 
       </li>
       <li class="nav-item">
-        <a routerLink="/profile" routerLinkActive="active blue" class="nav-link">
+        <a routerLink="/profile" routerLinkActive="active" class="nav-link">
           <i class="fa fa-user-circle-o fa-lg"></i>
-          My Profile
+          Profile
         </a>
       </li>
       <li class="nav-item">
-        <a *ngIf="isAdmin()" routerLink="/admin" routerLinkActive="active blue" class="nav-link">
+        <a *ngIf="isAdmin()" routerLink="/admin" routerLinkActive="active" class="nav-link">
           <i class="fa fa-cogs fa-lg"></i>
-          Administration
+          Users
         </a> 
       </li>
       <li class="nav-item">
-        <a routerLink="/campaigns" routerLinkActive="active blue" class="nav-link">
+        <a routerLink="/campaigns" routerLinkActive="active" class="nav-link">
           <i class="fa fa-comments-o fa-lg"></i>
-          Sms Campaigns
+          Campaigns
         </a>
       </li>
       <li class="nav-item">
-        <a routerLink="/clients" routerLinkActive="active blue" class="nav-link">
+        <a routerLink="/clients" routerLinkActive="active" class="nav-link">
           <i class="fa fa-group fa-lg"></i>
-          Manage Clients
+          Clients
         </a>
       </li>
       <li class="nav-item">

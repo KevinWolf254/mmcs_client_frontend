@@ -7,7 +7,7 @@
       <app-side-navbar></app-side-navbar>
     </nav>
     <!-- Content Body -->
-    <div class="col-lg-9 ml-sm-auto mt-5 px-2 pt-2">
+    <div class="col-md-9 ml-sm-auto mt-5 px-2 pt-2">
       <div class="row">
         <div class="col">
             <div class="d-flex pb-2 mb-3 border-bottom">
@@ -41,36 +41,36 @@
                             <div class="input-group-prepend">
                               <span class="input-group-text bg-info text-white"><i class="fa fa-user fa-lg"></i></span>
                             </div>
-                            <input type="text" class="form-control" [ngModel]="userDetails.surname">
-                            <input type="text" class="form-control" [ngModel]="userDetails.otherNames">
+                            <input type="text" class="form-control form-control-sm" [ngModel]="userDetails.surname">
+                            <input type="text" class="form-control form-control-sm" [ngModel]="userDetails.otherNames">
                           </div>
                           <!-- organisation -->
                           <div class="input-group my-2">
                             <div class="input-group-prepend">
                               <span class="input-group-text bg-info text-white"><i class="fa fa-home"></i></span>
                             </div>
-                            <input type="text" class="form-control" [ngModel]="userDetails.employer.name">
+                            <input type="text" class="form-control form-control-sm" [ngModel]="userDetails.employer.name">
                           </div>
                           <!-- Email -->
                           <div class="input-group my-2">
                             <div class="input-group-prepend">
                               <span class="input-group-text bg-info text-white"><i class="fa fa-envelope"></i></span>
                             </div>
-                            <input type="text" class="form-control" [ngModel]="userDetails.email">
+                            <input type="text" class="form-control form-control-sm" [ngModel]="userDetails.email">
                           </div>
                           <!-- Role -->
                           <div class="input-group my-2">
                             <div class="input-group-prepend">
                               <span class="input-group-text bg-info text-white"><i class="fa fa-cog"></i></span>
                             </div>
-                            <input type="text" class="form-control" [ngModel]="userDetails.credentials.role">
+                            <input type="text" class="form-control form-control-sm" [ngModel]="userDetails.credentials.role">
                           </div>
                           <!-- Last Sign In -->
                           <div class="input-group my-2">
                             <div class="input-group-prepend">
                               <span class="input-group-text bg-info text-white"><i class="fa fa-calendar"></i></span>
                             </div>
-                            <input type="text" class="form-control" [ngModel]="date">
+                            <input type="text" class="form-control form-control-sm" [ngModel]="date">
                           </div>
                         </fieldset>
                       </div>
@@ -89,7 +89,7 @@
                       <div class="form-group row mb-0">
                         <label for="newPassword" class="col-sm-3 col-form-label">New Password:</label>
                         <div class="col-sm-9">
-                          <input type="password" class="form-control" formControlName="newPass" id="newPassword" placeholder="New Password" aria-describedby="passwordHelp">
+                          <input type="password" class="form-control form-control-sm" formControlName="newPass" id="newPassword" placeholder="New Password" aria-describedby="passwordHelp">
                           <small id="passwordHelp" class="form-text text-muted">
                             Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
                           </small>
@@ -113,7 +113,7 @@
                       <div class="form-group row mt-3 mb-0 pb-0">
                         <label for="confirmPassword" class="col-sm-3 col-form-label">Confirm Password:</label>
                         <div class="col-sm-9">
-                          <input type="password" class="form-control" formControlName="confirmNewPass" id="confirmPassword" placeholder="Confirm New Password">
+                          <input type="password" class="form-control form-control-sm" formControlName="confirmNewPass" id="confirmPassword" placeholder="Confirm New Password">
                         </div>
                       </div>
                       <!-- Confirm Password error msg -->
@@ -130,7 +130,7 @@
                             Password does not match
                         </span>
                       </div>
-                      <button type="submit" class="btn btn-primary btn-block mt-3" [disabled]="!changePassForm.valid">
+                      <button type="submit" class="btn btn-primary btn-sm btn-block mt-3" [disabled]="!changePassForm.valid">
                         <div *ngIf="!changingPass">
                             Change Password
                           </div>

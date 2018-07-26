@@ -6,15 +6,15 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fa fa-user fa-lg"></i></span>
                 </div>
-                <input type="text" class="form-control" formControlName="surname" placeholder="Surname">
-                <input type="text" class="form-control" formControlName="otherNames" placeholder="Other Names">
+                <input type="text" class="form-control form-control-sm" formControlName="surname" placeholder="Surname">
+                <input type="text" class="form-control form-control-sm" formControlName="otherNames" placeholder="Other Names">
             </div>
             <!-- email -->
             <div class="input-group mb-0">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fa fa-envelope"></i></span>
                 </div>
-                <input type="text" class="form-control" formControlName="email" placeholder="Email">
+                <input type="text" class="form-control form-control-sm" formControlName="email" placeholder="Email">
             </div>
             <!-- email error msg -->
             <div class=" d-flex flex-row-reverse" 
@@ -28,8 +28,8 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fa fa-cog"></i></span>
                 </div>
-                <select id="role" class="form-control" formControlName="role">
-                    <option value="0" selected>Select role</option>
+                <select id="role" class="form-control form-control-sm" formControlName="role">
+                    <option value="0" selected>Choose role</option>
                     <option *ngFor="let role of roles" >{{role}}</option>
                 </select>
             </div>
@@ -37,7 +37,7 @@
             <div class=" d-flex flex-row-reverse" 
             *ngIf="!userForm.controls['role'].valid && userForm.controls['role'].touched">
               <span class="text text-danger mt-0 pt-0 pr-3" style="font-size:13px">
-                  Please enter a user role
+                  Please choose a user role
               </span>
             </div>
             <!-- default password -->
@@ -45,7 +45,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fa fa-lock fa-lg px-0"></i></span>
                 </div>
-                <input type="text" class="form-control" formControlName="defaultPass" placeholder="Password">
+                <input type="text" class="form-control form-control-sm" formControlName="defaultPass" placeholder="Password">
             </div>
             <small class="form-text text-muted">
                 NB: Users must change their password after their first sign in
@@ -63,7 +63,7 @@
                   Please enter a minimum of 4 characters
               </span>
             </div>
-            <button class="btn btn-primary btn-block my-4 px-4" [disabled]="!userForm.valid" type="submit">
+            <button class="btn btn-primary btn-sm btn-block my-4 px-4" [disabled]="!userForm.valid" type="submit">
                 <div *ngIf="!isCreating">
                     Create User
                 </div>

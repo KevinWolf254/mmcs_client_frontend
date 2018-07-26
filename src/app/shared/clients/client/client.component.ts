@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { selectValidator } from '../../validators/select-validator';
 import { Subject } from 'rxjs/Subject';
 import { debounceTime } from 'rxjs/operators';
+import { ClientService } from '../../services/client/client.service';
+import { Client } from '../../models/client.model';
 
 @Component({
   selector: 'app-client',
@@ -11,15 +13,17 @@ import { debounceTime } from 'rxjs/operators';
 })
 export class ClientComponent implements OnInit {
 
-  form: FormGroup;
-  fileForm: FormGroup;
+  public form: FormGroup;
+  public isCreating: boolean = false;
+  public isCreatingClients: boolean = false;
+  public fileForm: FormGroup;
 
   codes: string[] = ["+254", "+255", "+256", "+257"];
 
   _success = new Subject<string>();
   successMessage: string;
 
-  constructor(private _fb: FormBuilder) { 
+  constructor(private _fb: FormBuilder, private clientService: ClientService) { 
     this.form = _fb.group({
       'names': [null],
       'code': [null,Validators.compose([Validators.required, Validators.pattern('[0-9]{3,3}')])],
@@ -37,13 +41,32 @@ export class ClientComponent implements OnInit {
     ).subscribe(() => this.successMessage = null);
   }
 
-  createClient(form){   
-    this._success.next("Successfully created Client "+form.names+" Phone No: "+form.phone);
-    this.form.reset();
+  public createClient(form){
+    this.isCreating = true;
+    let countryCode: string = "+" + form.code
+    this.clientService.createClient(new Client(0, countryCode, form.phone, form.names)).subscribe(
+      (response: Client) =>{        
+        this._success.next("Successfully created Client " + form.names + " with Phone No: " + form.phone);
+        this.form.reset();
+        this.isCreating = false;
+      },error => {
+        this._success.error("Error creating Client " + form.names + " with Phone No: " + form.phone);
+        this.isCreating = false;
+      }
+    );   
   }
 
-  createClients(form){
-    this._success.next("Successfully created Clients");
-    this.fileForm.reset();
+  public createClients(form){
+    this.isCreatingClients = true;
+    this.clientService.createClients(form.file).subscribe(
+      (response) =>{        
+        this._success.next("Successfully created Clients");
+        this.fileForm.reset();
+        this.isCreatingClients = false;
+      },error => {
+        this._success.error("Error creating Clients");
+        this.isCreatingClients = false;
+      }
+    );
   }
 }

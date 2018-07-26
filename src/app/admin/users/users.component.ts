@@ -125,7 +125,7 @@ export class UsersComponent implements OnInit {
     this.perPage = event.target.value;
   }
 
-  search(event) {
+  public search(event) {
     let searchParam = event.target.value.toLowerCase();
 
     // filter our data

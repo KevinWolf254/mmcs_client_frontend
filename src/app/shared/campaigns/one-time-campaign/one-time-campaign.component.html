@@ -3,7 +3,7 @@
     <form [formGroup] = "form" (ngSubmit) = "sendSms(form.value)">
       <h6 class="mb-4 bg-light p-2 rounded">Compose message</h6>
       <div class="form-group">
-        <textarea class="form-control" formControlName="message" rows="5" placeholder="Sms Message" aria-describedby="messageHelp"></textarea>
+        <textarea class="form-control form-control-sm" formControlName="message" rows="5" placeholder="Sms Message" aria-describedby="messageHelp"></textarea>
         <small id="messageHelp" class="form-text text-muted">
           Compose an SMS message that is less than 160 characters long, otherwise additional charges apply.
         </small>
@@ -11,13 +11,13 @@
       <hr class="mb-4">
       <h6 class="mb-4 bg-light p-2 rounded">Groups to send to</h6>
       <div class="input-group mb-3">
-        <select class="form-control" formControlName="group" 
+        <select class="form-control form-control-sm" formControlName="group" 
         aria-describedby="groupSelectHelp" [(ngModel)]="selected">
           <option value='0' selected>Select Group</option>
           <option *ngFor="let group of groups" [value]="group.id">{{group.name}}</option>
         </select>
         <div class="input-group-append">
-          <button class="btn btn-info px-4" (click)="add()" [disabled]="!form.controls['group'].valid" type="button">
+          <button class="btn btn-sm btn-info px-4" (click)="add()" [disabled]="!form.controls['group'].valid" type="button">
             Add
           </button>
         </div> 

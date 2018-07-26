@@ -7,7 +7,7 @@
       <app-side-navbar></app-side-navbar>
     </nav>
     <!-- Content Body -->
-    <div class="col-lg-9 ml-sm-auto mt-5 px-2 pt-2">
+    <div class="col-md-9 ml-sm-auto mt-5 px-2 pt-2">
       <div class="row">
         <div class="col">
             <div class="d-flex pb-2 mb-3 border-bottom">
@@ -58,7 +58,9 @@
               <div class="d-flex flex-row-reverse bd-highlight">
                 <div class="px-2 bd-highlight">
                   <button type="button" class="btn btn-sm btn-outline-secondary"
-                    data-toggle="tooltip" data-placement="top" title="Pending Requests" placement="left" ngbPopover="Total Amount Requested: {{unitsDetails.requestsPendingApprovalAmount | currency: 'ksh '}}" popoverTitle="Requested Amount">
+                    data-toggle="tooltip" data-placement="top" title="Pending Requests" placement="left" 
+                    ngbPopover="Total Amount Requested: {{unitsDetails.requestsPendingApprovalAmount | currency: 'ksh '}}" 
+                    popoverTitle="Requested Amount">
                     Requests 
                     <span class="badge badge-info">{{unitsDetails.requestsPendingApproval}}</span>
                   </button>
@@ -78,8 +80,8 @@
                   </select> 
                 </div>
                 <div class="pr-0 pt-1 bd-highlight text-muted"> Choose Year: </div>
-                <div class="px-3 bd-highlight"> | </div>
-                <div class="pl-2 pr-0 pt-1 bd-highlight text-muted"> Monthly Sms Campaigns</div>
+                <div class="px-3 bd-highlight d-sm-none  d-lg-block"> | </div>
+                <div class="pl-2 pr-0 pt-1 bd-highlight text-muted d-sm-none d-lg-block"> Monthly Campaigns</div>
               </div>
             </div>
           </div>

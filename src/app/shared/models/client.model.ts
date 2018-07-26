@@ -1,13 +1,13 @@
 export class Client {
-    clientId: number;
+    id: number;
     countryCode: string;
-    phoneNo: number;
-    fullName: string;
+    phoneNumber: number;
+    name: string;
 
-    constructor(clientId: number, countryCode: string, phoneNo: number, fullName: string){
-        this.clientId = clientId;
+    constructor(id: number, countryCode: string, phoneNumber: number, name: string){
+        this.id = id;
         this.countryCode = countryCode;
-        this.phoneNo = phoneNo;
-        this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
+        this.name = name;
     }
 }

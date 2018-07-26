@@ -7,16 +7,34 @@
           <div class="input-group-prepend">
             <span class="input-group-text"><i class="fa fa-user"></i></span>
           </div>
-          <input type="text" class="form-control" formControlName="names" placeholder="Full names">
+          <input type="text" class="form-control form-control-sm" formControlName="names" placeholder="Full names">
         </div>
         <div class="input-group mb-2">
           <div class="input-group-prepend">
               <span class="input-group-text"><i class="fa fa-phone"></i></span>
           </div>
-          <input type="number" class="form-control col-sm-2" formControlName="code" placeholder="Country Code">
-          <input type="number" class="form-control col-sm-10" formControlName="phone" placeholder="Phone Number">
+          <input type="number" class="form-control form-control-sm col-sm-2" formControlName="code" placeholder="Country Code">
+          <input type="number" class="form-control form-control-sm col-sm-10" formControlName="phone" placeholder="Phone Number">
         </div>
-      <button type="submit" class="btn btn-primary btn-block mb-2" [disabled]="!form.valid">Create Client</button>
+      <button type="submit" class="btn btn-sm btn-primary btn-block mb-2" [disabled]="!form.valid">
+        <div *ngIf="!isCreating">
+          Create Client
+        </div>
+        <div *ngIf="isCreating" class="sk-circle my-0 py-0">
+          <div class="sk-circle1 sk-child"></div>
+          <div class="sk-circle2 sk-child"></div>
+          <div class="sk-circle3 sk-child"></div>
+          <div class="sk-circle4 sk-child"></div>
+          <div class="sk-circle5 sk-child"></div>
+          <div class="sk-circle6 sk-child"></div>
+          <div class="sk-circle7 sk-child"></div>
+          <div class="sk-circle8 sk-child"></div>
+          <div class="sk-circle9 sk-child"></div>
+          <div class="sk-circle10 sk-child"></div>
+          <div class="sk-circle11 sk-child"></div>
+          <div class="sk-circle12 sk-child"></div>
+        </div>
+      </button>
     </form>
     <hr class="mb-4">
     <p class="bg-light p-2 rounded"><b>Multiple Client creation:</b></p>
@@ -25,7 +43,25 @@
         <label for="importFile">Import from File</label>
         <input type="file" class="form-control-file" id="importFile" formControlName="file">
       </div>
-      <button type="submit" class="btn btn-primary btn-block mb-2" [disabled]="!fileForm.valid">Create Clients</button>
+      <button type="submit" class="btn btn-sm btn-primary btn-block mb-2" [disabled]="!fileForm.valid">
+        <div *ngIf="!isCreatingClients">
+          Create Clients
+        </div>
+        <div *ngIf="isCreatingClients" class="sk-circle my-0 py-0">
+          <div class="sk-circle1 sk-child"></div>
+          <div class="sk-circle2 sk-child"></div>
+          <div class="sk-circle3 sk-child"></div>
+          <div class="sk-circle4 sk-child"></div>
+          <div class="sk-circle5 sk-child"></div>
+          <div class="sk-circle6 sk-child"></div>
+          <div class="sk-circle7 sk-child"></div>
+          <div class="sk-circle8 sk-child"></div>
+          <div class="sk-circle9 sk-child"></div>
+          <div class="sk-circle10 sk-child"></div>
+          <div class="sk-circle11 sk-child"></div>
+          <div class="sk-circle12 sk-child"></div>
+        </div>
+      </button>
     </form>
   </div>
 </div>  
