@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { UserDetails } from '../../shared/models/user-details.model';
 import { SignInService } from '../../shared/services/sign-in/sign-in.service';
 import { UnitsService } from '../../shared/services/units/units.service';
 import { Employer } from '../../shared/models/employer.model';
@@ -34,8 +33,8 @@ export class UnitsComponent implements OnInit {
     );
   }
   
-  public sendRequestForMoreUnits(form){
-    this.unitsService.sendRequestForUnits(this.userDetails, form.units, form.mpesaTransNo).subscribe(
+  public requestMoreUnits(form){
+    this.unitsService.addUnits(this.userDetails.email, form.units, form.mpesaTransNo).subscribe(
       response =>{
         this.notify.success('Request sent successfully.');
         this.requestForm.reset();
