@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { UserCredentials } from '../../shared/models/user-credentials.model';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { UserService } from '../../shared/services/user/user.service';
 import { UserCredentials } from '../../shared/models/user.model';
