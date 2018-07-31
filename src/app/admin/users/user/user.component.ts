@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { selectValidator } from '../../../shared/validators/select-validator';
-import { User } from '../../../shared/models/user.model';
+import { User, UserDetails } from '../../../shared/models/user.model';
 import { UserService } from '../../../shared/services/user/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { Role } from '../../../shared/models/credentials.model';
