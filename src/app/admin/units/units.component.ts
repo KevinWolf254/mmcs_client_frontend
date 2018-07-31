@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { UserDetails } from '../../shared/models/user-details.model';
 import { SignInService } from '../../shared/services/sign-in/sign-in.service';
 import { UnitsService } from '../../shared/services/units/units.service';
 import { Employer } from '../../shared/models/employer.model';
