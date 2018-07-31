@@ -28,7 +28,7 @@ export class CampaignService {
    }
 public sendToAll(message: string, message_characters: number): Observable<any>{
   let sms: Sms = new Sms(message, message_characters);
-  return this._http.post<any>(this.basicUri+'/secure/sms/to-all', sms);
+  return this._http.post<any>(this.basicUri+'/secure/sms', sms);
 }
   getCampaigns(): Schedule[]{
     return this.campaigns;

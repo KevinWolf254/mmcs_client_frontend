@@ -30,9 +30,9 @@ export class UserCredentials extends User{
 export class UserDetails extends UserCredentials{
     employer: Employer = new Employer(); 
 
-    constructor(userId?: number, firstName?: string, lastName?: string, email?: string,
+    constructor(userId?: number, surname?: string, otherNames?: string, email?: string,
          role?: string, active?: boolean, lastSignIn?: Date, employer?: Employer){
-        super(userId, firstName, lastName, email, role, active, lastSignIn);
+        super(userId, surname, otherNames, email, role, active, lastSignIn);
         this.employer = employer;
     }
 }

@@ -23,14 +23,16 @@ export class EmployerRegistration extends Employer{
 // }
 
 export class UnitsDetailsResponse{
+    country: Country;
     unitsAvailable: number;
     requestsPendingApproval: number;
     requestsPendingApprovalAmount: number;
-    constructor(unitsAvailable?: number, requestsPendingApproval?: number, 
+    constructor(country?: Country, unitsAvailable?: number, requestsPendingApproval?: number, 
         requestsPendingApprovalAmount?: number){
-        this.unitsAvailable = unitsAvailable;
-        this.requestsPendingApproval = requestsPendingApproval;
-        this.requestsPendingApprovalAmount = requestsPendingApprovalAmount;
+            this.country = country;
+            this.unitsAvailable = unitsAvailable;
+            this.requestsPendingApproval = requestsPendingApproval;
+            this.requestsPendingApprovalAmount = requestsPendingApprovalAmount;
     }
 }
 
@@ -44,4 +46,8 @@ export class UnitsRequest {
         this.requestedUnits = requestedUnits;
         this.mpesaTransNo = mpesaTransNo;
     }
+}
+
+export enum Country{
+    RWANDA, KENYA, TANZANIA, UGANDA
 }

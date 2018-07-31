@@ -16,10 +16,12 @@ export class UnitsComponent implements OnInit {
 
   public requestForm: FormGroup; 
   private employer: Employer = new Employer();
-  public userDetails: UserDetails = new UserDetails(0, '', '', '', '', false, new Date(), this.employer);
+  public userDetails: UserDetails = new UserDetails(0, '', '', '', '', 
+  false, new Date(), this.employer);
 
-  constructor(public activeModal: NgbActiveModal, private _fb: FormBuilder, private signInService: SignInService, 
-    private unitsService: UnitsService, private notify: ToastrService) { 
+  constructor(public activeModal: NgbActiveModal, private _fb: FormBuilder, 
+    private signInService: SignInService, private unitsService: UnitsService, 
+    private notify: ToastrService) { 
     this.requestForm = _fb.group({
       'units': [null, Validators.required],
       'mpesaTransNo': [null, Validators.required]
