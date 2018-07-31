@@ -7,6 +7,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { ToAllComponent } from './to-all/to-all.component';
 
 @NgModule({
   imports: [
@@ -20,12 +21,14 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
   exports: [
     OneTimeCampaignComponent, 
     ScheduledCampaignComponent, 
-    ManageCampaignsComponent
+    ManageCampaignsComponent,
+    ToAllComponent
   ],
   declarations: [
     OneTimeCampaignComponent, 
     ScheduledCampaignComponent, 
-    ManageCampaignsComponent
+    ManageCampaignsComponent, 
+    ToAllComponent
   ]
 })
 export class CampaignsModule { }

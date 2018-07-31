@@ -14,29 +14,34 @@ export class EmployerRegistration extends Employer{
     }
 }
 
-export class UnitsDetailsRequest extends Employer{
-    adminEmail: string;
-    constructor(id?: number, name?: string, adminEmail?: string,){
-        super(id, name);
-        this.adminEmail = adminEmail;
-    }
-}
+// export class UnitsDetailsRequest extends Employer{
+//     adminEmail: string;
+//     constructor(id?: number, name?: string, adminEmail?: string,){
+//         super(id, name);
+//         this.adminEmail = adminEmail;
+//     }
+// }
 
-export class UnitsDetailsResponse extends UnitsDetailsRequest{
+export class UnitsDetailsResponse{
     unitsAvailable: number;
     requestsPendingApproval: number;
     requestsPendingApprovalAmount: number;
+    constructor(unitsAvailable?: number, requestsPendingApproval?: number, 
+        requestsPendingApprovalAmount?: number){
+        this.unitsAvailable = unitsAvailable;
+        this.requestsPendingApproval = requestsPendingApproval;
+        this.requestsPendingApprovalAmount = requestsPendingApprovalAmount;
+    }
 }
 
-export class UnitsRequest extends UnitsDetailsRequest{
-    unitsRequested: number;
+export class UnitsRequest {
+    requestedBy: string;
+    requestedUnits: number;
     mpesaTransNo: string;
 
-    constructor(id?: number, name?: string, adminEmail?: string, unitsRequested?: number, mpesaTransNo?: string){
-        super(id, name, adminEmail);
-        // this.name = name;
-        this.unitsRequested = unitsRequested;
+    constructor(requestedBy?: string, requestedUnits?: number, mpesaTransNo?: string){
+        this.requestedBy = requestedBy;
+        this.requestedUnits = requestedUnits;
         this.mpesaTransNo = mpesaTransNo;
-        //in aeon api remember to add date
     }
 }

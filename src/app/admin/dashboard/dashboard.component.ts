@@ -5,8 +5,7 @@ import { UnitsComponent } from '../units/units.component';
 import { CampaignService } from '../../shared/services/campaign/campaign.service';
 import { MonthlyExpenditure } from '../../shared/models/monthly-expenditure.model';
 import { UnitsService } from '../../shared/services/units/units.service';
-import { UnitsDetailsResponse, UnitsDetailsRequest } from '../../shared/models/employer.model';
-import { UserDetails } from '../../shared/models/user-details.model';
+import { UnitsDetailsResponse } from '../../shared/models/employer.model';
 import { SignInService } from '../../shared/services/sign-in/sign-in.service';
 
 @Component({
@@ -16,7 +15,7 @@ import { SignInService } from '../../shared/services/sign-in/sign-in.service';
 })
 export class DashboardComponent implements OnInit {
 
-    public unitsDetails: UnitsDetailsResponse = new UnitsDetailsResponse(0, '', '');
+    public unitsDetails: UnitsDetailsResponse = new UnitsDetailsResponse(0, 0, 0);
     public unitsAvailableIsLoading: boolean = true;
     public previousMonthUnitsIsLoading: boolean = true;
     public expendituresAreLoading: boolean = true;
@@ -45,18 +44,19 @@ export class DashboardComponent implements OnInit {
         this.sendRequestForMonthlyExpenditure(this.currentYear);
     }
 
-    private getUnitsDetails() {
-        this._signInService.sendRequestForUserDetails().subscribe(
-            (userDetails: UserDetails) => {
-                let request: UnitsDetailsRequest = new UnitsDetailsRequest(userDetails.employer.id, userDetails.employer.name, userDetails.email);
-                this._unitsService.sendRequestForUnitsAvailable(request).subscribe(
+    private getUnitsDetails() { 
+        // this._signInService.sendRequestForUserDetails().subscribe(
+        //     (userDetails: UserDetails) => {
+        //         let request: UnitsDetailsRequest = new UnitsDetailsRequest(userDetails.employer.id, userDetails.employer.name, userDetails.email);
+                // this._unitsService.sendRequestForUnitsAvailable(request).subscribe(
+                this._unitsService.getUnitsAvailable().subscribe(
                     (response: UnitsDetailsResponse) => {
                         this.unitsDetails = response;
                         this.unitsAvailableIsLoading = false;
                     }
                 );
-            }
-        );
+        //     }
+        // );
     }
 
     private getSpentPreviousMonthUnits() {

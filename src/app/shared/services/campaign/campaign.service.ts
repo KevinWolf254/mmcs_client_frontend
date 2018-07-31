@@ -7,10 +7,11 @@ import { MonthlyExpenditure } from '../../models/monthly-expenditure.model';
 import { HttpClient } from '@angular/common/http';
 import { retry, map } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
+import { Sms } from '../../models/sms.model';
 
 @Injectable()
 export class CampaignService {
-  private basicUri: string = "http://localhost:8081/bulk-sms/api";
+  private basicUri: string = "http://localhost:8083/mmcs";
 
   campaigns: Schedule[] = [];
   expenditures: MonthlyExpenditure[] = [];
@@ -25,7 +26,10 @@ export class CampaignService {
       map(result => result)
     );
    }
-
+public sendToAll(message: string, message_characters: number): Observable<any>{
+  let sms: Sms = new Sms(message, message_characters);
+  return this._http.post<any>(this.basicUri+'/secure/sms/to-all', sms);
+}
   getCampaigns(): Schedule[]{
     return this.campaigns;
   }

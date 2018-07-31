@@ -11,9 +11,9 @@ export class SignInService {
   private basicUri: string = "http://localhost:8083/mmcs";
 
   private authHeader = {headers: new HttpHeaders({'Content-Type':'application/x-www-form-urlencoded', 'Authorization':'Basic dGVzdDAxOnRlc3QwMQ==', 'No-Auth':'true'})};
-  private userDetails: UserDetails = null;
   
   constructor(private _http: HttpClient) {}
+  
   public authenticateUser(email: string, password: string): Observable<JsonWebToken>{
     let authUri: string = this.basicUri+"/oauth/token";
     let oAuthData = "grant_type=password"+"&username="+email+"&password="+password;

@@ -2,13 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { selectValidator } from '../../validators/select-validator';
 import { Group } from '../../models/group.model';
-import { Sms } from '../../models/sms.model';
-import { SmsScheduledOnce } from '../../models/sms-scheduled/sms-scheduled-once.model';
-import { SmsScheduled } from '../../models/sms-scheduled/sms-scheduled.model';
 import { Time } from '@angular/common';
-import { SmsScheduledWeekly } from '../../models/sms-scheduled/sms-scheduled-weekly.model';
-import { SmsScheduledMonthly } from '../../models/sms-scheduled/sms-scheduled-monthly.model';
 import { GroupManagerService } from '../../services/group/group-manager.service';
+import { SmsScheduledOnce, SmsScheduled, SmsScheduledWeekly, SmsScheduledMonthly, SmsGroup } from '../../models/sms.model';
 
 @Component({
   selector: 'app-scheduled-campaign',
@@ -17,6 +13,7 @@ import { GroupManagerService } from '../../services/group/group-manager.service'
 })
 export class ScheduledCampaignComponent implements OnInit {
 
+  message_characters = 0;
   selected = 0;
   groups: Group[] = [];
   selectedRecipients: Group[] = [];
@@ -127,11 +124,11 @@ export class ScheduledCampaignComponent implements OnInit {
     }); 
   } 
 
-  sendSms(value){
+  sendSms(form){
     this.selectedRecipients.forEach((group, index)=>{
       this.recipientsIds.push(group.id);
     });
-    let sms = new Sms(value.message, this.recipientsIds);
+    let sms = new SmsGroup(form.message, this.message_characters, this.recipientsIds);
     //reset form and selectedGroups array
     this.resetForm();
     this.resetDataValues();
@@ -150,14 +147,13 @@ export class ScheduledCampaignComponent implements OnInit {
   checkName(){}
 
   sendScheduledSms(form){
-    // Scheduled at particular date
-    let campaignName: string = form.campaignName;
-    let smsMessage: string = form.message;
     let scheduledDate: Date = new Date();
     let scheduledTime: Time = {hours: 0, minutes: 0};
     if(form.campaign == "once"){
-      scheduledDate.setFullYear(form.scheduledOnce_Date.year, form.scheduledOnce_Date.month, form.scheduledOnce_Date.day);
-      let sms: SmsScheduledOnce = new SmsScheduledOnce(campaignName, form.campaign, smsMessage, this.recipientsIds, scheduledDate, form.scheduledOnce_Time);
+      scheduledDate.setFullYear(form.scheduledOnce_Date.year, form.scheduledOnce_Date.month, 
+        form.scheduledOnce_Date.day);
+      let sms: SmsScheduledOnce = new SmsScheduledOnce(form.message, this.message_characters, 
+        this.recipientsIds, form.campaignName, form.campaign, form.scheduledOnce_Time, scheduledDate);
       let cronExpression = sms.getCronExpression();
       // send to web api simple schedule
       console.log("SMS Details: "+sms+"Cron Expression: "+cronExpression);
@@ -165,21 +161,24 @@ export class ScheduledCampaignComponent implements OnInit {
       if(form.schedule == 'daily'){
         scheduledTime.hours = form.dailyTime.hour;
         scheduledTime.minutes = form.dailyTime.minute;
-        let dailySms: SmsScheduled = new SmsScheduled(campaignName, form.campaign, smsMessage, this.recipientsIds, scheduledTime);
+        let dailySms: SmsScheduled = new SmsScheduled(form.message, this.message_characters, 
+          this.recipientsIds, form.campaignName, form.campaign, scheduledTime);
         let cronExpression = dailySms.getCronExpression();
         // send to web api cron schedule
         console.log("SMS Details: "+dailySms+"Cron Expression: "+cronExpression);
       }else if(form.schedule == 'weekly'){
         scheduledTime.hours = form.weeklyTime.hour;
         scheduledTime.minutes = form.weeklyTime.minute;
-        let weeklySms: SmsScheduledWeekly = new SmsScheduledWeekly(campaignName, form.campaign, smsMessage, this.recipientsIds, form.dayOfWeek, scheduledTime);
+        let weeklySms: SmsScheduledWeekly = new SmsScheduledWeekly(form.message, this.message_characters, 
+          this.recipientsIds, form.campaignName, form.campaign, scheduledTime, form.dayOfWeek);
         let cronExpression = weeklySms.getCronExpression();
         // send to web api cron schedule
         console.log("SMS Details: "+weeklySms+"Cron Expression: "+cronExpression);
       }else if(form.schedule == 'monthly'){
         scheduledTime.hours = form.monthlyTime.hour;
         scheduledTime.minutes = form.monthlyTime.minute;
-        let monthlySms: SmsScheduledMonthly = new SmsScheduledMonthly(campaignName, form.campaign, smsMessage, this.recipientsIds, form.monthlyDate.day, scheduledTime);
+        let monthlySms: SmsScheduledMonthly = new SmsScheduledMonthly(form.message, this.message_characters, 
+          this.recipientsIds, form.campaignName, form.campaign, scheduledTime, form.monthlyDate.day);
         let cronExpression = monthlySms.getCronExpression();
         // send to web service cron schedule
         console.log("SMS Details: "+monthlySms+"Cron Expression: "+cronExpression);

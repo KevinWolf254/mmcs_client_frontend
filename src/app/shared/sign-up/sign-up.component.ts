@@ -34,24 +34,26 @@ export class SignUpComponent implements OnInit {
 
   public signUp(form) {
     this.isSigningUp = true;
-    this.signUpService.registerInAeonServer(form.email, form.organisation).subscribe(
-      (aeonServerResponse) => {
-        this.signUpService.registerInClientServer(form.surname, form.otherNames, form.email,
-          aeonServerResponse.organisation.id, aeonServerResponse.organisation.name, form.password).subscribe(
+    // this.signUpService.registerInAeonServer(form.email, form.organisation).subscribe(
+    //   (aeonServerResponse) => {
+        // this.signUpService.registerInClientServer(form.surname, form.otherNames, form.email,
+        //   aeonServerResponse.organisation.id, aeonServerResponse.organisation.name, form.password).subscribe(
+          this.signUpService.registerInClientServer(form.organisation, form.surname, form.otherNames, 
+            form.email, form.password).subscribe(
             (clientServerResponse) => {
               this.notify.success(''+clientServerResponse.message);
               this.isSigningUp = false;
               this.router.navigate(['signin']);
-            }, error => {
+            },error => {
                 this.notify.error('Error: '+error.error.message);
                 this.isSigningUp = false;
             }
           );
-      }, error => {
-          this.notify.error('Error: '+error.error.message);
-          this.isSigningUp = false;
-      }
-    );
+    //   }, error => {
+    //       this.notify.error('Error: '+error.error.message);
+    //       this.isSigningUp = false;
+    //   }
+    // );
   }
 
 }

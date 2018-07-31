@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { UserCredentials } from '../../models/user-credentials.model';
+import { UserCredentials } from '../../models/user.model';
 
 @Injectable()
 export class UserService {

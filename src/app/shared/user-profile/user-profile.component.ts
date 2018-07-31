@@ -1,13 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { confirmPasswordValidator } from '../validators/confirm-password-validator';
-import { User } from '../models/user.model';
-import { UserCredentials } from '../models/user-credentials.model';
+import { User, UserDetails } from '../models/user.model';
 import { SignInService } from '../services/sign-in/sign-in.service';
-import { UserDetails } from '../models/user-details.model';
 import { Employer } from '../models/employer.model';
 import { UserService } from '../services/user/user.service';
-import { ToastrService } from '../../../../node_modules/ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-user-profile',

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { UnitsService } from '../services/units/units.service';
+import { UnitsDetailsResponse } from '../models/employer.model';
 
 @Component({
   selector: 'app-campaigns',
@@ -7,9 +9,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CampaignsComponent implements OnInit {
   
-  constructor() { }
+  public unitsDetails: UnitsDetailsResponse = new UnitsDetailsResponse(0, 0, 0);
+
+  constructor(private unitsService: UnitsService) { }
 
   ngOnInit() {
-  }
+    this.unitsService.getUnitsAvailable().subscribe(
+      (response: UnitsDetailsResponse) => {
+          this.unitsDetails = response;
+      }
+  );  
+}
 
 }

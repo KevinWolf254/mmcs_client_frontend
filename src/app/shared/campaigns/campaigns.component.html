@@ -11,15 +11,18 @@
       <div class="row">
         <div class="col">
             <div class="d-flex pb-2 border-bottom">
-                <h3>Sms Campaigns</h3>
+                <h3>Campaigns</h3>
               </div>
         </div>
       </div>
-      <div class="row my-1">
+      <div class="row my-3">
         <div class="col">
           <div class="card rounded">
             <div class="card-body p-2 bg-light">
               <div class="d-flex flex-row-reverse bd-highlight">
+                <div class="pr-0 pt-1 mr-3 bd-highlight text-muted font-weight-bold">
+                  {{unitsDetails.unitsAvailable | currency:'ksh '}} 
+                </div>
                 <div class="px-3 bd-highlight"> | </div>
                 <div class="pr-0 pt-1 bd-highlight text-muted"> Units Available: </div>
               </div>
@@ -31,19 +34,25 @@
         <div class="col">
             <ngb-tabset>
               <!-- On Demand Sms -->
-              <ngb-tab title="On Demand Sms" id="nowTab">
+              <ngb-tab title="To All" id="allTab">
+                  <ng-template ngbTabContent>
+                    <app-to-all></app-to-all>                 
+                  </ng-template>
+                </ngb-tab>
+              <!-- On Demand Sms -->
+              <ngb-tab title="To Group" id="nowTab">
                 <ng-template ngbTabContent>
                   <app-one-time-campaign></app-one-time-campaign>                 
                 </ng-template>
               </ngb-tab>
               <!-- Scheduled Campaigns -->
-              <ngb-tab title="Schedule a Campaign" id="scheduleTab">
+              <ngb-tab title="Schedule" id="scheduleTab">
                 <ng-template ngbTabContent>
                   <app-scheduled-campaign></app-scheduled-campaign>
                 </ng-template>
               </ngb-tab>
               <!-- Manage Campaigns -->
-              <ngb-tab title="Manage Campaigns" id="manageTab">
+              <ngb-tab title="Manage" id="manageTab">
                 <ng-template ngbTabContent>
                   <app-manage-campaigns></app-manage-campaigns>
                 </ng-template>

@@ -10,9 +10,9 @@ export class AeonService {
 
   constructor(private _http: HttpClient) { }
   
-  public confirmRegisteration(email: string): Observable<EmployerRegistration>{
-    let confirmIsRegisteredUri: string = this.aeonUri+"/signin?email="+email;   
-    let emailParams = new HttpParams().set('email', email);
-    return this._http.post<EmployerRegistration>(confirmIsRegisteredUri, null, this.authHeader)
-  }
+  // public confirmRegisteration(email: string): Observable<EmployerRegistration>{
+  //   let confirmIsRegisteredUri: string = this.aeonUri+"/signin?email="+email;   
+  //   let emailParams = new HttpParams().set('email', email);
+  //   return this._http.post<EmployerRegistration>(confirmIsRegisteredUri, null, this.authHeader)
+  // }
 }

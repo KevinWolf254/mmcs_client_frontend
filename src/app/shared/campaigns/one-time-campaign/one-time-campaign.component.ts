@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Group } from '../../models/group.model';
 import { selectValidator } from '../../validators/select-validator';
-import { Sms } from '../../models/sms.model';
 import { GroupManagerService } from '../../services/group/group-manager.service';
+import { SmsGroup } from '../../models/sms.model';
 
 @Component({
   selector: 'app-one-time-campaign',
@@ -12,6 +12,7 @@ import { GroupManagerService } from '../../services/group/group-manager.service'
 })
 export class OneTimeCampaignComponent implements OnInit{
 
+  message_characters = 0;
   selected = 0;
   groups: Group[] = [];
   selectedRecipients: Group[] = [];
@@ -60,7 +61,7 @@ export class OneTimeCampaignComponent implements OnInit{
     this.selectedRecipients.forEach((group, index)=>{
       this.recipientsIds.push(group.id);
     });
-    let sms = new Sms(formValues.message, this.recipientsIds);
+    let sms = new SmsGroup(formValues.message, this.message_characters, this.recipientsIds);
     //reset form and selectedGroups array
     this.resetForm();
     this.resetDataValues();

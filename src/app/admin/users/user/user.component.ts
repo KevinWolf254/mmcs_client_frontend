@@ -4,7 +4,7 @@ import { selectValidator } from '../../../shared/validators/select-validator';
 import { User } from '../../../shared/models/user.model';
 import { UserService } from '../../../shared/services/user/user.service';
 import { UserDetails } from '../../../shared/models/user-details.model';
-import { ToastrService } from '../../../../../node_modules/ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 import { Role } from '../../../shared/models/credentials.model';
 
 @Component({

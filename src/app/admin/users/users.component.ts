@@ -3,7 +3,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { UserCredentials } from '../../shared/models/user-credentials.model';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { UserService } from '../../shared/services/user/user.service';
-import { ToastrService } from '../../../../node_modules/ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-users',

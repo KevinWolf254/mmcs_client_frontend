@@ -3,7 +3,8 @@
     <form [formGroup] = "form" (ngSubmit) = "sendSms(form.value)">
       <h6 class="mb-4 bg-light p-2 rounded">Compose message</h6>
       <div class="form-group">
-        <textarea class="form-control form-control-sm" formControlName="message" rows="5" placeholder="Sms Message" aria-describedby="messageHelp"></textarea>
+        <textarea class="form-control form-control-sm shadow-sm" formControlName="message" rows="5" 
+        placeholder="Message" aria-describedby="messageHelp"></textarea>
         <small id="messageHelp" class="form-text text-muted">
           Compose an SMS message that is less than 160 characters long, otherwise additional charges apply.
         </small>
