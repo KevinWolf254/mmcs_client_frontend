@@ -3,10 +3,10 @@ import { Group } from '../../models/group.model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { selectValidator } from '../../validators/select-validator';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
-import { ClientTeleco } from '../../models/client-teleco.model';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GroupManagerService } from '../../services/group/group-manager.service';
 import { ClientService } from '../../services/client/client.service';
+import { Client } from '../../models/client.model';
 
 @Component({
   selector: 'app-client-groups',
@@ -17,14 +17,14 @@ export class ClientGroupsComponent implements OnInit {
 
   entriesPerPage: number;
   perPageNos: number[] = [10, 25, 50, 100];
-  tempClients: ClientTeleco[] = [];
+  tempClients: Client[] = [];
   @ViewChild(DatatableComponent) table: DatatableComponent;
   customPagerIcons = {
     sortAscending: 'fa fa-sort-asc', sortDescending: 'fa fa-sort-desc', pagerLeftArrow: 'fa fa-chevron-left', 
     pagerRightArrow: 'fa fa-chevron-right', pagerPrevious: 'fa fa-step-backward', pagerNext: 'fa fa-step-forward'
   };
 
-  groupClients: ClientTeleco[] = [];
+  groupClients: Client[] = [];
 
   selected: number = 0;
   groups: Group[] = [];
@@ -36,13 +36,14 @@ export class ClientGroupsComponent implements OnInit {
   editableClientModal: NgbModalRef;
   removableClientModal: NgbModalRef;
 
-  editableClient: ClientTeleco;
+  editableClient: Client;
   editableRow: number;
 
-  removableClient: ClientTeleco = null;
+  removableClient: Client = null;
   removableRow: number;
 
-  constructor(private _fb: FormBuilder, private modalService: NgbModal, private _groupManager: GroupManagerService, private _clientService: ClientService) { 
+  constructor(private _fb: FormBuilder, private modalService: NgbModal, 
+    private _groupManager: GroupManagerService, private _clientService: ClientService) { 
     this.createForm = _fb.group({
       'name': [null,Validators.required]
     });
@@ -77,7 +78,7 @@ export class ClientGroupsComponent implements OnInit {
     let searchParam = event.target.value.toLowerCase();
 
     // filter our data
-    let tempClients = this.tempClients.filter((client: ClientTeleco) => {
+    let tempClients = this.tempClients.filter((client: Client) => {
       return client.name.toLowerCase().indexOf(searchParam) !== -1 || !searchParam;
     });
 
@@ -92,16 +93,16 @@ export class ClientGroupsComponent implements OnInit {
     this.createForm.reset();
   }
 
-  openClientDetailsDialog(clientDetailsModal, selectedClient: ClientTeleco, rowIndex){
-    this.editableClient = new ClientTeleco(selectedClient.id, selectedClient.countryCode, 
-      selectedClient.phoneNumber, selectedClient.name, selectedClient.telecom);
+  openClientDetailsDialog(clientDetailsModal, selectedClient: Client, rowIndex){
+    this.editableClient = new Client(selectedClient.id, selectedClient.countryCode, 
+      selectedClient.phoneNumber, selectedClient.name);
     this.editableRow = rowIndex;    
     this.editableClientModal = this.modalService.open(clientDetailsModal);
   }
 
-  openRemoveClientDialog(removeClientModal, selectedClient: ClientTeleco, rowIndex){
-    this.removableClient = new ClientTeleco(selectedClient.id, selectedClient.countryCode, 
-      selectedClient.phoneNumber, selectedClient.name, selectedClient.telecom);
+  openRemoveClientDialog(removeClientModal, selectedClient: Client, rowIndex){
+    this.removableClient = new Client(selectedClient.id, selectedClient.countryCode, 
+      selectedClient.phoneNumber, selectedClient.name);
     this.removableRow = rowIndex;
     this.removableClientModal = this.modalService.open(removeClientModal);
   }

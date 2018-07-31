@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { UserDetails } from '../../models/user-details.model';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { retry } from 'rxjs/operators';
 import { UnitsDetailsResponse, UnitsRequest } from '../../models/employer.model';
@@ -9,7 +8,7 @@ import { Observable } from 'rxjs/Observable';
 export class UnitsService {
   private basicUri: string = "http://localhost:8083/mmcs";
   private httpHeader = {headers: new HttpHeaders({'Content-type':'application/json'})};
-  private aeonTechUri = "http://localhost:8082/aeon/mmcs";
+  // private aeonTechUri = "http://localhost:8082/aeon/mmcs";
 
   constructor(private _http: HttpClient) {}
 

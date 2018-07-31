@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { UserDetails } from '../../models/user-details.model';
 import { HttpHeaders, HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { _throw } from 'rxjs/observable/throw';
 import { JsonWebToken } from '../../models/json-web-token.model';
 import { catchError, retry } from 'rxjs/operators';
+import { UserDetails } from '../../models/user.model';
 
 @Injectable()
 export class SignInService {
