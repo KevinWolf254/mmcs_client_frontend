@@ -15,7 +15,8 @@ import { SignInService } from '../../shared/services/sign-in/sign-in.service';
 })
 export class DashboardComponent implements OnInit {
 
-    public unitsDetails: UnitsDetailsResponse = new UnitsDetailsResponse(0, 0, 0);
+    public unitsDetails: UnitsDetailsResponse = new UnitsDetailsResponse(0, 0, 0, 0);
+    public currency: string = '';
     public unitsAvailableIsLoading: boolean = true;
     public previousMonthUnitsIsLoading: boolean = true;
     public expendituresAreLoading: boolean = true;
@@ -52,6 +53,7 @@ export class DashboardComponent implements OnInit {
                 this._unitsService.getUnitsAvailable().subscribe(
                     (response: UnitsDetailsResponse) => {
                         this.unitsDetails = response;
+                        this.setUpCurrency(response);
                         this.unitsAvailableIsLoading = false;
                     }
                 );
@@ -62,6 +64,16 @@ export class DashboardComponent implements OnInit {
     private getSpentPreviousMonthUnits() {
         this.unitsSpentPreviousMonth = 5000;
         this.previousMonthUnitsIsLoading = false;
+    }
+    private setUpCurrency(unitsDetails: UnitsDetailsResponse){
+        if(unitsDetails.country == Country.RWANDA)
+            this.currency = 'RWF '
+        else if(unitsDetails.country == Country.KENYA)
+            this.currency = 'KES '
+        else if(unitsDetails.country == Country.TANZANIA)
+            this.currency = 'TZS '
+        else
+            this.currency = 'UGX '
     }
 
     private calculatePrevious10YearsForSelect() {
