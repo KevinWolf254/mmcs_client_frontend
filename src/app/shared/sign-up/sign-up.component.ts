@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { countryValidator } from '../validators/select-validator';
 import { CountryService } from '../services/country/country.service';
 import { confirmPasswordValidator } from '../validators/confirm-password-validator';
+import { Country } from '../models/employer.model';
 
 @Component({
   selector: 'app-sign-up',
@@ -43,15 +44,17 @@ export class SignUpComponent implements OnInit {
   }
 
   public signUp(form) {
+    let country: string = this.countryService.convertCountryAsString(form.country);    
+    let country_code: string = this.countryService.convertCountryAsString(form.code);
     this.isSigningUp = true;
-    this.signUpService.registerInClientServer(form.surname, form.otherNames, form.country, form.code, 
+    this.signUpService.registerInClientServer(form.surname, form.otherNames, country, country_code, 
       form.phoneNo, form.organisation, form.email, form.senderId, form.newPass).subscribe(
         (clientServerResponse) => {
           this.notify.success('' + clientServerResponse.message);
           this.isSigningUp = false;
           this.router.navigate(['signin']);
         }, error => {
-          this.notify.error('Error: ' + error.error.message);
+          this.notify.error('Error: ' + error.error.error_description);
           this.isSigningUp = false;
         }
       );

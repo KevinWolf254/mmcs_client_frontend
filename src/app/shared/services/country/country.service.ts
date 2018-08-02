@@ -15,4 +15,15 @@ export class CountryService {
   public getCountries(): any[]{
     return this.countries;
   }
+  
+  public convertCountryAsString(country: Country): string{
+    if(country == Country.RWANDA)
+      return "RWANDA";
+    else if(country == Country.KENYA)
+      return "KENYA";
+    else if(country == Country.TANZANIA)
+      return "TANZANIA";
+    else
+      return "UGANDA";
+  }
 }

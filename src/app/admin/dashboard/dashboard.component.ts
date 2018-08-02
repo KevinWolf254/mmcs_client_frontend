@@ -15,7 +15,7 @@ import { SignInService } from '../../shared/services/sign-in/sign-in.service';
 })
 export class DashboardComponent implements OnInit {
 
-    public unitsDetails: UnitsDetailsResponse = new UnitsDetailsResponse(0, 0, 0, 0);
+    public unitsDetails: UnitsDetailsResponse = new UnitsDetailsResponse('', 0, 0, 0);
     public currency: string = '';
     public unitsAvailableIsLoading: boolean = true;
     public previousMonthUnitsIsLoading: boolean = true;
@@ -36,7 +36,7 @@ export class DashboardComponent implements OnInit {
     public months: string[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
 
     constructor(private _modalService: NgbModal, private _campaignService: CampaignService,
-        private _signInService: SignInService, private _unitsService: UnitsService) { }
+        private _unitsService: UnitsService) { }
 
     ngOnInit() {
         this.getUnitsDetails();
@@ -46,19 +46,13 @@ export class DashboardComponent implements OnInit {
     }
 
     private getUnitsDetails() { 
-        // this._signInService.sendRequestForUserDetails().subscribe(
-        //     (userDetails: UserDetails) => {
-        //         let request: UnitsDetailsRequest = new UnitsDetailsRequest(userDetails.employer.id, userDetails.employer.name, userDetails.email);
-                // this._unitsService.sendRequestForUnitsAvailable(request).subscribe(
-                this._unitsService.getUnitsAvailable().subscribe(
-                    (response: UnitsDetailsResponse) => {
-                        this.unitsDetails = response;
-                        this.setUpCurrency(response);
-                        this.unitsAvailableIsLoading = false;
-                    }
-                );
-        //     }
-        // );
+        this._unitsService.getUnitsAvailable().subscribe(
+            (response: UnitsDetailsResponse) => {
+                this.unitsDetails = response;
+                this.setUpCurrency(response);
+                this.unitsAvailableIsLoading = false;
+            }
+        );
     }
 
     private getSpentPreviousMonthUnits() {
@@ -66,14 +60,14 @@ export class DashboardComponent implements OnInit {
         this.previousMonthUnitsIsLoading = false;
     }
     private setUpCurrency(unitsDetails: UnitsDetailsResponse){
-        if(unitsDetails.country == Country.RWANDA)
-            this.currency = 'RWF '
-        else if(unitsDetails.country == Country.KENYA)
-            this.currency = 'KES '
-        else if(unitsDetails.country == Country.TANZANIA)
-            this.currency = 'TZS '
+        if(unitsDetails.country == "RWANDA")
+            this.currency = 'rwf '
+        else if(unitsDetails.country == "KENYA")
+            this.currency = 'ksh '
+        else if(unitsDetails.country == "TANZANIA")
+            this.currency = 'tzs '
         else
-            this.currency = 'UGX '
+            this.currency = 'ugx '
     }
 
     private calculatePrevious10YearsForSelect() {
