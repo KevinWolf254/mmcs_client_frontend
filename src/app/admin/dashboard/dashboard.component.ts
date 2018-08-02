@@ -5,7 +5,6 @@ import { UnitsComponent } from '../units/units.component';
 import { CampaignService } from '../../shared/services/campaign/campaign.service';
 import { MonthlyExpenditure } from '../../shared/models/monthly-expenditure.model';
 import { UnitsService } from '../../shared/services/units/units.service';
-import { UnitsDetailsResponse, Country } from '../../shared/models/employer.model';
 import { SignInService } from '../../shared/services/sign-in/sign-in.service';
 
 @Component({
