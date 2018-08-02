@@ -4,29 +4,80 @@
       <div class="card-body">
         <h5 class="text-center mb-3">Sign up</h5>
         <form class="mx-4 mb-3" [formGroup] = "signUpForm" (ngSubmit) = "signUp(signUpForm.value)">
-          <!-- Surname -->
+          <!-- Surname @ other names-->
           <div class="input-group mt-3">
             <div class="input-group-prepend">
-              <span class="input-group-text" id="surnameIcon"><i class="fa fa-envelope"></i></span>
+              <span class="input-group-text" id="surnameIcon"><i class="fa fa-user"></i></span>
             </div>
-            <input type="email" class="form-control form-control-sm" formControlName="surname"
-             placeholder="Surname" aria-label="Surname" aria-describedby="surnameIcon">
+            <input type="text" class="form-control form-control-sm col-sm-4" formControlName="surname"
+             placeholder="Surname*" aria-label="Surname" aria-describedby="surnameIcon">
+             <input type="text" class="form-control form-control-sm col-sm-8" formControlName="otherNames"
+              placeholder="Other Names">
           </div>
-          <!-- Other Names -->
-          <div class="input-group mt-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text" id="othernamesIcon"><i class="fa fa-lock fa-lg"></i></span>
-            </div>
-            <input type="text" class="form-control form-control-sm" formControlName="otherNames"
-              placeholder="Other Names" aria-label="Other Names" aria-describedby="othernamesIcon">
+          <!-- Surname validity -->
+          <div class="d-flex flex-row-reverse" 
+          *ngIf="!signUpForm.controls['surname'].valid && signUpForm.controls['surname'].touched">
+            <span class="text text-danger mt-0 pt-0 pr-3" style="font-size:13px">
+                Please enter your surname
+            </span>
           </div>
           <!-- organisation  -->
           <div class="input-group mt-3">
             <div class="input-group-prepend">
-              <span class="input-group-text" id="organisationIcon"><i class="fa fa-envelope"></i></span>
+              <span class="input-group-text" id="organisationIcon"><i class="fa fa-home"></i></span>
             </div>
             <input type="text" class="form-control form-control-sm" formControlName="organisation"
-             placeholder="Your Organisation" aria-label="organisation" aria-describedby="organisationIcon">
+             placeholder="Your Organisation*" aria-label="organisation" aria-describedby="organisationIcon">
+          </div>
+          <!-- organisation validity -->
+          <div class="d-flex flex-row-reverse" 
+          *ngIf="!signUpForm.controls['organisation'].valid && signUpForm.controls['organisation'].touched">
+            <span class="text text-danger mt-0 pt-0 pr-3" style="font-size:13px">
+                Please enter your organization
+            </span>
+          </div>
+          <!-- Country  -->
+          <div class="input-group mt-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="countryIcon"><i class="fa fa-globe"></i></span>
+            </div>
+             <select class="form-control form-control-sm" formControlName="country">
+              <option value='4' selected>Country of residence*</option>
+              <option *ngFor="let country of countries" [value]="country.id">{{country.name}}</option>
+            </select>
+          </div>
+          <!-- Country validity -->
+          <div class="d-flex flex-row-reverse" 
+          *ngIf="!signUpForm.controls['country'].valid && signUpForm.controls['country'].touched">
+            <span class="text text-danger mt-0 pt-0 pr-3" style="font-size:13px">
+                Please enter country of residence
+            </span>
+          </div>
+          <!-- phone no -->
+          <div class="input-group mt-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="phoneIcon"><i class="fa fa-phone"></i></span>
+            </div>
+            <select class="form-control form-control-sm col-sm-4" formControlName="code">
+              <option value='4' selected>Code*</option>
+              <option *ngFor="let country of countries" [value]="country.id">{{country.countryCode}}</option>
+            </select>
+            <input type="number" class="form-control form-control-sm col-sm-8" formControlName="phoneNo"
+              placeholder="Phone Number*" aria-label="Phone number" aria-describedby="phoneIcon">
+          </div>
+          <!-- code validity -->
+          <div class="d-flex flex-row-reverse" 
+          *ngIf="!signUpForm.controls['code'].valid && signUpForm.controls['code'].touched">
+            <span class="text text-danger mt-0 pt-0 pr-3" style="font-size:13px">
+                Please select country code
+            </span>
+          </div>
+          <!-- code validity -->
+          <div class="d-flex flex-row-reverse" 
+          *ngIf="!signUpForm.controls['phoneNo'].valid && signUpForm.controls['phoneNo'].touched">
+            <span class="text text-danger mt-0 pt-0 pr-3" style="font-size:13px">
+                Please enter your phone number
+            </span>
           </div>
           <!-- email -->
           <div class="input-group mt-3">
@@ -34,30 +85,67 @@
               <span class="input-group-text" id="emailIcon"><i class="fa fa-envelope"></i></span>
             </div>
             <input type="email" class="form-control form-control-sm" formControlName="email"
-             placeholder="Organisation Email Address" aria-label="Surname" aria-describedby="emailIcon">
+             placeholder="Email Address*" aria-label="Surname" aria-describedby="emailIcon">
           </div>
           <!-- email validity -->
-          <div class=" d-flex flex-row-reverse" 
+          <div class="d-flex flex-row-reverse" 
           *ngIf="!signUpForm.controls['email'].valid && signUpForm.controls['email'].touched">
             <span class="text text-danger mt-0 pt-0 pr-3" style="font-size:13px">
                 Please enter a valid email
             </span>
           </div>
+          <!-- sender id -->
+          <div class="input-group mt-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="senderIdIcon"><i class="fa fa-location-arrow"></i></span>
+            </div>
+            <input type="text" class="form-control form-control-sm" formControlName="senderId" maxlength="11"
+             placeholder="Sender Id*" aria-label="Sender Identifier" aria-describedby="senderIdIcon">
+            <div class="input-group-append">
+              <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="tooltip" data-placement="left" title="Suggestion"
+                placement="left" ngbPopover="Enter something unique and easily identifies your organization" popoverTitle="Suggestion">
+                <i class="fa fa-question"></i>
+              </button>
+            </div>
+          </div>
+          <!-- sender id validity -->
+          <div class="d-flex flex-row-reverse" 
+          *ngIf="!signUpForm.controls['senderId'].valid && signUpForm.controls['senderId'].touched">
+            <span class="text text-danger mt-0 pt-0 pr-3" style="font-size:13px">
+                Please enter a valid sender id
+            </span>
+          </div>   
           <!-- password -->
           <div class="input-group mt-3">
             <div class="input-group-prepend">
-              <span class="input-group-text" id="passwordIcon"><i class="fa fa-envelope"></i></span>
+              <span class="input-group-text" id="passwordIcon"><i class="fa fa-lock fa-lg"></i></span>
             </div>
-            <input type="password" class="form-control form-control-sm" formControlName="password"
-             placeholder="Password" aria-label="Password" aria-describedby="passwordIcon">
+            <input type="password" class="form-control form-control-sm" formControlName="newPass"
+             placeholder="Password*" aria-label="Password" aria-describedby="passwordIcon">
           </div> 
           <!-- password validity -->
-          <div class=" d-flex flex-row-reverse" 
-          *ngIf="!signUpForm.controls['password'].valid && signUpForm.controls['password'].touched">
+          <div class="d-flex flex-row-reverse" 
+          *ngIf="!signUpForm.controls['newPass'].valid && signUpForm.controls['newPass'].touched">
             <span class="text text-danger mt-0 pt-0 pr-3" style="font-size:13px">
                 Please enter a valid password
             </span>
-          </div>         
+          </div>  
+          <!-- confirm password -->
+          <div class="input-group mt-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="cpasswordIcon"><i class="fa fa-lock fa-lg"></i></span>
+            </div>
+            <input type="password" class="form-control form-control-sm" formControlName="confirm_password"
+             placeholder="Confirm Password*" aria-label="Confirm Password" aria-describedby="cpasswordIcon">
+          </div> 
+          <!-- confirm password validity -->
+          <div class="d-flex flex-row-reverse" 
+          *ngIf="!signUpForm.controls['confirm_password'].valid && 
+          signUpForm.controls['confirm_password'].touched">
+            <span class="text text-danger mt-0 pt-0 pr-3" style="font-size:13px">
+                Passwords do not match
+            </span>
+          </div>        
           <button class="btn btn-primary btn-sm btn-block mt-3" type="submit" [disabled]="!signUpForm.valid">
             <div *ngIf="!isSigningUp">
                 Register

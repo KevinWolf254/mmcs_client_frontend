@@ -22,6 +22,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { SignUpService } from './shared/services/sign-up/sign-up.service';
 import { AeonService } from './shared/services/aeon/aeon.service';
 import { UserService } from './shared/services/user/user.service';
+import { CountryService } from './shared/services/country/country.service';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { UserService } from './shared/services/user/user.service';
     ClientService,
     CampaignService,
     UnitsService,
+    CountryService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
