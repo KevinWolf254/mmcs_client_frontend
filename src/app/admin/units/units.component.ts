@@ -6,6 +6,7 @@ import { UnitsService } from '../../shared/services/units/units.service';
 import { Employer } from '../../shared/models/employer.model';
 import { UserDetails } from '../../shared/models/user.model';
 import { ToastrService } from 'ngx-toastr';
+import { UnitsResponseSuccess } from '../../shared/models/response.model';
 
 @Component({
   selector: 'app-units',
@@ -38,13 +39,14 @@ export class UnitsComponent implements OnInit {
   
   public requestMoreUnits(form){
     this.unitsService.addUnits(this.userDetails.email, form.units, form.mpesaTransNo).subscribe(
-      response =>{
-        this.notify.success('Request sent successfully.');
+      (response: UnitsResponseSuccess) =>{
+        console.log(response);
+        this.notify.success(response.message, response.title);
         this.requestForm.reset();
         this.activeModal.close();
       }, error =>{
-        this.notify.error('Something wrong happened!');
+        this.notify.error(error.error.error_description, error.error.error);
       }
     );
-  }  
+  } 
 }
