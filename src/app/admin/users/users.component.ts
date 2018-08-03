@@ -4,6 +4,7 @@ import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { UserService } from '../../shared/services/user/user.service';
 import { UserCredentials } from '../../shared/models/user.model';
 import { ToastrService } from 'ngx-toastr';
+import { UnitsResponseSuccess } from '../../shared/models/response.model';
 
 @Component({
   selector: 'app-users',
