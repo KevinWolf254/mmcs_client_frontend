@@ -79,7 +79,7 @@ export class UsersComponent implements OnInit {
         this.edit[rowIndex] = false;
         this.notify.success("User was successfully updated...");
       },error=>{
-        this.notify.error("Update failed...");
+        this.notify.error(error.error.error_description, error.error.error);
         this.getUsers();
         this.edit[rowIndex] = false;
       }
@@ -110,13 +110,13 @@ export class UsersComponent implements OnInit {
 
   public delete(){
     this.userService.deletUser(this.deleteUserId).subscribe(
-      response=>{             
+      (response: UnitsResponseSuccess) =>{             
         this.modalRefDel.close();
         this.users.splice(this.deleteRow, 1);
         this.users = [...this.users];
-        this.notify.success("Deleted");
+        this.notify.success(response.message, response.title);
       },error=>{
-        this.notify.error("Deletion failed");
+        this.notify.error(error.error.error_description, error.error.error);
       }
     );
   }

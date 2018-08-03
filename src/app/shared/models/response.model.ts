@@ -15,3 +15,9 @@ export class UnitsDetailsResponse implements response{
             this.requestsPendingApprovalAmount = requestsPendingApprovalAmount;
     }
 }
+
+
+export interface UnitsResponseSuccess extends response{
+    title: string;
+    message: string;
+} 
