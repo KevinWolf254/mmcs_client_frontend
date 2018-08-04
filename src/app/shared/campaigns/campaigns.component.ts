@@ -16,9 +16,9 @@ export class CampaignsComponent implements OnInit {
   ngOnInit() {
     this.unitsService.getUnitsAvailable().subscribe(
       (response: UnitsDetailsResponse) => {
-          this.unitsDetails = response;
+        this.unitsDetails = response;
       }
-  );  
-}
+    );
+  }
 
 }

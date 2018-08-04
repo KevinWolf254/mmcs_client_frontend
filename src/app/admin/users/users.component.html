@@ -1,17 +1,6 @@
 
 <div class="card border-top-0 shadow">
   <div class="card-body">
-    <div class="card mx-3 mb-4">
-      <div class="card-body bg-light m-0 py-1">
-        <p>
-          <small class="form-text text-center text-muted">
-            *Edit user details and reset user password 
-            (if user has forgotten their password)
-            and also delete the user.
-          </small>
-        </p>
-      </div>
-    </div>
     <div class="d-flex justify-content-between">
       <!-- Per Page Entries -->
       <div class="input-group col-sm-5">
@@ -63,20 +52,21 @@
       <ngx-datatable-column name="acnt status" [width]="40">
         <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
           
-          <button *ngIf='row.credentials.active' (click)="row.credentials.active = false" class="btn btn-sm btn-success" [disabled]="!edit[rowIndex]" type="button"><i class="fa fa-toggle-on fa-lg"></i> active</button>
-          <button *ngIf='!row.credentials.active' (click)="row.credentials.active = true" class="btn btn-sm btn-danger" [disabled]="!edit[rowIndex]" type="button"><i class="fa fa-toggle-off fa-lg"></i> disabled</button>  
+          <button *ngIf='row.credentials.active' (click)="row.credentials.active = false" class="btn btn-sm btn-success" 
+          [disabled]="!edit[rowIndex]" type="button"><i class="fa fa-toggle-on fa-lg"></i> active</button>
+          <button *ngIf='!row.credentials.active' (click)="row.credentials.active = true" class="btn btn-sm btn-danger" 
+          [disabled]="!edit[rowIndex]" type="button"><i class="fa fa-toggle-off fa-lg"></i> disabled</button>  
          </ng-template>
       </ngx-datatable-column>
-      <!-- <ngx-datatable-column name="signed In" [width]="40">
-        <ng-template ngx-datatable-cell-template let-row="row">{{row.credentials.lastSignIn}}</ng-template>
-      </ngx-datatable-column> -->
       <ngx-datatable-column name="actions" [width]="40">
         <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
           <div class="btn-group" role="group" aria-label="actions">
-            <button (click)="editUser(rowIndex)" *ngIf='!edit[rowIndex]' class="btn btn-sm btn-outline-info" data-toggle="tooltip" data-placement="top" title="Edit user details"><i class="fa fa-pencil"></i></button>
-            <button (click)="updateUser(rowIndex)" *ngIf='edit[rowIndex]' class="btn btn-sm btn-success" data-toggle="tooltip" data-placement="top" title="update"><i class="fa fa-check"></i></button>
-            <!-- <button (click)="openReset(resetModal, row, rowIndex)" class="btn btn-sm btn-outline-warning" data-toggle="tooltip" data-placement="top" title="Reset user password"><i class="fa fa-repeat"></i></button> -->
-            <button (click)="confirmDelete(deleteModal, row, rowIndex)" class="btn btn-sm btn-outline-danger" data-toggle="tooltip" data-placement="top" title="Delete user"><i class="fa fa-trash"></i></button>
+            <button (click)="editUser(rowIndex)" *ngIf='!edit[rowIndex]' class="btn btn-sm btn-outline-info" data-toggle="tooltip" 
+              data-placement="top" title="Edit user details"><i class="fa fa-pencil"></i></button>
+            <button (click)="updateUser(rowIndex)" *ngIf='edit[rowIndex]' class="btn btn-sm btn-success" data-toggle="tooltip" 
+              data-placement="top" title="update"><i class="fa fa-check"></i></button>
+            <button (click)="confirmDelete(deleteModal, row, rowIndex)" class="btn btn-sm btn-outline-danger" data-toggle="tooltip" 
+              data-placement="top" title="Delete user"><i class="fa fa-trash"></i></button>
           </div>
         </ng-template>
       </ngx-datatable-column>

@@ -54,10 +54,11 @@ export class DashboardComponent implements OnInit {
         );
     }
 
-    private getSpentPreviousMonthUnits() {
+    getSpentPreviousMonthUnits() {
         this.unitsSpentPreviousMonth = 5000;
         this.previousMonthUnitsIsLoading = false;
     }
+
     private setUpCurrency(unitsDetails: UnitsDetailsResponse){
         if(unitsDetails.country == "RWANDA")
             this.currency = 'rwf '

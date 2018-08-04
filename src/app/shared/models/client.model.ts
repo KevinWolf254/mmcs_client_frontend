@@ -11,3 +11,9 @@ export class Client {
         this.name = name;
     }
 }
+export interface Contacts {
+    rwfContacts: number;
+    kesContacts: number;
+    tzsContacts: number;
+    ugxContacts: number;
+}

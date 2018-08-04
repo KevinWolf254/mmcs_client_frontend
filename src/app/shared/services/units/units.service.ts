@@ -7,20 +7,20 @@ import { UnitsRequest } from '../../models/request.model';
 
 @Injectable()
 export class UnitsService {
-  private basicUri: string = "http://localhost:8083/mmcs";
+  private basicUri: string = "http://localhost:8083/mmcs/secure/units";
   private httpHeader = {headers: new HttpHeaders({'Content-type':'application/json'})};
 
   constructor(private _http: HttpClient) {}
 
   public getUnitsAvailable(): Observable<UnitsDetailsResponse>{
-      return this._http.get<UnitsDetailsResponse>(this.basicUri+"/secure/units").pipe(
+      return this._http.get<UnitsDetailsResponse>(this.basicUri).pipe(
         retry(2)
       );
     }
 
-  public addUnits(requestedBy: string, requestedUnits: number, mpesaTransNo: string){
-    let unitsRequest: UnitsRequest = new UnitsRequest(requestedBy, requestedUnits, mpesaTransNo);
-    return this._http.post(this.basicUri+"/secure/units/add", unitsRequest, this.httpHeader).pipe(
+  public addUnits(requestedUnits: number, mpesaTransNo: string){
+    let unitsRequest: UnitsRequest = new UnitsRequest(requestedUnits, mpesaTransNo);
+    return this._http.post(this.basicUri, unitsRequest, this.httpHeader).pipe(
       retry(2)
     );
   }

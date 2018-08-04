@@ -21,9 +21,7 @@ export class UsersComponent implements OnInit {
   public perPageNos: number[] = [10, 25, 50, 100];
   public edit = {};
   public email: string = '';
-  // form: FormGroup;
   public modalRefDel: NgbModalRef;
-  // modalRefReset: NgbModalRef;
 
   public temp = [];
   @ViewChild(DatatableComponent) table: DatatableComponent;
@@ -34,10 +32,8 @@ export class UsersComponent implements OnInit {
     pagerRightArrow: 'fa fa-chevron-right', pagerPrevious: 'fa fa-step-backward', pagerNext: 'fa fa-step-forward'
   };
 
-  constructor(private modalService: NgbModal, private userService: UserService, private notify: ToastrService) {
-    // this.form = _fb.group({
-    //   'resetPass': [null,Validators.compose([Validators.required, Validators.minLength(4)])]
-    // });
+  constructor(private modalService: NgbModal, private userService: UserService, 
+    private notify: ToastrService) {
   }
 
   ngOnInit() {
@@ -86,19 +82,6 @@ export class UsersComponent implements OnInit {
       }
     );
   }
-  
-  // openReset(modal, user, rowIndex){
-  //   this.form.reset(); 
-  //   this.modalRefReset = this.modalService.open(modal);
-  //   this.email = user.email;
-  // }
-
-  // reset(form){
-  //   console.log("User email: "+this.email);
-  //   console.log("Reset Pass: "+form.resetPass);
-  //   this.form.reset(); 
-  //   this.modalRefReset.close();   
-  // }
 
   public confirmDelete(modal, user, rowIndex){
     this.deleteUser = new UserCredentials(user.id, user.surname, user.otherNames, 
@@ -122,18 +105,16 @@ export class UsersComponent implements OnInit {
     );
   }
 
-  changePageEntries(event){
+  public changePageEntries(event){
     this.perPage = event.target.value;
   }
 
   public search(event) {
     let searchParam = event.target.value.toLowerCase();
-
     // filter our data
     let temp = this.temp.filter(user => {
       return user.email.toLowerCase().indexOf(searchParam) !== -1 || !searchParam;
     });
-
     // update the rows
     this.users = temp;
     // Whenever the filter changes, always go back to the first page

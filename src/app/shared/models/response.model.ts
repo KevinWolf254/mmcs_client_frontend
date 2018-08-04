@@ -16,7 +16,6 @@ export class UnitsDetailsResponse implements response{
     }
 }
 
-
 export interface UnitsResponseSuccess extends response{
     title: string;
     message: string;
