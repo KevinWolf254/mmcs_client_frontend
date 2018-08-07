@@ -3,7 +3,10 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Group } from '../../models/group.model';
 import { selectValidator } from '../../validators/select-validator';
 import { GroupManagerService } from '../../services/group/group-manager.service';
-import { SmsGroup } from '../../models/sms.model';
+import { SmsToGroup } from '../../models/sms.model';
+import { Contacts } from '../../models/client.model';
+import { UnitsService } from '../../services/units/units.service';
+import { UnitsDetailsResponse } from '../../models/response.model';
 
 @Component({
   selector: 'app-one-time-campaign',
@@ -11,6 +14,18 @@ import { SmsGroup } from '../../models/sms.model';
   styleUrls: ['./one-time-campaign.component.scss']
 })
 export class OneTimeCampaignComponent implements OnInit{
+
+  public unitsDetails: UnitsDetailsResponse = new UnitsDetailsResponse('', 0, 0);
+  public noOfContacts: number = 0;
+  public contacts: Contacts;
+
+  public currency: string = "ksh";
+  public totalCharges: number = 0.00;
+  private basicCharges: number = 0.00;
+  
+  public messageLength: number = 0;
+
+  public canSend: boolean = true;
 
   message_characters = 0;
   selected = 0;
@@ -20,7 +35,8 @@ export class OneTimeCampaignComponent implements OnInit{
   recipientsIds: number[] = [];  
   form: FormGroup;
 
-  constructor(private _fb: FormBuilder, private _groupManager: GroupManagerService) {
+  constructor(private _fb: FormBuilder, private unitsService: UnitsService, 
+    private groupService: GroupManagerService) {
     this.form = _fb.group({
       'message': [null,Validators.compose([Validators.required, Validators.maxLength(160)])],
       'group': ['0', selectValidator]
@@ -28,12 +44,23 @@ export class OneTimeCampaignComponent implements OnInit{
   }
 
   ngOnInit() {
-    this.groups = this._groupManager.getGroups();
+    this.groups = this.groupService.getGroups();
+
+    this.unitsService.getUnitsAvailable().subscribe(
+      (response: UnitsDetailsResponse) => {
+        this.setUpCurrency(response);
+        this.unitsDetails = response;
+      }
+    );
   }   
+  
+  private setUpCurrency(unitsDetails: UnitsDetailsResponse) {
+    this.currency = this.unitsService.setUpCurrency(unitsDetails);
+  }
 
   add(){
     //find group with selected id
-    let group: Group = this._groupManager.findGroup(this.selected);
+    let group: Group = this.groupService.findGroup(this.selected);
     //check if recipients has a group of recipients added to it
     if(this.selectedRecipients.length !=0){
         //check and remove duplicates
@@ -61,7 +88,7 @@ export class OneTimeCampaignComponent implements OnInit{
     this.selectedRecipients.forEach((group, index)=>{
       this.recipientsIds.push(group.id);
     });
-    let sms = new SmsGroup(formValues.message, this.recipientsIds);
+    // let sms = new SmsGroup(formValues.message, this.recipientsIds);
     //reset form and selectedGroups array
     this.resetForm();
     this.resetDataValues();

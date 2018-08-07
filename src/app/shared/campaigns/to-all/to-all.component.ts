@@ -15,7 +15,7 @@ export class ToAllComponent implements OnInit {
   public form: FormGroup;
   public messageLength: number = 0;
   public isLong: boolean = false;
-  public unitsDetails: UnitsDetailsResponse = new UnitsDetailsResponse('', 0, 0);
+  // public unitsDetails: UnitsDetailsResponse = new UnitsDetailsResponse('', 0, 0);
   
   public noOfContacts: number = 0;
   public contacts: Contacts;

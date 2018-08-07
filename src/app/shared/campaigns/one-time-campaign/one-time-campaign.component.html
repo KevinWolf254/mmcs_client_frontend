@@ -1,7 +1,26 @@
 <div class="card border-top-0 shadow">
   <div class="card-body">
     <form [formGroup] = "form" (ngSubmit) = "sendSms(form.value)">
-      <h6 class="mb-4 bg-light p-2 rounded">Compose message</h6>
+      <!-- <h6 class="mb-4 bg-light p-2 rounded">Compose message</h6> -->
+      <div class="row mb-4 bg-light p-2 border rounded shadow-sm">
+        <div class="col-sm-4">
+          <h6 class="">Compose message</h6>
+        </div>
+        <div class="col-sm-8">
+          <small class="d-flex flex-row-reverse bd-highlight">
+            <div class="bd-highlight text-success" [class.text-success]="canSend" [class.text-danger]="!canSend">
+              {{currency}} {{totalCharges}}
+            </div>
+            <div class="bd-highlight pr-2">Charges: </div>
+            <div class="bd-highlight px-2"> | </div>
+            <div class="bd-highlight"> {{noOfContacts}} </div>
+            <div class="bd-highlight pr-2">Contacts: </div>
+          </small>
+        </div>
+      </div>
+      <small *ngIf="!canSend" class="alert alert-danger" role="alert">
+       Please top up units to send to {{noOfContacts}} contacts
+      </small>
       <div class="form-group">
         <textarea class="form-control form-control-sm shadow-sm" formControlName="message" rows="5" 
         placeholder="Message" aria-describedby="messageHelp"></textarea>
@@ -9,9 +28,22 @@
           Compose an SMS message that is less than 160 characters long, otherwise additional charges apply.
         </small>
       </div>
-      <hr class="mb-4">
-      <h6 class="mb-4 bg-light p-2 rounded">Groups to send to</h6>
-      <div class="input-group mb-3">
+      <hr class="mb-0">
+      <div class="row">
+        <div  class="col my-0 pb-0" [class.text-warning]="isLong" [class.text-muted]="!isLong">
+          <div class="d-flex flex-row-reverse bd-highlight">
+            <div class="bd-highlight"> Characters </div>
+            <div class="bd-highlight px-2"> | </div>
+            <div class="bd-highlight"> {{messageLength}} </div>
+          </div>
+        </div>
+      </div>
+      <small *ngIf="isLong" class="d-flex text-warning bg-light rounded 
+      flex-row-reverse bd-highlight mt-0">
+        warning: additional charges will be applied
+      </small>
+      <h6 class="mb-4 mt-3 bg-light p-2 rounded">Groups to send to</h6>
+      <div class="input-group mb-3"> 
         <select class="form-control form-control-sm" formControlName="group" 
         aria-describedby="groupSelectHelp" [(ngModel)]="selected">
           <option value='0' selected>Select Group</option>
@@ -34,7 +66,7 @@
         </span>
       </div>
       <hr class="mb-4">
-      <button class="btn btn-primary btn-block" type="submit" [disabled]="!form.valid || selectedRecipients.length == 0">
+      <button class="btn btn-primary btn-block" type="submit" [disabled]="!form.valid || selectedRecipients.length == 0 || !canSend">
         Send Sms
       </button>
     </form>
