@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { GroupManagerService } from '../group/group-manager.service';
-import { Client, Contacts } from '../../models/client.model';
+import { Client, Contacts, Charges } from '../../models/client.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from '../../../../../node_modules/rxjs/Observable';
 
@@ -15,13 +15,13 @@ export class ClientService {
   constructor(private _http: HttpClient, private _groupManager: GroupManagerService) { }
 
   public createClient(client: Client){
-    return this._http.post(this.basicUri + "/secure/client", client, this.authHeader);
+    return this._http.post(this.basicUri + "/secure/contact", client, this.authHeader);
   }
 
   public createClients(file: File){
     let formData: FormData = new FormData();    
     formData.append("file", file, file.name);
-    return this._http.post(this.basicUri + "/secure/clients", formData, this.fileHeader);
+    return this._http.post(this.basicUri + "/secure/contacts", formData, this.fileHeader);
   }
 
   findClientsByGroupId(groupId: number): Client[]{
@@ -37,6 +37,9 @@ export class ClientService {
   }
 
   public getNoOfContacts(): Observable<Contacts>{
-    return this._http.get<any>(this.basicUri + "/secure/clients");
+    return this._http.get<any>(this.basicUri + "/secure/contact");
+  }
+  public getCharges(): Observable<Charges>{
+    return this._http.get<any>(this.basicUri + "/secure/charges");
   }
 }

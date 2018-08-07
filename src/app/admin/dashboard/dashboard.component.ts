@@ -60,14 +60,7 @@ export class DashboardComponent implements OnInit {
     }
 
     private setUpCurrency(unitsDetails: UnitsDetailsResponse){
-        if(unitsDetails.country == "RWANDA")
-            this.currency = 'rwf '
-        else if(unitsDetails.country == "KENYA")
-            this.currency = 'ksh '
-        else if(unitsDetails.country == "TANZANIA")
-            this.currency = 'tzs '
-        else
-            this.currency = 'ugx '
+        this.currency = this._unitsService.setUpCurrency(unitsDetails); 
     }
 
     private calculatePrevious10YearsForSelect() {

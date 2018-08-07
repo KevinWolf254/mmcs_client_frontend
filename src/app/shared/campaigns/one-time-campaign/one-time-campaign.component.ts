@@ -61,7 +61,7 @@ export class OneTimeCampaignComponent implements OnInit{
     this.selectedRecipients.forEach((group, index)=>{
       this.recipientsIds.push(group.id);
     });
-    let sms = new SmsGroup(formValues.message, this.message_characters, this.recipientsIds);
+    let sms = new SmsGroup(formValues.message, this.recipientsIds);
     //reset form and selectedGroups array
     this.resetForm();
     this.resetDataValues();

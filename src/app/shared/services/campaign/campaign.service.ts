@@ -26,10 +26,10 @@ export class CampaignService {
       map(result => result)
     );
    }
-public sendToAll(message: string, message_characters: number): Observable<any>{
-  let sms: Sms = new Sms(message, message_characters);
-  return this._http.post<any>(this.basicUri+'/secure/sms', sms);
-}
+  public sendToAll(message: string): Observable<any> {
+    let sms: Sms = new Sms(message);
+    return this._http.post<any>(this.basicUri + '/secure/sms', sms);
+  }
   getCampaigns(): Schedule[]{
     return this.campaigns;
   }

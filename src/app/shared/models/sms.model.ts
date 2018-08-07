@@ -1,90 +1,109 @@
-import { Time } from "@angular/common";
+import { Schedule, NoSchedule } from "./schedule.model";
 
-export class Sms {
+export interface Sms {
     message: string;
-    count: number;
-    constructor(message?: string, count?: number){
+    schedule: Schedule;
+}
+
+export class Sms implements Sms {
+    public message: string;
+    public schedule: Schedule;
+
+    constructor(message?: string) {
         this.message = message;
-        this.count = count;
+        this.schedule = new NoSchedule();
     }
 }
 
-export class SmsGroup extends Sms{
-    groups: number[];
+export class SmsToGroup extends Sms {
+    groupIds: number[];
 
-    constructor(message?: string, count?: number, groups?: number[]){
-        super(message, count);
-        this.groups = groups;
-    }
-
-}
-
-export class SmsScheduled extends SmsGroup{
-    campaignName: string;
-    campaignType: string;
-    time: Time;
-
-    constructor(message?: string, count?: number, groups?: number[], 
-        campaignName?: string, campaignType?: string, time?: Time){
-        super(message, count, groups);
-        this.campaignName = campaignName;
-        this.campaignType = campaignType;
-        this.time = time;
-    }
-
-    getCronExpression(): string{
-        let hour: number = this.time.hours;
-        let minute: number = this.time.minutes;
-        // cron expression: fires daily
-        return "0 "+minute+" "+hour+" ? * *";
+    constructor(message?: string, schedule?: Schedule, 
+        groupIds?: number[]) {
+        super(message);
+        this.schedule = schedule;
+        this.groupIds = groupIds;
     }
 }
 
-export class SmsScheduledOnce extends SmsScheduled{
-    date: Date; 
+/*
+// export class SmsGroup extends Sms{
+//     groups: number[];
 
-    constructor(message?: string, count?: number, groups?: number[], 
-        campaignName?: string, campaignType?: string, time?: Time, 
-        date?: Date){
-        super(message, count, groups, campaignName, campaignType, time);
-        this.date = date
-    }
-    getCronExpression(): string{
-        return '';
-    }
-}
+//     constructor(message?: string, groups?: number[]){
+//         super(message);
+//         this.groups = groups;
+//     }
 
-export class SmsScheduledWeekly extends SmsScheduled{
-    dayOfWeek: string;
+// }
 
-    constructor(message?: string, count?: number, groups?: number[], 
-        campaignName?: string, campaignType?: string, time?: Time, 
-        dayOfWeek?: string){
-        super(message, count, groups, campaignName, campaignType, time);
-        this.dayOfWeek = dayOfWeek;
-    }
+// export class SmsScheduled extends SmsGroup{
+//     campaignName: string;
+//     campaignType: string;
+//     time: Time;
 
-    getCronExpression(): string{
-        let hour: number = this.time.hours;
-        let minute: number = this.time.minutes;
-        // cron expression: fires weekly
-        return "0 "+minute+" "+hour+" ? * "+this.dayOfWeek+" *";
-    } 
-}
+//     constructor(message?: string, groups?: number[], 
+//         campaignName?: string, campaignType?: string, time?: Time){
+//         super(message, groups);
+//         this.campaignName = campaignName;
+//         this.campaignType = campaignType;
+//         this.time = time;
+//     }
 
-export class SmsScheduledMonthly extends SmsScheduled{
-    dayOfMonth: number;
+//     getCronExpression(): string{
+//         let hour: number = this.time.hours;
+//         let minute: number = this.time.minutes;
+//         // cron expression: fires daily
+//         return "0 "+minute+" "+hour+" ? * *";
+//     }
+// }
 
-    constructor(message?: string, count?: number, groups?: number[], 
-        campaignName?: string, campaignType?: string, time?: Time, 
-        dayOfMonth?: number){
-        super(message, count, groups, campaignName, campaignType, time);
-        this.dayOfMonth = dayOfMonth;
-    }
-    getCronExpression(): string{
-        let hour: number = this.time.hours;
-        let minute: number = this.time.minutes;
-        // cron expression: fires monthly
-        return "0 "+minute+" "+hour+" "+this.dayOfMonth+" * ?";
-    } 
-}
+// export class SmsScheduledOnce extends SmsScheduled{
+//     date: Date; 
+
+//     constructor(message?: string, groups?: number[], 
+//         campaignName?: string, campaignType?: string, time?: Time, 
+//         date?: Date){
+//         super(message, groups, campaignName, campaignType, time);
+//         this.date = date
+//     }
+//     getCronExpression(): string{
+//         return '';
+//     }
+// }
+
+// export class SmsScheduledWeekly extends SmsScheduled{
+//     dayOfWeek: string;
+
+//     constructor(message?: string, groups?: number[], 
+//         campaignName?: string, campaignType?: string, time?: Time, 
+//         dayOfWeek?: string){
+//         super(message, groups, campaignName, campaignType, time);
+//         this.dayOfWeek = dayOfWeek;
+//     }
+
+//     getCronExpression(): string{
+//         let hour: number = this.time.hours;
+//         let minute: number = this.time.minutes;
+//         // cron expression: fires weekly
+//         return "0 "+minute+" "+hour+" ? * "+this.dayOfWeek+" *";
+//     } 
+// }
+
+// export class SmsScheduledMonthly extends SmsScheduled{
+//     dayOfMonth: number;
+
+//     constructor(message?: string, groups?: number[], 
+//         campaignName?: string, campaignType?: string, time?: Time, 
+//         dayOfMonth?: number){
+//         super(message, groups, campaignName, campaignType, time);
+//         this.dayOfMonth = dayOfMonth;
+//     }
+//     getCronExpression(): string{
+//         let hour: number = this.time.hours;
+//         let minute: number = this.time.minutes;
+//         // cron expression: fires monthly
+//         return "0 "+minute+" "+hour+" "+this.dayOfMonth+" * ?";
+//     } 
+// }
+*/

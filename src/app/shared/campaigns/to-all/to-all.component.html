@@ -7,16 +7,19 @@
         </div>
         <div class="col-sm-8">
           <small class="d-flex flex-row-reverse bd-highlight">
-            <div class="bd-highlight text-success"> ksh 0 </div>
-            <div class="bd-highlight pr-2">:</div>
-            <div class="bd-highlight">Charges </div>
+            <div *ngIf="canSend" class="bd-highlight text-success"> {{currency}} {{totalCharges}} </div>             
+            <div *ngIf="!canSend" class="bd-highlight text-danger"> {{currency}} {{totalCharges}} </div>
+            <div class="bd-highlight pr-2">Charges: </div>
             <div class="bd-highlight px-2"> | </div>
-            <div class="bd-highlight"> 2000,000 </div>
-            <div class="bd-highlight px-2"> | </div>
-            <div class="bd-highlight">Contacts </div>
+            <div class="bd-highlight"> {{noOfContacts}} </div>
+            <!-- <div class="bd-highlight px-2"> | </div> -->
+            <div class="bd-highlight pr-2">Contacts: </div>
           </small>
         </div>
       </div>
+      <small *ngIf="!canSend" class="alert alert-danger" role="alert">
+       Please top up units to send to {{noOfContacts}} contacts
+      </small>
       <div class="form-group">
         <textarea class="form-control shadow-sm" maxlength="320" formControlName="message" rows="5" 
         placeholder="Message" aria-describedby="messageHelp"></textarea>
@@ -30,14 +33,14 @@
           <div class="d-flex flex-row-reverse bd-highlight">
             <div class="bd-highlight"> Characters </div>
             <div class="bd-highlight px-2"> | </div>
-            <div class="bd-highlight"> {{count}} </div>
+            <div class="bd-highlight"> {{messageLength}} </div>
           </div>
         </div>
         <div *ngIf="isLong" class="col text-warning my-0 pb-0">
           <div class="d-flex flex-row-reverse bd-highlight">
             <div class="bd-highlight"> Characters </div>
             <div class="bd-highlight px-2"> | </div>
-            <div class="bd-highlight"> {{count}} </div>
+            <div class="bd-highlight"> {{messageLength}} </div>
           </div>
         </div>
       </div>
@@ -45,7 +48,7 @@
       flex-row-reverse bd-highlight mt-0">
         warning: additional charges will be applied
       </small>
-      <button class="btn btn-primary btn-block mt-4" type="submit" [disabled]="!form.valid">
+      <button class="btn btn-primary btn-block mt-4" type="submit" [disabled]="!form.valid || !canSend">
         Send Sms
       </button>
     </form>

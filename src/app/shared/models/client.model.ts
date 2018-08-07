@@ -11,9 +11,26 @@ export class Client {
         this.name = name;
     }
 }
+
+export enum ServiceProvider{
+    GENERIC_RW, GENERIC_KE, AIRTEL_KE, 
+    GENERIC_TZ, GENERIC_UG, AIRTEL_UG,
+    OTHER
+}
+
 export interface Contacts {
-    rwfContacts: number;
-    kesContacts: number;
-    tzsContacts: number;
-    ugxContacts: number;
+    rwf: number;
+    kes: number;
+        kesAir: number;
+    tzs: number;
+    ugx: number;
+        ugxAir: number;
+    other: number;
+}
+/*
+ *what aeon charges to send 
+ *sms according to currency
+ */
+export interface Charges extends Contacts{
+
 }

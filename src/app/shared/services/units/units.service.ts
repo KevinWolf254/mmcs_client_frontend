@@ -24,4 +24,15 @@ export class UnitsService {
       retry(2)
     );
   }
+
+  public setUpCurrency(unitsDetails: UnitsDetailsResponse): string {
+    if (unitsDetails.country == "RWANDA")
+      return 'rwf ';
+    if (unitsDetails.country == "KENYA")
+      return 'ksh ';
+    if (unitsDetails.country == "TANZANIA")
+      return 'tzs ';
+    if (unitsDetails.country == "UGANDA")
+      return 'ugx ';
+  }
 }
