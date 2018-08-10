@@ -4,7 +4,7 @@ import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { UserService } from '../../shared/services/user/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { UnitsResponseSuccess } from '../../shared/models/response.model';
-import { OrganisationUser } from '../../shared/models/user.model';
+import { User } from '../../shared/models/user.model';
 
 @Component({
   selector: 'app-users',
@@ -15,8 +15,12 @@ export class UsersComponent implements OnInit {
 
   // public users: UserCredentials[] = [];
   // public deleteUser: UserCredentials;
+
+  public users: User[] = [];
+
   public deleteRow: number = null;
-  private deleteUserId = null;
+  private deleteUser: string = '';
+  // private deleteUserId = null;
   public perPage: number;
   public perPageNos: number[] = [10, 25, 50, 100];
   public edit = {};
@@ -44,7 +48,7 @@ export class UsersComponent implements OnInit {
 
   private getUsers(){
     this.userService.getUsers().subscribe(
-      (users: OrganisationUser[]) =>{
+      (users: User[]) =>{
         this.users = users;
         // cache our users
         this.temp = [...users];
@@ -70,7 +74,7 @@ export class UsersComponent implements OnInit {
 
   public updateUser(rowIndex){
     this.userService.updateUser(this.users[rowIndex]).subscribe(
-      (userUpdated: UserCredentials)=>{
+      (userUpdated: User)=>{
         this.users[rowIndex] = userUpdated;        
         this.users = [...this.users];        
         this.edit[rowIndex] = false;
@@ -83,11 +87,11 @@ export class UsersComponent implements OnInit {
     );
   }
 
-  public confirmDelete(modal, user, rowIndex){
-    this.deleteUser = new UserCredentials(user.id, user.surname, user.otherNames, 
-      user.email, user.credentials.role, user.credentials.active, user.credentials.lastSignIn);
+  public confirmDelete(modal, user: User, rowIndex){
+    this.deleteUser = new User(user.surname, user.otherNames, 
+      user.email, user.role, user.isActive, user.lastSignInDate);
       
-    this.deleteUserId = user.id;
+    this.deleteUser = user.email;
     this.deleteRow = rowIndex;        
     this.modalRefDel = this.modalService.open(modal);
   }
