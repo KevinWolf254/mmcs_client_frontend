@@ -6,7 +6,7 @@ import { UnitsService } from '../../shared/services/units/units.service';
 import { Employer } from '../../shared/models/employer.model';
 import { UserDetails } from '../../shared/models/user.model';
 import { ToastrService } from 'ngx-toastr';
-import { UnitsResponseSuccess } from '../../shared/models/response.model';
+import { UnitsResponseSuccess, _UserDetails } from '../../shared/models/response.model';
 
 @Component({
   selector: 'app-units',
@@ -19,9 +19,7 @@ export class UnitsComponent implements OnInit {
   private employer: Employer = new Employer();
   // public userDetails: UserDetails = new UserDetails(0, '', '', '', '', 
   // false, new Date(), this.employer);
-
-  public userDetails: _UserDetails;
-  
+  public userDetails: _UserDetails
   constructor(public activeModal: NgbActiveModal, private _fb: FormBuilder, 
     private signInService: SignInService, private unitsService: UnitsService, 
     private notify: ToastrService) { 
@@ -33,7 +31,7 @@ export class UnitsComponent implements OnInit {
 
   ngOnInit() {
     this.signInService.sendRequestForUserDetails().subscribe(
-      (userDetails: _UserDetails) =>{ 
+      userDetails =>{ 
         this.userDetails = userDetails;
       }
     );
