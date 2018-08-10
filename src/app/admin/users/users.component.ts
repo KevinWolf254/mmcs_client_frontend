@@ -17,9 +17,11 @@ export class UsersComponent implements OnInit {
   // public deleteUser: UserCredentials;
 
   public users: User[] = [];
+  public deleteUser: User;
 
   public deleteRow: number = null;
-  private deleteUser: string = '';
+
+  private deleteUserEmail: string = '';
   // private deleteUserId = null;
   public perPage: number;
   public perPageNos: number[] = [10, 25, 50, 100];
@@ -69,7 +71,7 @@ export class UsersComponent implements OnInit {
   }
 
   public setRole(event, rowIndex){
-    this.users[rowIndex].credentials.role = event.target.value;
+    this.users[rowIndex].role = event.target.value;
   }
 
   public updateUser(rowIndex){
@@ -88,16 +90,17 @@ export class UsersComponent implements OnInit {
   }
 
   public confirmDelete(modal, user: User, rowIndex){
-    this.deleteUser = new User(user.surname, user.otherNames, 
-      user.email, user.role, user.isActive, user.lastSignInDate);
-      
-    this.deleteUser = user.email;
+    // this.deleteUser = new User(user.surname, user.otherNames, 
+    //   user.email, user.role, user.isActive, user.lastSignInDate);
+    this.deleteUser = user;
+    
+    this.deleteUserEmail = user.email;
     this.deleteRow = rowIndex;        
     this.modalRefDel = this.modalService.open(modal);
   }
 
   public delete(){
-    this.userService.deletUser(this.deleteUserId).subscribe(
+    this.userService.deletUser(this.deleteUserEmail).subscribe(
       (response: UnitsResponseSuccess) =>{             
         this.modalRefDel.close();
         this.users.splice(this.deleteRow, 1);

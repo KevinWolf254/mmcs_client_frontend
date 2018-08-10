@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { confirmPasswordValidator } from '../validators/confirm-password-validator';
-import { User, UserDetails } from '../models/user.model';
 import { SignInService } from '../services/sign-in/sign-in.service';
 import { Employer } from '../models/employer.model';
 import { UserService } from '../services/user/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { _UserDetails } from '../models/response.model';
+import { User } from '../models/user.model';
 
 @Component({
   selector: 'app-user-profile',
@@ -15,13 +15,10 @@ import { _UserDetails } from '../models/response.model';
 })
 export class UserProfileComponent implements OnInit {
 
-  employer: Employer= {id: 0, name: ''};
-  // userDetails: UserDetails = new UserDetails(0,'','','','',false,new Date(), this.employer);
-  userDetails: _UserDetails;
+  public userDetails: _UserDetails = new User();
 
-  lastSignIn: Date = new Date();
-  date=''
-  changePassForm: FormGroup;
+  public date: string = '';
+  public changePassForm: FormGroup;
   public changingPass: boolean = false;
 
   constructor(private _fb: FormBuilder, private signInService: SignInService, private userService: UserService,
@@ -41,15 +38,16 @@ export class UserProfileComponent implements OnInit {
     this.signInService.sendRequestForUserDetails().subscribe(
       (response: _UserDetails)=>{
         this.userDetails = response;
+        this.setDateProfile(response);
       }
     );
-    this.setDateProfile();
   }
 
-  private setDateProfile(){
-    this.lastSignIn = this.userDetails.lastSignInDate;
-    let date = new Date(this.lastSignIn);
-    this.date = date.toISOString().slice(0,10);
+  private setDateProfile(userDetails: _UserDetails){
+    let date = new Date(userDetails.lastSignInDate);
+    this.date = "Logged in at: "+date.getHours()+":"+date.getMinutes()+" on "+date.getUTCDate()+
+    "-"+date.getMonth()+"-"+date.getFullYear()
+    // .toISOString().slice(0,10);
   }
 
   changePassword(form){

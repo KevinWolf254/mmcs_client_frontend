@@ -5,9 +5,7 @@ import { fadeInOut } from '../animations/fade-in-out';
 import { SignInService } from '../services/sign-in/sign-in.service';
 import { JsonWebToken } from '../models/json-web-token.model';
 import { ToastrService } from 'ngx-toastr';
-import { AeonService } from '../services/aeon/aeon.service';
 import { Role } from '../models/credentials.model';
-import { UserDetails } from '../models/user.model';
 import { _UserDetails } from '../models/response.model';
 
 @Component({

@@ -22,8 +22,8 @@ export class UserService {
     return this._http.post<any>(this.basicUri + "/secure/users/create", userData, this.authHeader);
   }
 
-  public getUsers():Observable<User>{
-    return this._http.get<User>(this.basicUri + "/secure/users");
+  public getUsers():Observable<User[]>{
+    return this._http.get<User[]>(this.basicUri + "/secure/users");
   }
 
   public updateUser(user: User):Observable<User>{
@@ -36,8 +36,8 @@ export class UserService {
     return this._http.put<User>(this.basicUri + "/secure/users", userData, this.authHeader);
   }
 
-  public deletUser(userId: number){
-    return this._http.delete(this.basicUri + "/secure/users/" + userId);
+  public deletUser(email: string){
+    return this._http.delete(this.basicUri + "/secure/users/" + email);
   }
 
   private getRole(role: string): string{
