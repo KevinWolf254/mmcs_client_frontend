@@ -35,7 +35,7 @@ export class ClientsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.groups = this._groupManager.getGroups();
+    // this.groups = this._groupManager.getGroups();
 
     this._success.subscribe((message) => this.successMessage = message);
     this._success.pipe(

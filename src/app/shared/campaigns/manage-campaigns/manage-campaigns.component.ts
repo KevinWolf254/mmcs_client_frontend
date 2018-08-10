@@ -61,7 +61,7 @@ export class ManageCampaignsComponent implements OnInit {
 
   ngOnInit() {
     this.getSchedules();
-    this.allgroups =  this._groupService.getGroups();
+    // this.allgroups =  this._groupService.getGroups();
     this.perPage = this.perPageNos[0];
 
     this.form.get('schedule').valueChanges.subscribe( type =>{
@@ -121,22 +121,21 @@ export class ManageCampaignsComponent implements OnInit {
 
   /*Pauses a running schedule */
   pauseSchedule(schedule, rowIndex){
-    console.log("Schedule: "+schedule.jobName+" stopped!");
-    this.schedules[rowIndex].jobStatus = "PAUSE";
+    // this.schedules[rowIndex].jobStatus = "PAUSE";
     this.scheduleStopped[rowIndex] = true;
   }
 
   /*Runs a stopped/scheduled schedule */
   runSchedule(schedule, rowIndex){    
     console.log("Schedule: "+schedule.jobName+" resumed!");
-    this.schedules[rowIndex].jobStatus = "RUNNING";
+    // this.schedules[rowIndex].jobStatus = "RUNNING";
     this.scheduleStopped[rowIndex] = false;
   }
 
   /*Unschedules a running schedule */
   stopSchedule(schedule, rowIndex){
     console.log("Schedule: "+schedule.jobName+" stopped!");
-    this.schedules[rowIndex].jobStatus = "SCHEDULED";
+    // this.schedules[rowIndex].jobStatus = "SCHEDULED";
     this.scheduleStopped[rowIndex] = false;
   }
 
@@ -150,13 +149,13 @@ export class ManageCampaignsComponent implements OnInit {
 
   addGroupToCampaign(){
     //find group with selected id
-    let group: Group = this._groupService.findGroup(this.selected);
+    // let group: Group = this._groupService.findGroup(this.selected);
     //check if recipients has a group of recipients added to it
     if(this.groupsOfSelectedCampaign.length !=0){
         //check and remove duplicates
         this.groupsOfSelectedCampaign = this.removeDuplicate();
     }
-    this.groupsOfSelectedCampaign.push(group);
+    // this.groupsOfSelectedCampaign.push(group);
     this.selected = 0;
     // this.form.get('group').setValue(0);
   }
@@ -181,7 +180,7 @@ export class ManageCampaignsComponent implements OnInit {
   }
 
   openDeletionDialog(modal, schedule, rowIndex){
-    this.deleteSchedule = new Schedule(schedule.jobName, schedule.groupName, schedule.scheduleTime, schedule.lastFiredTime, schedule.jobStatus, schedule.nextFireTime);
+    // this.deleteSchedule = new Schedule(schedule.jobName, schedule.groupName, schedule.scheduleTime, schedule.lastFiredTime, schedule.jobStatus, schedule.nextFireTime);
     this.deleteRow = rowIndex;    
     this.modalRefDel = this.modalService.open(modal);
   }

@@ -1,4 +1,4 @@
-import { Credentials } from "./credentials.model";
+import { Credentials, Role } from "./credentials.model";
 import { Employer } from "./employer.model";
 
 export class User {
@@ -28,7 +28,7 @@ export class UserCredentials extends User{
 }
 
 export class UserDetails extends UserCredentials{
-    employer: Employer = new Employer(); 
+    employer: Employer = new Employer();  
 
     constructor(userId?: number, surname?: string, otherNames?: string, email?: string,
          role?: string, active?: boolean, lastSignIn?: Date, employer?: Employer){

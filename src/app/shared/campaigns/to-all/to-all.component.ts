@@ -15,7 +15,7 @@ export class ToAllComponent implements OnInit {
   public form: FormGroup;
   public messageLength: number = 0;
   public isLong: boolean = false;
-  // public unitsDetails: UnitsDetailsResponse = new UnitsDetailsResponse('', 0, 0);
+  public unitsDetails: UnitsDetailsResponse = new UnitsDetailsResponse('', 0, 0);
   
   public noOfContacts: number = 0;
   public contacts: Contacts;
@@ -27,7 +27,7 @@ export class ToAllComponent implements OnInit {
   public canSend: boolean = true;
 
   constructor(private _fb: FormBuilder, private campaignService: CampaignService, 
-    private unitsService: UnitsService,private _clientService: ClientService) { 
+    private unitsService: UnitsService, private _clientService: ClientService) { 
     this.form = _fb.group({
       'message': ['',Validators.compose([Validators.required, Validators.maxLength(320)])]
     });
@@ -40,9 +40,12 @@ export class ToAllComponent implements OnInit {
         if (this.messageLength > 160) {
           this.isLong = true;
           this.totalCharges = this.basicCharges * 2;
-        }else {
+        }else if (this.messageLength > 0 && this.messageLength <= 160){
           this.isLong = false;
           this.totalCharges = this.basicCharges;
+        }else{
+          this.isLong = false;
+          this.totalCharges = 0;
         }
         this.checkSendingValidity();
       }
@@ -61,7 +64,7 @@ export class ToAllComponent implements OnInit {
     this._clientService.getNoOfContacts().subscribe(
       (contacts: Contacts) =>{
         this.contacts = contacts;
-        this.calculateNoOfContacts(contacts);
+        this.noOfContacts = this._clientService.calculateNoOfContacts(contacts);
         this.getCharges();
       }
     );
@@ -70,41 +73,9 @@ export class ToAllComponent implements OnInit {
   private getCharges(){
     this._clientService.getCharges().subscribe(
       (charges: Charges) =>{
-        this.calculateCharges(charges);
+        this.basicCharges = this._clientService.calculateCharges(charges, this.contacts);
       }
     );
-  }
-
-  private calculateNoOfContacts(contacts: Contacts){    
-    let rwfContacts = contacts.rwf;
-    let kesContacts = contacts.kes;
-    let kesAirContacts = contacts.kesAir;
-    let tzsContacts = contacts.tzs;
-    let ugxContacts = contacts.ugx;
-    let ugxAirContacts = contacts.ugxAir;
-    let otherContacts = contacts.other;
-
-    this.noOfContacts = rwfContacts+kesContacts+kesAirContacts
-    +tzsContacts+ugxContacts+ugxAirContacts+otherContacts;
-  }
-
-  private calculateCharges(charges: Charges){    
-    let rwfCharges = charges.rwf;
-    let kesCharges = charges.kes;
-    let kesAirCharges = charges.kesAir;
-    let tzsCharges = charges.tzs;
-    let ugxCharges = charges.ugx;
-    let ugxAirCharges = charges.ugxAir;
-    let otherCharges = charges.other;
-
-    this.basicCharges = 
-      (rwfCharges * this.contacts.rwf)+
-      (kesCharges * this.contacts.kes)+
-      (kesAirCharges * this.contacts.kesAir)+
-      (tzsCharges * this.contacts.tzs)+
-      (ugxCharges * this.contacts.ugx)+
-      (ugxAirCharges * this.contacts.ugx)+
-      (otherCharges * this.contacts.other);
   }
 
   private setUpCurrency(unitsDetails: UnitsDetailsResponse) {

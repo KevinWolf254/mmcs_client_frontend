@@ -53,7 +53,7 @@ export class ClientGroupsComponent implements OnInit {
   }
 
   ngOnInit() {    
-    this.groups = this._groupManager.getGroups();
+    // this.groups = this._groupManager.getGroups();
 
     this.entriesPerPage = this.perPageNos[0];
   } 
@@ -64,7 +64,7 @@ export class ClientGroupsComponent implements OnInit {
   }
 
   getGroupClientsFromWebApi(groupId: number){
-    this.groupClients = this._clientService.findClientsByGroupId(groupId);
+    // this.groupClients = this._clientService.findClientsByGroupId(groupId);
     // cache our clients
     this.tempClients = [...this.groupClients];
   }
@@ -89,7 +89,7 @@ export class ClientGroupsComponent implements OnInit {
   }
 
   createGroup(form){
-    this._groupManager.createGroup(form.name);
+    // this._groupManager.createGroup(form.name);
     this.createForm.reset();
   }
 
@@ -108,7 +108,7 @@ export class ClientGroupsComponent implements OnInit {
   }
   
   deleteGroup(form){
-    this._groupManager.deleteGroup(form.group);
+    // this._groupManager.deleteGroup(form.group);
     this.deleteForm.reset();
     this.deleteForm.get(['group']).setValue(0);
     this.groupClients = [];

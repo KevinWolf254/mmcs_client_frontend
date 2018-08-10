@@ -5,6 +5,7 @@ import { _throw } from 'rxjs/observable/throw';
 import { JsonWebToken } from '../../models/json-web-token.model';
 import { catchError, retry } from 'rxjs/operators';
 import { UserDetails } from '../../models/user.model';
+import { _UserDetails } from '../../models/response.model';
 
 @Injectable()
 export class SignInService {
@@ -20,15 +21,22 @@ export class SignInService {
     return this._http.post<JsonWebToken>(authUri, oAuthData, this.authHeader);
   }
  
-  public sendRequestForUserDetails(): Observable<UserDetails>{
-    let credentialsUri: string = this.basicUri+"/secure/signin";
-    return this._http.get<UserDetails>(credentialsUri)
+  // public sendRequestForUserDetails(): Observable<UserDetails>{
+  //   let credentialsUri: string = this.basicUri+"/secure/signin";
+  //   return this._http.get<UserDetails>(credentialsUri)
+  //   .pipe(
+  //     retry(3), 
+  //     catchError(this.handleError) 
+  //   );
+  // }
+  public sendRequestForUserDetails(): Observable<_UserDetails>{
+    let signInUri: string = this.basicUri+"/secure/signin";
+    return this._http.get<_UserDetails>(signInUri)
     .pipe(
       retry(3), 
       catchError(this.handleError) 
     );
   }
-  
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       console.error('Client Side Error: ', error.error.message);

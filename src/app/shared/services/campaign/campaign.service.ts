@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Schedule } from '../../models/schedule.model';
 import { Campaign } from '../../models/campaign.model';
-import { Group } from '../../models/group.model';
 import { GroupManagerService } from '../group/group-manager.service';
 import { MonthlyExpenditure } from '../../models/monthly-expenditure.model';
 import { HttpClient } from '@angular/common/http';
 import { retry, map } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
-import { Sms } from '../../models/sms.model';
+import { Sms, SmsToAll } from '../../models/sms.model';
 
 @Injectable()
 export class CampaignService {
@@ -27,9 +26,14 @@ export class CampaignService {
     );
    }
   public sendToAll(message: string): Observable<any> {
-    let sms: Sms = new Sms(message);
+    let sms: Sms = new SmsToAll(message);
     return this._http.post<any>(this.basicUri + '/secure/sms', sms);
   }
+
+  public sendScheduledSms(sms: Sms){
+    return this._http.post<any>(this.basicUri + '/secure/schedule', sms);
+  }
+
   getCampaigns(): Schedule[]{
     return this.campaigns;
   }

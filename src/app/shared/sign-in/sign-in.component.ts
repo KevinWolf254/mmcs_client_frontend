@@ -8,6 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AeonService } from '../services/aeon/aeon.service';
 import { Role } from '../models/credentials.model';
 import { UserDetails } from '../models/user.model';
+import { _UserDetails } from '../models/response.model';
 
 @Component({
   selector: 'app-sign-in',
@@ -20,8 +21,10 @@ import { UserDetails } from '../models/user.model';
 export class SignInComponent implements OnInit {
 
   public signInForm: FormGroup; 
-  private userDetails: UserDetails;
+  // private userDetails: UserDetails;
   public isSigningIn: boolean = false;
+
+  private userDetails: _UserDetails;
 
   constructor(private _fb: FormBuilder, private router: Router, private signinService: SignInService, 
     private notify: ToastrService) {
@@ -38,14 +41,24 @@ export class SignInComponent implements OnInit {
     this.isSigningIn = true;
     this.signinService.authenticateUser(form.email, form.password).subscribe(
       (jwt: JsonWebToken)=>{
-        localStorage.setItem('userToken', jwt.access_token);        
+        localStorage.setItem('userToken', jwt.access_token);
+
+        // this.signinService.sendRequestForUserDetails().subscribe(
+        //   (userDetails: UserDetails)=>{
+        //     this.isSigningIn = false;
+        //     this.setUserDetails(userDetails);
+        //     this.routeUser();
+        //   }
+        // );
+
         this.signinService.sendRequestForUserDetails().subscribe(
-          (userDetails: UserDetails)=>{
-            this.isSigningIn = false;
-            this.setUserDetails(userDetails);
-            this.routeUser();
-          }
-        ); 
+            (userDetails: _UserDetails)=>{
+              this.isSigningIn = false;
+              this.setUserDetails(userDetails);
+              this.routeUser();
+            }
+          );
+
       },(error: any) =>{
           this.notify.error(error.error.error_description);
           console.log(error);
@@ -54,13 +67,24 @@ export class SignInComponent implements OnInit {
     );  
   }
 
+  // private setUserDetails(userDetails){
+  //   this.userDetails = userDetails;
+  //   localStorage.setItem('userRole', userDetails.credentials.role);
+  // }
   private setUserDetails(userDetails){
     this.userDetails = userDetails;
-    localStorage.setItem('userRole', userDetails.credentials.role);
+    localStorage.setItem('userRole', userDetails.role);
   }
 
+  // private isAdmin(): boolean{
+  //   if(this.userDetails.credentials.role === Role.ADMIN){
+  //     return true;
+  //   }
+  //   return false;
+  // } 
+
   private isAdmin(): boolean{
-    if(this.userDetails.credentials.role === Role.ADMIN){
+    if(this.userDetails.role === Role.ADMIN){
       return true;
     }
     return false;

@@ -3,24 +3,29 @@ import { Schedule, NoSchedule } from "./schedule.model";
 export interface Sms {
     message: string;
     schedule: Schedule;
+    groupIds: number[];
 }
 
-export class Sms implements Sms {
-    public message: string;
-    public schedule: Schedule;
+export class SmsToAll implements Sms {    
+    message: string;
+    schedule: Schedule;
+    groupIds: number[];
 
     constructor(message?: string) {
         this.message = message;
-        this.schedule = new NoSchedule();
+        this.schedule = new NoSchedule;
+        this.groupIds = [];
     }
 }
 
-export class SmsToGroup extends Sms {
+export class SmsToGroup implements Sms {    
+    message: string;
+    schedule: Schedule;
     groupIds: number[];
 
     constructor(message?: string, schedule?: Schedule, 
         groupIds?: number[]) {
-        super(message);
+        this.message = message;
         this.schedule = schedule;
         this.groupIds = groupIds;
     }

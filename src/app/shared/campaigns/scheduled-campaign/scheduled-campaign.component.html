@@ -34,7 +34,8 @@
                   Pick Date and Time:
                   <div class="form-group">
                     <div class="input-group">
-                      <input class="form-control" placeholder="YYYY-MM-DD" formControlName="scheduledOnce_Date" ngbDatepicker #oneTimeDate="ngbDatepicker">
+                      <input class="form-control" placeholder="YYYY-MM-DD" formControlName="scheduledOnce_Date" 
+                      ngbDatepicker #oneTimeDate="ngbDatepicker">
                       <div class="input-group-append">
                         <button class="btn btn-primary" (click)="oneTimeDate.toggle()" type="button">
                           <i class="fa fa-calendar"></i>
@@ -136,8 +137,21 @@
           Compose an SMS message that is less than 160 characters long, otherwise additional charges apply.
         </small>
       </div>
-      <hr class="mb-4">
-      <h6 class="mb-4 bg-light p-2">Groups to send to:</h6>
+      <hr class="mb-0">
+      <div class="row">
+        <div  class="col my-0 pb-0" [class.text-warning]="isLong" [class.text-muted]="!isLong">
+          <div class="d-flex flex-row-reverse bd-highlight">
+            <div class="bd-highlight"> Characters </div>
+            <div class="bd-highlight px-2"> | </div>
+            <div class="bd-highlight"> {{messageLength}} </div>
+          </div>
+        </div>
+      </div>
+      <small *ngIf="isLong" class="d-flex text-warning bg-light rounded 
+      flex-row-reverse bd-highlight mt-0">
+        warning: additional charges will be applied
+      </small>
+      <h6 class="mb-4 mt-4 bg-light p-2">Groups to send to:</h6>
       <div class="input-group mb-3">
         <select class="form-control" id="groupSelect01" formControlName="group" 
         aria-describedby="groupSelectHelp" [(ngModel)]="selected">

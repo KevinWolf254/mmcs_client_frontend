@@ -7,3 +7,11 @@ export class Group {
         this.name = name;
     }
 }
+
+export class GroupedContactsRequest{
+    groupIds: number[];
+
+    constructor(groupIds: number[]){
+        this.groupIds = groupIds;
+    }
+}
