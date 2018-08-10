@@ -18,6 +18,7 @@ export class UnitsComponent implements OnInit {
 
   // public userDetails: UserDetails = new UserDetails(0, '', '', '', '', 
   // false, new Date(), this.employer);
+  
   public userDetails: _UserDetails = new User();
 
   constructor(public activeModal: NgbActiveModal, private _fb: FormBuilder, 
