@@ -3,10 +3,9 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SignInService } from '../../shared/services/sign-in/sign-in.service';
 import { UnitsService } from '../../shared/services/units/units.service';
-import { Employer } from '../../shared/models/employer.model';
-import { UserDetails } from '../../shared/models/user.model';
 import { ToastrService } from 'ngx-toastr';
 import { UnitsResponseSuccess, _UserDetails } from '../../shared/models/response.model';
+import { User } from '../../shared/models/user.model';
 
 @Component({
   selector: 'app-units',
@@ -16,10 +15,11 @@ import { UnitsResponseSuccess, _UserDetails } from '../../shared/models/response
 export class UnitsComponent implements OnInit {
 
   public requestForm: FormGroup; 
-  private employer: Employer = new Employer();
+
   // public userDetails: UserDetails = new UserDetails(0, '', '', '', '', 
   // false, new Date(), this.employer);
-  public userDetails: _UserDetails
+  public userDetails: _UserDetails = new User();
+
   constructor(public activeModal: NgbActiveModal, private _fb: FormBuilder, 
     private signInService: SignInService, private unitsService: UnitsService, 
     private notify: ToastrService) { 

@@ -6,6 +6,7 @@ import { SignInService } from '../services/sign-in/sign-in.service';
 import { Employer } from '../models/employer.model';
 import { UserService } from '../services/user/user.service';
 import { ToastrService } from 'ngx-toastr';
+import { _UserDetails } from '../models/response.model';
 
 @Component({
   selector: 'app-user-profile',
@@ -15,7 +16,9 @@ import { ToastrService } from 'ngx-toastr';
 export class UserProfileComponent implements OnInit {
 
   employer: Employer= {id: 0, name: ''};
-  userDetails: UserDetails = new UserDetails(0,'','','','',false,new Date(), this.employer);
+  // userDetails: UserDetails = new UserDetails(0,'','','','',false,new Date(), this.employer);
+  userDetails: _UserDetails;
+
   lastSignIn: Date = new Date();
   date=''
   changePassForm: FormGroup;
@@ -36,7 +39,7 @@ export class UserProfileComponent implements OnInit {
 
   ngOnInit() {
     this.signInService.sendRequestForUserDetails().subscribe(
-      (response: UserDetails)=>{
+      (response: _UserDetails)=>{
         this.userDetails = response;
       }
     );
@@ -44,7 +47,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   private setDateProfile(){
-    this.lastSignIn = this.userDetails.credentials.lastSignInDate;
+    this.lastSignIn = this.userDetails.lastSignInDate;
     let date = new Date(this.lastSignIn);
     this.date = date.toISOString().slice(0,10);
   }
