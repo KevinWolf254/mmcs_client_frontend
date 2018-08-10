@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpHeaders, HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { UserCredentials } from '../../models/user.model';
+import { OrganisationUser } from '../../models/user.model';
 
 @Injectable()
 export class UserService {
@@ -22,11 +22,11 @@ export class UserService {
     return this._http.post<any>(this.basicUri + "/secure/users/create", userData, this.authHeader);
   }
 
-  public getUsers(){
-    return this._http.get(this.basicUri + "/secure/users");
+  public getUsers():Observable<OrganisationUser>{
+    return this._http.get<OrganisationUser>(this.basicUri + "/secure/users");
   }
 
-  public updateUser(user: UserCredentials){
+  public updateUser(user: any){
     let user_role: string = this.getRole(user.credentials.role);
     let userData = "surname="+user.surname+
     "&otherNames="+user.otherNames+

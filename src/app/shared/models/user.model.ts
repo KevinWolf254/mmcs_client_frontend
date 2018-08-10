@@ -46,5 +46,12 @@ export class User implements _UserDetails{
     role: Role;
     isActive: boolean;
     lastSignInDate: Date;
-    
+
+}
+
+export class OrganisationUser{
+    id: number;    
+    surname: string;
+    otherNames: string;
+    email: string;
 }
