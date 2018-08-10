@@ -2,9 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { UserService } from '../../shared/services/user/user.service';
-import { UserCredentials } from '../../shared/models/user.model';
 import { ToastrService } from 'ngx-toastr';
 import { UnitsResponseSuccess } from '../../shared/models/response.model';
+import { OrganisationUser } from '../../shared/models/user.model';
 
 @Component({
   selector: 'app-users',
@@ -13,8 +13,8 @@ import { UnitsResponseSuccess } from '../../shared/models/response.model';
 })
 export class UsersComponent implements OnInit {
 
-  public users: UserCredentials[] = [];
-  public deleteUser: UserCredentials;
+  // public users: UserCredentials[] = [];
+  // public deleteUser: UserCredentials;
   public deleteRow: number = null;
   private deleteUserId = null;
   public perPage: number;
@@ -44,7 +44,7 @@ export class UsersComponent implements OnInit {
 
   private getUsers(){
     this.userService.getUsers().subscribe(
-      (users: UserCredentials[]) =>{
+      (users: OrganisationUser[]) =>{
         this.users = users;
         // cache our users
         this.temp = [...users];
