@@ -3,7 +3,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { selectValidator } from '../../../shared/validators/select-validator';
 import { UserService } from '../../../shared/services/user/user.service';
 import { ToastrService } from 'ngx-toastr';
-import { Role } from '../../../shared/models/credentials.model';
 import { _UserDetails } from '../../../shared/models/response.model';
 import { User } from '../../../shared/models/user.model';
 
