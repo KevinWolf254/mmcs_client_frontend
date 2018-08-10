@@ -16,7 +16,8 @@
       </div>
       <!-- Search -->
       <div class="input-group col-sm-7">
-        <input type="text" class="form-control form-control-sm" placeholder="Search by Email" (keyup)='search($event)' aria-label="Search by Email" aria-describedby="search">
+        <input type="text" class="form-control form-control-sm" placeholder="Search by Email" (keyup)='search($event)' 
+        aria-label="Search by Email" aria-describedby="search">
         <div class="input-group-append">
           <span class="input-group-text" id="search"><i class="fa fa-search"></i></span>
         </div>
@@ -25,23 +26,25 @@
     <!-- Users Table -->
     <ngx-datatable class="bootstrap mt-3" [rows]="users" [limit]="perPage" [columnMode]="'force'"
       [rowHeight]="55" [cssClasses]="customPagerIcons" [footerHeight]="40" [scrollbarH]="true">
-      <ngx-datatable-column name="id" [width]="5"></ngx-datatable-column>
+      <!-- <ngx-datatable-column name="id" [width]="5"></ngx-datatable-column> -->
       <ngx-datatable-column name="Surname" [width]="40">        
         <ng-template ngx-datatable-cell-template let-row="row" let-value="value" let-rowIndex="rowIndex">
           <span *ngIf="!edit[rowIndex]">{{value}}</span>        
-          <input *ngIf="edit[rowIndex]" type="text" class="form-control form-control-sm" [value]="value" (blur)="setFName($event, rowIndex)">
+          <input *ngIf="edit[rowIndex]" type="text" class="form-control form-control-sm" [value]="value" 
+          (blur)="setFName($event, rowIndex)">
         </ng-template>
       </ngx-datatable-column>
       <ngx-datatable-column name="otherNames" [width]="40">
         <ng-template ngx-datatable-cell-template let-row="row" let-value="value" let-rowIndex="rowIndex">
           <span *ngIf="!edit[rowIndex]">{{value}}</span>        
-          <input *ngIf="edit[rowIndex]" type="text" class="form-control form-control-sm" [value]="value" (blur)="setLName($event, rowIndex)">
+          <input *ngIf="edit[rowIndex]" type="text" class="form-control form-control-sm" [value]="value" 
+          (blur)="setLName($event, rowIndex)">
         </ng-template>
       </ngx-datatable-column>
       <ngx-datatable-column name="email" [width]="100"></ngx-datatable-column>
       <ngx-datatable-column name="role" [width]="20">
         <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
-          <span *ngIf="!edit[rowIndex]">{{row.credentials.role}}</span>
+          <span *ngIf="!edit[rowIndex]">{{row.role}}</span>
           <select *ngIf="edit[rowIndex]" class="form-control form-control-sm py-1" (change)="setRole($event, rowIndex)">
             <option selected>Change...</option>
             <option value="ROLE_ADMIN">ADMIN</option>
@@ -52,9 +55,9 @@
       <ngx-datatable-column name="acnt status" [width]="40">
         <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
           
-          <button *ngIf='row.credentials.active' (click)="row.credentials.active = false" class="btn btn-sm btn-success" 
+          <button *ngIf='row.active' (click)="row.active = false" class="btn btn-sm btn-success" 
           [disabled]="!edit[rowIndex]" type="button"><i class="fa fa-toggle-on fa-lg"></i> active</button>
-          <button *ngIf='!row.credentials.active' (click)="row.credentials.active = true" class="btn btn-sm btn-danger" 
+          <button *ngIf='!row.active' (click)="row.active = true" class="btn btn-sm btn-danger" 
           [disabled]="!edit[rowIndex]" type="button"><i class="fa fa-toggle-off fa-lg"></i> disabled</button>  
          </ng-template>
       </ngx-datatable-column>

@@ -1,4 +1,4 @@
-import { Role } from "./credentials.model";
+import { Role } from "./user.model";
 
 export interface response{
 
@@ -10,7 +10,7 @@ export interface _UserDetails{
     otherNames: string;
     email: string;
     role: Role;
-    isActive: boolean;
+    active: boolean;
     lastSignInDate: Date;
 }
 

@@ -4,6 +4,4 @@ export class Credentials {
     lastSignInDate: Date;
 }
 
-export enum Role{
-  ADMIN = "ADMIN", USER = "USER"
-}
+

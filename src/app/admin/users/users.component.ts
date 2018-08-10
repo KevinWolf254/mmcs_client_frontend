@@ -13,16 +13,12 @@ import { User } from '../../shared/models/user.model';
 })
 export class UsersComponent implements OnInit {
 
-  // public users: UserCredentials[] = [];
-  // public deleteUser: UserCredentials;
-
-  public users: User[] = [];
+  public users: User[] = []; 
   public deleteUser: User;
 
   public deleteRow: number = null;
 
   private deleteUserEmail: string = '';
-  // private deleteUserId = null;
   public perPage: number;
   public perPageNos: number[] = [10, 25, 50, 100];
   public edit = {};
@@ -90,8 +86,6 @@ export class UsersComponent implements OnInit {
   }
 
   public confirmDelete(modal, user: User, rowIndex){
-    // this.deleteUser = new User(user.surname, user.otherNames, 
-    //   user.email, user.role, user.isActive, user.lastSignInDate);
     this.deleteUser = user;
     
     this.deleteUserEmail = user.email;

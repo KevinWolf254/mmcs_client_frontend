@@ -17,7 +17,10 @@ export class UserService {
   }
 
   public saveNewUser(surname: string, otherNames: string, email: string, role: string, password: string){
-    let userData = "surname="+surname+"&otherNames="+otherNames+"&email="+email+"&role="+role+
+    let userData = "surname="+surname+
+    "&otherNames="+otherNames+
+    "&email="+email+
+    "&role="+role+
     "&password="+password;
     return this._http.post<any>(this.basicUri + "/secure/users/create", userData, this.authHeader);
   }
@@ -32,7 +35,7 @@ export class UserService {
     "&otherNames="+user.otherNames+
     "&email="+user.email+
     "&role="+user_role+
-    "&isactive="+user.isActive;
+    "&isactive="+user.active;
     return this._http.put<User>(this.basicUri + "/secure/users", userData, this.authHeader);
   }
 
