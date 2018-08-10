@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/Observable';
 import { _throw } from 'rxjs/observable/throw';
 import { JsonWebToken } from '../../models/json-web-token.model';
 import { catchError, retry } from 'rxjs/operators';
-import { UserDetails } from '../../models/user.model';
 import { _UserDetails } from '../../models/response.model';
 
 @Injectable()
