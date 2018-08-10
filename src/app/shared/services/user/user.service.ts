@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { OrganisationUser } from '../../models/user.model';
+import { User } from '../../models/user.model';
 
 @Injectable()
 export class UserService {
@@ -22,18 +22,18 @@ export class UserService {
     return this._http.post<any>(this.basicUri + "/secure/users/create", userData, this.authHeader);
   }
 
-  public getUsers():Observable<OrganisationUser>{
-    return this._http.get<OrganisationUser>(this.basicUri + "/secure/users");
+  public getUsers():Observable<User>{
+    return this._http.get<User>(this.basicUri + "/secure/users");
   }
 
-  public updateUser(user: any){
-    let user_role: string = this.getRole(user.credentials.role);
+  public updateUser(user: User):Observable<User>{
+    let user_role: string = this.getRole(user.role);
     let userData = "surname="+user.surname+
     "&otherNames="+user.otherNames+
     "&email="+user.email+
     "&role="+user_role+
-    "&isactive="+user.credentials.active;
-    return this._http.put(this.basicUri + "/secure/users", userData, this.authHeader);
+    "&isactive="+user.isActive;
+    return this._http.put<User>(this.basicUri + "/secure/users", userData, this.authHeader);
   }
 
   public deletUser(userId: number){

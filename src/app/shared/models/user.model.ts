@@ -48,10 +48,3 @@ export class User implements _UserDetails{
     lastSignInDate: Date;
 
 }
-
-export class OrganisationUser{
-    id: number;    
-    surname: string;
-    otherNames: string;
-    email: string;
-}
