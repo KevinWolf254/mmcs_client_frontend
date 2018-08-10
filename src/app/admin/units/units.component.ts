@@ -17,9 +17,11 @@ export class UnitsComponent implements OnInit {
 
   public requestForm: FormGroup; 
   private employer: Employer = new Employer();
-  public userDetails: UserDetails = new UserDetails(0, '', '', '', '', 
-  false, new Date(), this.employer);
+  // public userDetails: UserDetails = new UserDetails(0, '', '', '', '', 
+  // false, new Date(), this.employer);
 
+  public userDetails: _UserDetails;
+  
   constructor(public activeModal: NgbActiveModal, private _fb: FormBuilder, 
     private signInService: SignInService, private unitsService: UnitsService, 
     private notify: ToastrService) { 
@@ -31,7 +33,7 @@ export class UnitsComponent implements OnInit {
 
   ngOnInit() {
     this.signInService.sendRequestForUserDetails().subscribe(
-      userDetails =>{ 
+      (userDetails: _UserDetails) =>{ 
         this.userDetails = userDetails;
       }
     );
