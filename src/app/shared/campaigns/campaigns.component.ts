@@ -11,14 +11,17 @@ export class CampaignsComponent implements OnInit {
   
   public unitsDetails: UnitsDetailsResponse = new UnitsDetailsResponse('', 0, 0);
 
+  public isRetrievingUnits: boolean = false;
   constructor(private unitsService: UnitsService) { }
 
   ngOnInit() {
-    this.unitsService.getUnitsAvailable().subscribe(
-      (response: UnitsDetailsResponse) => {
-        this.unitsDetails = response;
-      }
-    );
+    this.retrieveUnits();
   }
-
+  private retrieveUnits() {
+    this.isRetrievingUnits = true;
+    this.unitsService.getUnitsAvailable().subscribe((response: UnitsDetailsResponse) => {
+      this.isRetrievingUnits = false;
+      this.unitsDetails = response;
+    });
+  }
 }

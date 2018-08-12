@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Role } from '../../models/credentials.model';
+import { Role } from '../../models/user.model';
 
 @Component({
   selector: 'app-top-navbar',

@@ -3,11 +3,14 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Group } from '../../models/group.model';
 import { selectValidator } from '../../validators/select-validator';
 import { GroupManagerService } from '../../services/group/group-manager.service';
-import { SmsToGroup } from '../../models/sms.model';
+import { SmsToGroup, Sms } from '../../models/sms.model';
 import { Contacts, Charges } from '../../models/client.model';
 import { UnitsService } from '../../services/units/units.service';
 import { UnitsDetailsResponse } from '../../models/response.model';
 import { ClientService } from '../../services/client/client.service';
+import { NoSchedule } from '../../models/schedule.model';
+import { CampaignService } from '../../services/campaign/campaign.service';
+import { ToastrService } from '../../../../../node_modules/ngx-toastr';
 
 @Component({
   selector: 'app-one-time-campaign',
@@ -30,13 +33,17 @@ export class OneTimeCampaignComponent implements OnInit{
 
   public selected = 0;
   public groups: Group[] = [];
-  selectedRecipients: Group[] = [];
+  public selectedRecipients: Group[] = [];
 
-  recipientsIds: number[] = [];  
+  public recipientsIds: number[] = [];  
   public form: FormGroup;
+  
+  public isSendingSms: boolean = false;
 
   constructor(private _fb: FormBuilder, private unitsService: UnitsService, 
-    private groupService: GroupManagerService, private _clientService: ClientService) {
+    private groupService: GroupManagerService, private _clientService: ClientService,
+    private campaignService: CampaignService, private notify: ToastrService) {
+
     this.form = _fb.group({
       'message': [null,Validators.compose([Validators.required, Validators.maxLength(320)])],
       'group': ['0', selectValidator]
@@ -50,24 +57,6 @@ export class OneTimeCampaignComponent implements OnInit{
         this.groups = groups;
       }
     );
-    
-    //observes the changes in the message textfield
-    this.form.get('message').valueChanges.subscribe(
-      message => {
-        this.messageLength = message.length;
-        if (this.messageLength > 160) {
-          this.isLong = true;
-          this.totalCharges = this.basicCharges * 2;
-        }else if (this.messageLength > 0 && this.messageLength <= 160){
-          this.isLong = false;
-          this.totalCharges = this.basicCharges;
-        }else{
-          this.isLong = false;
-          this.totalCharges = 0;
-        }
-        this.checkSendingValidity();
-      }
-    );
 
     //get details on units available and setup the currency
     this.unitsService.getUnitsAvailable().subscribe(
@@ -76,7 +65,19 @@ export class OneTimeCampaignComponent implements OnInit{
         this.unitsDetails = response;
       }
     );
+
+    //observes the changes in the message textfield
+    this.monitorCharges();
   }   
+
+  private monitorCharges() {
+    this.form.get('message').valueChanges.subscribe(message => {
+      if(this.form.get('message').touched && this.form.get('message').valid)
+        this.messageLength = message.length;
+      this.changeCharges(message);
+      
+    });
+  }
 
   private setUpCurrency(unitsDetails: UnitsDetailsResponse) {
     this.currency = this.unitsService.setUpCurrency(unitsDetails);
@@ -90,39 +91,68 @@ export class OneTimeCampaignComponent implements OnInit{
     }
   }
 
-  public addGroup(){
+  public addGroup() {
     //find group with selected id
     let group: Group = this.groupService.findGroup(this.groups, this.selected);
     //check if recipients has a group of recipients added to it
-    if(this.selectedRecipients.length !=0){
-        //check and remove duplicates
-        this.selectedRecipients = this.removeDuplicate();
+    if (this.selectedRecipients.length != 0) {
+      //check and remove duplicates
+      this.selectedRecipients = this.removeDuplicate();
+      this.recipientsIds = this.removeIdsDuplicate();
+
     }
     this.selectedRecipients.push(group);
-
-    //push the group id to the array of ids 
-    this.selectedRecipients.forEach((group, index)=>{
-      this.recipientsIds.push(group.id);
-    });
+    this.recipientsIds.push(group.id);
 
     this.getNoOfContactsByGroup(this.recipientsIds);
+    //reset select
+    this.form.get('group').setValue('0');
   }
   
-private getNoOfContactsByGroup(recipientsIds: number[]){
-  this._clientService.getNoOfContactsByGroup(recipientsIds).subscribe(
-    (contacts: Contacts) =>{
-      this.contacts = contacts;
-      this.noOfContacts = this._clientService.calculateNoOfContacts(contacts);
-      this.getCharges();
-    }
-  );
-}
+  private getNoOfContactsByGroup(recipientsIds: number[]){
+    this._clientService.getNoOfContactsByGroup(recipientsIds).subscribe(
+      (contacts: Contacts) =>{
+        this.contacts = contacts;
+        this.noOfContacts = this._clientService.calculateNoOfContacts(contacts);
+        this.getCharges();
+      }
+    );
+  }
+
   private getCharges(){
     this._clientService.getCharges().subscribe(
       (charges: Charges) =>{
         this.basicCharges = this._clientService.calculateCharges(charges, this.contacts);
+        if(this.form.get('message').touched && this.form.get('message').valid){
+          let message = this.form.get('message').value;
+          //calculate charges
+          this.changeCharges(message);
+        }
       }
     );
+  }
+
+  private changeCharges(message: any) {
+    this.messageLength = message.length;
+    if (this.messageLength > 160 && this.recipientsIds.length != 0) {
+      this.isLong = true;
+      this.totalCharges = this.basicCharges * 2;
+    }
+    else if (this.messageLength > 0 && this.messageLength <= 160 && this.recipientsIds.length != 0) {
+      this.isLong = false;
+      this.totalCharges = this.basicCharges;
+    }
+    else {
+      this.isLong = false;
+      this.totalCharges = 0;
+    }
+    this.checkSendingValidity();
+  }
+
+  private removeIdsDuplicate(): number[]{
+    return this.recipientsIds = this.recipientsIds.filter((id: number)=>{
+        return id != this.selected;
+    });
   }
 
   private removeDuplicate(): Group[]{
@@ -147,23 +177,31 @@ private getNoOfContactsByGroup(recipientsIds: number[]){
     this.getNoOfContactsByGroup(this.recipientsIds);
   } 
 
-  sendSms(formValues){
-    this.selectedRecipients.forEach((group, index)=>{
-      this.recipientsIds.push(group.id);
-    });
-    // let sms = new SmsGroup(formValues.message, this.recipientsIds);
-    //reset form and selectedGroups array
-    this.resetForm();
-    this.resetDataValues();
+  public sendSms(form){
+    this.isSendingSms = true;
+    let sms: Sms = new SmsToGroup(form.message, new NoSchedule, this.recipientsIds);
+    this.campaignService.sendNonScheduledSms(sms).subscribe(
+      response =>{
+        this.isSendingSms = false;
+        this.notify.success(response.message, response.title);
+        //reset form and select_Groups array
+        this.resetDataValues();
+        this.resetForm();
+      }, error =>{
+        this.isSendingSms = false;
+        this.notify.error(error.error.error_description, error.error.error);
+      }
+    );
   }
    
-  resetForm(){
-    this.form.reset();
-    this.form.get("group").setValue(0);
+  private resetForm(){
+    this.form.get('message').setValue('');
+    this.form.get('group').setValue('0');
   }
 
-  resetDataValues(){
+  private resetDataValues(){
     this.selectedRecipients = [];
     this.recipientsIds = [];
+    this.noOfContacts = 0;
   }
 }

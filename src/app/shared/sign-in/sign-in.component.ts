@@ -5,8 +5,8 @@ import { fadeInOut } from '../animations/fade-in-out';
 import { SignInService } from '../services/sign-in/sign-in.service';
 import { JsonWebToken } from '../models/json-web-token.model';
 import { ToastrService } from 'ngx-toastr';
-import { Role } from '../models/credentials.model';
 import { _UserDetails } from '../models/response.model';
+import { Role } from '../models/user.model';
 
 @Component({
   selector: 'app-sign-in',

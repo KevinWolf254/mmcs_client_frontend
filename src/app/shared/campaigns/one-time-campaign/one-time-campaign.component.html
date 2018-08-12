@@ -66,9 +66,25 @@
       flex-row-reverse bd-highlight mt-0">
         warning: additional charges will be applied
       </small>
-      <button class="btn btn-primary btn-block mt-4" type="submit" [disabled]="!form.valid || 
+      <button class="btn btn-primary btn-block mt-4" type="submit" [disabled]="!form.get('message').valid || 
       selectedRecipients.length == 0 || !canSend || messageLength == 0">
+      <div *ngIf="!isSendingSms">
         Send Sms
+      </div>
+      <div *ngIf="isSendingSms" class="sk-circle my-0 py-0">
+        <div class="sk-circle1 sk-child"></div>
+        <div class="sk-circle2 sk-child"></div>
+        <div class="sk-circle3 sk-child"></div>
+        <div class="sk-circle4 sk-child"></div>
+        <div class="sk-circle5 sk-child"></div>
+        <div class="sk-circle6 sk-child"></div>
+        <div class="sk-circle7 sk-child"></div>
+        <div class="sk-circle8 sk-child"></div>
+        <div class="sk-circle9 sk-child"></div>
+        <div class="sk-circle10 sk-child"></div>
+        <div class="sk-circle11 sk-child"></div>
+        <div class="sk-circle12 sk-child"></div>
+      </div>
       </button>
     </form>
   </div>

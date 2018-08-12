@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Role } from '../../models/credentials.model';
+import { Role } from '../../models/user.model';
 
 @Component({
   selector: 'app-side-navbar',

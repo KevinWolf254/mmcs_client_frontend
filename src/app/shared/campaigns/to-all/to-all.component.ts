@@ -5,6 +5,8 @@ import { UnitsService } from '../../services/units/units.service';
 import { UnitsDetailsResponse } from '../../models/response.model';
 import { ClientService } from '../../services/client/client.service';
 import { Contacts, Charges } from '../../models/client.model';
+import { ToastrService } from '../../../../../node_modules/ngx-toastr';
+import { SmsToAll, Sms } from '../../models/sms.model';
 
 @Component({
   selector: 'app-to-all',
@@ -25,9 +27,11 @@ export class ToAllComponent implements OnInit {
   private basicCharges: number = 0.00;
 
   public canSend: boolean = true;
+  public isSendingSms: boolean = false;
 
   constructor(private _fb: FormBuilder, private campaignService: CampaignService, 
-    private unitsService: UnitsService, private _clientService: ClientService) { 
+    private unitsService: UnitsService, private _clientService: ClientService,
+    private notify: ToastrService) { 
     this.form = _fb.group({
       'message': ['',Validators.compose([Validators.required, Validators.maxLength(320)])]
     });
@@ -83,9 +87,15 @@ export class ToAllComponent implements OnInit {
   }
 
   public sendSms(form){
-    this.campaignService.sendToAll(form.message).subscribe(
-      response =>{
-
+    this.isSendingSms = true;
+    let sms: Sms = new SmsToAll(form.message);
+    this.campaignService.sendNonScheduledSms(sms).subscribe(
+      response =>{ 
+        this.isSendingSms = false;
+        this.notify.success(response.message, response.title);
+      }, error =>{
+        this.isSendingSms = false;
+        this.notify.error(error.error.error_description, error.error.error);
       }
     );
     this.form.get('message').setValue('');

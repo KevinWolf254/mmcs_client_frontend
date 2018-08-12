@@ -21,7 +21,23 @@
             <div class="card-body p-2 bg-light">
               <div class="d-flex flex-row-reverse bd-highlight">
                 <div class="pr-0 pt-1 mr-3 bd-highlight text-muted font-weight-bold">
-                  {{unitsDetails.unitsAvailable | currency:'ksh '}} 
+                  <div *ngIf="!isRetrievingUnits">
+                    {{unitsDetails.unitsAvailable | currency:'ksh '}} 
+                  </div>
+                  <div *ngIf="isRetrievingUnits" class="sk-circle my-0 py-0">
+                    <div class="sk-circle1 sk-child"></div>
+                    <div class="sk-circle2 sk-child"></div>
+                    <div class="sk-circle3 sk-child"></div>
+                    <div class="sk-circle4 sk-child"></div>
+                    <div class="sk-circle5 sk-child"></div>
+                    <div class="sk-circle6 sk-child"></div>
+                    <div class="sk-circle7 sk-child"></div>
+                    <div class="sk-circle8 sk-child"></div>
+                    <div class="sk-circle9 sk-child"></div>
+                    <div class="sk-circle10 sk-child"></div>
+                    <div class="sk-circle11 sk-child"></div>
+                    <div class="sk-circle12 sk-child"></div>
+                  </div>
                 </div>
                 <div class="px-3 bd-highlight"> | </div>
                 <div class="pr-0 pt-1 bd-highlight text-muted"> Units Available: </div>
