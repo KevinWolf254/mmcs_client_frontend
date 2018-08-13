@@ -52,30 +52,39 @@ export class ClientService {
 
   public calculateNoOfContacts(contacts: Contacts): number{
     let rwfContacts = contacts.rwf;
+    let rwfAirContacts = contacts.rwfAir;
     let kesContacts = contacts.kes;
     let kesAirContacts = contacts.kesAir;
     let tzsContacts = contacts.tzs;
+    let tzsAirContacts = contacts.tzsAir;
     let ugxContacts = contacts.ugx;
     let ugxAirContacts = contacts.ugxAir;
     let otherContacts = contacts.other;
 
-    return rwfContacts+kesContacts+kesAirContacts
-    +tzsContacts+ugxContacts+ugxAirContacts+otherContacts;
+    return rwfContacts+rwfAirContacts+
+          kesContacts+kesAirContacts+
+          tzsContacts+tzsAirContacts+
+          ugxContacts+ugxAirContacts+
+          otherContacts;
   }
 
   public calculateCharges(charges: Charges, contacts: Contacts): number{
     let rwfCharges = charges.rwf;
+    let rwfAirCharges = charges.rwfAir;
     let kesCharges = charges.kes;
     let kesAirCharges = charges.kesAir;
     let tzsCharges = charges.tzs;
+    let tzsAirCharges = charges.tzsAir;
     let ugxCharges = charges.ugx;
     let ugxAirCharges = charges.ugxAir;
     let otherCharges = charges.other;
 
     return (rwfCharges * contacts.rwf) +
+      (rwfAirCharges * contacts.rwfAir) +
       (kesCharges * contacts.kes) +
       (kesAirCharges * contacts.kesAir) +
       (tzsCharges * contacts.tzs) +
+      (tzsAirCharges * contacts.tzsAir) +
       (ugxCharges * contacts.ugx) +
       (ugxAirCharges * contacts.ugx) +
       (otherCharges * contacts.other);

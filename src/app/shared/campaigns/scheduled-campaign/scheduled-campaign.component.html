@@ -6,38 +6,72 @@
       <div class="form-group">
         <!-- Campaign name -->
         <div class="input-group">
-          <input type="text" class="form-control " formControlName="campaignName" id="campaignName" placeholder="Campaign name">
+          <input type="text" class="form-control form-control-sm" formControlName="campaignName" id="campaignName" 
+          placeholder="Campaign name">
           <div class="input-group-append">
-            <button class="btn btn-info" type="button" (click)="checkName()" [disabled]="!form.controls['campaignName'].valid">
-              Check availability
+            <button class="btn btn-info btn-sm" [class.bg-success]="nameIsAvailable && form.controls['campaignName'].valid && 
+            checked" [class.bg-danger]="!nameIsAvailable && form.controls['campaignName'].valid && checked"
+            type="button" (click)="checkName()" 
+            [disabled]="!form.controls['campaignName'].valid">
+              <div *ngIf="!isChecking">                 
+                Available
+                <span *ngIf="nameIsAvailable && form.controls['campaignName'].valid && checked">
+                    <i class="fa fa-check"></i>
+                </span>
+                <span *ngIf="!nameIsAvailable && form.controls['campaignName'].valid && checked">
+                    <i class="fa fa-times"></i>
+                </span>
+              </div>
+              <div *ngIf="isChecking" class="sk-circle my-0 py-0">
+                <div class="sk-circle1 sk-child"></div>
+                <div class="sk-circle2 sk-child"></div>
+                <div class="sk-circle3 sk-child"></div>
+                <div class="sk-circle4 sk-child"></div>
+                <div class="sk-circle5 sk-child"></div>
+                <div class="sk-circle6 sk-child"></div>
+                <div class="sk-circle7 sk-child"></div>
+                <div class="sk-circle8 sk-child"></div>
+                <div class="sk-circle9 sk-child"></div>
+                <div class="sk-circle10 sk-child"></div>
+                <div class="sk-circle11 sk-child"></div>
+                <div class="sk-circle12 sk-child"></div>
+              </div>
             </button>
           </div>
         </div> 
       </div>
-      <h6 class="mb-0 bg-light p-2 rounded">Choose Type of campaign:</h6>
-      <div class="card border-top-0 mb-4">
-        <div class="card-body">
+      <div class="row mb-0 bg-light p-2 rounded mx-1">
+        <div class="col-sm-4 mx-0 px-0">
+            <h6>Type of campaign:</h6>
+        </div>
+        <div class="col-sm-4 border rounded">
           <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" formControlName="campaign" id="once" value="once">
-            <label class="form-check-label" for="once">One Time Campaign</label>
+            <input class="form-check-input" type="radio" formControlName="campaignType" id="oneOff" value="oneOff">
+            <label class="form-check-label" for="oneOff">One off</label> 
           </div>
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" formControlName="campaign" id="scheduled" value="scheduled">
-            <label class="form-check-label" for="scheduled">Scheduled Campaign</label>
           </div>
-          <!-- One Time Campaign -->
-          <div class="card mt-3 shadow" *ngIf="form.value.campaign == 'once'">
-            <h6 class="card-header">One Time Campaign</h6>
+          <div class="col-sm-4 border rounded">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" formControlName="campaignType" id="recurring" value="recurring">
+              <label class="form-check-label" for="recurring">Recurring</label>
+            </div>
+          </div>
+      </div>
+      <div class="card mx-0 my-0 border-top-0 mb-4">
+        <div class="card-body mt-0" *ngIf="form.value.campaignType == 'oneOff' || form.value.campaignType == 'recurring'">
+          <!-- One_Off Campaign -->
+          <div class="card my-0 shadow" *ngIf="form.value.campaignType == 'oneOff'">
+            <h6 class="card-header">Schedule</h6>
             <div class="card-body">
               <div class="row">
                 <div class="col-sm-6 mt-3">
                   Pick Date and Time:
                   <div class="form-group">
                     <div class="input-group">
-                      <input class="form-control" placeholder="YYYY-MM-DD" formControlName="scheduledOnce_Date" 
-                      ngbDatepicker #oneTimeDate="ngbDatepicker">
+                      <input class="form-control" placeholder="YYYY-MM-DD" formControlName="oneOff_Date" 
+                      ngbDatepicker #oneOffDate="ngbDatepicker">
                       <div class="input-group-append">
-                        <button class="btn btn-primary" (click)="oneTimeDate.toggle()" type="button">
+                        <button class="btn btn-primary" (click)="oneOffDate.toggle()" type="button">
                           <i class="fa fa-calendar"></i>
                         </button>
                       </div>
@@ -45,42 +79,42 @@
                   </div>
                 </div>
                 <div class="col-sm-6">
-                    <ngb-timepicker formControlName="scheduledOnce_Time" [meridian]="meridian"></ngb-timepicker>
+                    <ngb-timepicker formControlName="oneOff_Time" [meridian]="meridian"></ngb-timepicker>
                 </div>
               </div>
             </div>
           </div>
           <!-- Scheduled Campaign -->
-          <div class="card mt-3 shadow" *ngIf="form.value.campaign == 'scheduled'">
-            <h6 class="card-header">Scheduled Campaign</h6>
+          <div class="card my-0 shadow" *ngIf="form.value.campaignType == 'recurring'">
+            <h6 class="card-header">Schedule</h6>
             <div class="card-body">
-              <h6 class="mb-0 bg-light p-2">Choose Type of schedule:</h6>
+              <h6 class="mb-0 bg-light p-2">Choose Type:</h6>
               <!-- Schedule options -->
               <div class="card border-top-0 mb-4">
                 <div class="card-body">
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" formControlName="schedule" id="daily" value="daily">
+                    <input class="form-check-input" type="radio" formControlName="recurring" id="daily" value="daily">
                     <label class="form-check-label" for="daily">Daily</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" formControlName="schedule" id="weekly" value="weekly">
+                    <input class="form-check-input" type="radio" formControlName="recurring" id="weekly" value="weekly">
                     <label class="form-check-label" for="weekly">Weekly</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" formControlName="schedule" id="monthly" value="monthly">
+                    <input class="form-check-input" type="radio" formControlName="recurring" id="monthly" value="monthly">
                     <label class="form-check-label" for="monthly">Monthly</label>
                   </div>
                   <!-- Daily Schedule -->
-                  <div class="card mt-2" *ngIf="form.value.schedule == 'daily'">
+                  <div class="card mt-2" *ngIf="form.value.recurring == 'daily'">
                     <div class="card-body">
-                      <p class="bg-light p-2"><b>Daily Campaign - Time:</b></p>
+                      <p class="bg-light p-2"><b>Daily Schedule - Time:</b></p>
                         <ngb-timepicker formControlName="dailyTime" [meridian]="meridian"></ngb-timepicker>
                     </div>
                   </div>
                   <!-- Weekly Schedule -->
-                  <div class="card mt-2" *ngIf="form.value.schedule == 'weekly'">
+                  <div class="card mt-2" *ngIf="form.value.recurring == 'weekly'">
                     <div class="card-body">
-                        <p class="bg-light p-2"><b>Weekly Campaign:</b></p>
+                        <p class="bg-light p-2"><b>Weekly Schedule:</b></p>
                       <div class="row">
                         <div class="col-sm-6 mt-2">
                           <label for="selectDayOfWeek">Choose Day and time:</label>
@@ -100,9 +134,9 @@
                     </div>
                   </div>
                   <!-- Monthly Schedule -->
-                  <div class="card mt-2" *ngIf="form.value.schedule == 'monthly'">
+                  <div class="card mt-2" *ngIf="form.value.recurring == 'monthly'">
                     <div class="card-body">
-                      <p class="bg-light p-2"><b>Monthly Campaign:</b></p>
+                      <p class="bg-light p-2"><b>Monthly Schedule:</b></p>
                       <div class="row">
                         <div class="col-sm-6 mt-3">
                           Pick Date and Time:
@@ -153,13 +187,13 @@
       </small>
       <h6 class="mb-4 mt-4 bg-light p-2">Groups to send to:</h6>
       <div class="input-group mb-3">
-        <select class="form-control" id="groupSelect01" formControlName="group" 
+        <select class="form-control form-control-sm" id="groupSelect01" formControlName="group" 
         aria-describedby="groupSelectHelp" [(ngModel)]="selected">
           <option value='0' selected>Select Group</option>
           <option *ngFor="let group of groups" [value]="group.id">{{group.name}}</option>
         </select>
         <div class="input-group-append">
-          <button class="btn btn-info px-4" (click)="add()" [disabled]="!form.controls['group'].valid" type="button">
+          <button class="btn btn-info btn-sm px-4" (click)="add()" [disabled]="!form.controls['group'].valid" type="button">
             Add
           </button>
         </div> 
@@ -169,13 +203,33 @@
       </small>
       <div *ngIf="selectedRecipients.length != 0">
         <h6 class="mb-2 bg-light p-2">Selected Groups:</h6>
-        <span *ngFor="let group of selectedRecipients" class="badge badge-pill badge-info px-2 m-1">
+        <span *ngFor="let group of selectedRecipients" class="badge badge-pill badge-info badge-sm px-2 m-1">
           {{group.name}}
           <span class="btn btn-sm btn-info" (click)="remove(group)">&times;</span>
         </span>
       </div>
       <hr class="mb-4">
-      <button class="btn btn-primary btn-block" type="submit" [disabled]="!form.valid || selectedRecipients.length == 0">Save Campaign</button>
+      <button class="btn btn-primary btn-block btn-sm" type="submit" 
+      [disabled]="!form.controls['campaignName'].valid || !checked || selectedRecipients.length == 0 ||
+      !this.form.get('campaignType').valid">
+      <div *ngIf="!isSendingSchedule">
+          Save Schedule
+      </div>
+      <div *ngIf="isSendingSchedule" class="sk-circle my-0 py-0">
+        <div class="sk-circle1 sk-child"></div>
+        <div class="sk-circle2 sk-child"></div>
+        <div class="sk-circle3 sk-child"></div>
+        <div class="sk-circle4 sk-child"></div>
+        <div class="sk-circle5 sk-child"></div>
+        <div class="sk-circle6 sk-child"></div>
+        <div class="sk-circle7 sk-child"></div>
+        <div class="sk-circle8 sk-child"></div>
+        <div class="sk-circle9 sk-child"></div>
+        <div class="sk-circle10 sk-child"></div>
+        <div class="sk-circle11 sk-child"></div>
+        <div class="sk-circle12 sk-child"></div>
+      </div>
+    </button>
     </form>
   </div>
 </div>

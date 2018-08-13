@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { retry, map } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { Sms, SmsToAll } from '../../models/sms.model';
+import { AvailabilityResponse } from '../../models/response.model';
 
 @Injectable()
 export class CampaignService {
@@ -31,6 +32,10 @@ export class CampaignService {
   }
   public sendScheduledSms(sms: Sms){
     return this._http.post<any>(this.basicUri + '/secure/schedule', sms);
+  }
+
+  public checkCampaignNameAvailability(name: string):Observable<AvailabilityResponse>{
+    return this._http.get<AvailabilityResponse>(this.basicUri + '/secure/schedule/'+name);
   }
 
   getCampaigns(): Schedule[]{

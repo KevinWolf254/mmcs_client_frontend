@@ -13,16 +13,20 @@ export class Client {
 }
 
 export enum ServiceProvider{
-    GENERIC_RW, GENERIC_KE, AIRTEL_KE, 
-    GENERIC_TZ, GENERIC_UG, AIRTEL_UG,
+    GENERIC_RW, AIRTEL_RW,
+    GENERIC_KE, AIRTEL_KE, 
+    GENERIC_TZ, AIRTEL_TZ,
+    GENERIC_UG, AIRTEL_UG,
     OTHER
 }
 
 export interface Contacts {
-    rwf: number;
+    rwf: number;    
+        rwfAir: number;
     kes: number;
         kesAir: number;
     tzs: number;
+        tzsAir: number;
     ugx: number;
         ugxAir: number;
     other: number;

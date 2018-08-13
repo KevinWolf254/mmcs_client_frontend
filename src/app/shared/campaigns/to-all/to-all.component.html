@@ -41,7 +41,7 @@
       flex-row-reverse bd-highlight mt-0">
         warning: additional charges will be applied
       </small>
-      <button class="btn btn-primary btn-block mt-4" type="submit" [disabled]="!form.valid || !canSend">
+      <button class="btn btn-primary btn-block btn-sm mt-4" type="submit" [disabled]="!form.valid || !canSend">
         <div *ngIf="!isSendingSms">
           Send Sms
         </div>

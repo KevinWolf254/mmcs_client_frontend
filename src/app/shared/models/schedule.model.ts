@@ -1,24 +1,5 @@
 import { Time } from "../../../../node_modules/@angular/common";
 
-// export class Schedule {
-//     jobName: string;
-//     scheduleTime: Date;
-//     lastFiredTime: Date;
-//     groupName: string;
-//     jobStatus: string;
-//     nextFireTime: Date;
-
-//     constructor(jobName?: string, groupName?: string, scheduleTime?: 
-//         Date, lastFiredTime?: Date, jobStatus?: string, nextFireTime?: Date){
-//         this.jobName = jobName;
-//         this.scheduleTime = scheduleTime;
-//         this.lastFiredTime = lastFiredTime;
-//         this.groupName = groupName;
-//         this.jobStatus = jobStatus;
-//         this.nextFireTime = nextFireTime;
-//     }
-// }
-
 export enum Days{
     SUNDAY = 'SUNDAY', MONDAY = 'MONDAY', TUESDAY = 'TUESDAY',
     WEDNESDAY = 'WEDNESDAY', THURSDAY = 'THURSDAY', FRIDAY = 'FRIDAY',
@@ -33,50 +14,24 @@ export enum ScheduleType{
 export interface Schedule{
     name: string;
     type: ScheduleType;
-    // time: Time;
     date: Date;
     dayOfWeek: Days;
     dayOfMonth: number;
     cronExpression: string;
 
-    getScheduleName(): string;
-    getScheduleType(): string;
-    getScheduledDate(): Date;
-    // getScheduledTime(): Time;
-    getScheduledDayOfWeek(): Days;
-    getScheduledDayOfMonth(): number;
     getCronExpression(): string;
 }
 
 export class NoSchedule implements Schedule{    
     name: string;    
     type: ScheduleType;
-    // time: Time;
     date: Date;
     dayOfWeek: Days;
     dayOfMonth: number;
     cronExpression: string;
 
     constructor(){}
-    
-    getScheduleName(): string {
-        return '';
-    }
-    getScheduleType(): string {
-        return ScheduleType.NONE;
-    }
-    getScheduledDate(): Date {
-        return null;
-    }
-    // getScheduledTime(): Time {
-    //     return null;
-    // }
-    getScheduledDayOfWeek(): Days {
-        return null;
-    }
-    getScheduledDayOfMonth(): number {
-        return null;
-    }
+
     getCronExpression(): string {
         return '';
     }
@@ -90,7 +45,6 @@ export class NoSchedule implements Schedule{
 export class ScheduleDaily implements Schedule{
     name: string;    
     type: ScheduleType;
-    // time: Time;
     date: Date;
     dayOfWeek: Days;
     dayOfMonth: number;
@@ -101,34 +55,15 @@ export class ScheduleDaily implements Schedule{
         this.name = scheduleName;
         this.type = scheduleType;
         this.date = this.setTime(time);
-        // this.time = time;
         this.dayOfWeek = null;
         this.dayOfMonth = null;
         this.cronExpression = this.setCronExpression(time);
     }
-    getScheduleName(): string {
-        return this.name;
-    }
-    getScheduleType(): string {
-        return this.type;
-    }
-    getScheduledDate(): Date {
-         return this.date;
-    }
-    // getScheduledTime(): Time {
-    //     return this.time;
-    // }
-    getScheduledDayOfWeek(): Days {
-        return this.dayOfWeek;
-    }
-    getScheduledDayOfMonth(): number {
-        return this.dayOfMonth;
-    }
     getCronExpression(): string {
         return this.cronExpression;
     }
-    private setCronExpression(time): string {
-        let hour: number = time.hour;
+    private setCronExpression(time: Time): string {
+        let hour: number = time.hours;
         let minute: number = time.minutes;
         // cron expression: fires daily
         return "0 " + minute + " " + hour + " ? * *";
@@ -148,7 +83,6 @@ export class ScheduleDaily implements Schedule{
 export class ScheduleDate implements Schedule{
     name: string;    
     type: ScheduleType;
-    // time: Time;
     date: Date;
     dayOfWeek: Days;
     dayOfMonth: number;
@@ -159,28 +93,9 @@ export class ScheduleDate implements Schedule{
         this.name = scheduleName;
         this.type = scheduleType;
         this.date = this.setDateTime(date, time);
-        // this.time = time;
         this.dayOfWeek = null;
         this.dayOfMonth = null;
         this.cronExpression = '';
-    }
-    getScheduleName(): string {
-        return this.name;
-    }
-    getScheduleType(): string {
-        return this.type;
-    }
-    getScheduledDate(): Date {
-         return this.date;
-    }
-    // getScheduledTime(): Time {
-    //     return this.time;
-    // }
-    getScheduledDayOfWeek(): Days {
-        return this.dayOfWeek;
-    }
-    getScheduledDayOfMonth(): number {
-        return this.dayOfMonth;
     }
     getCronExpression(): string {
         return this.cronExpression;
@@ -199,51 +114,49 @@ export class ScheduleDate implements Schedule{
 export class ScheduleWeekly implements Schedule{
     name: string;    
     type: ScheduleType;
-    // time: Time;
     date: Date;
     dayOfWeek: Days;
     dayOfMonth: number;
     cronExpression: string;
 
-    constructor(scheduleName?: string, scheduleType?: ScheduleType, date?: Date,
-        time?: Time, dayOfWeek?: Days) {
+    constructor(scheduleName?: string, scheduleType?: ScheduleType, time?: Time, 
+        dayOfWeek?: Days) {
         this.name = scheduleName;
         this.type = scheduleType;
-        this.date = this.setDateTime(date, time);
-        // this.time = time;
+        this.date = this.setTime(time);
         this.dayOfWeek = dayOfWeek;
         this.dayOfMonth = null;
         this.cronExpression = this.setCronExpression(time);
     }
-    getScheduleName(): string {
-        return this.name;
-    }
-    getScheduleType(): string {
-        return this.type;
-    }
-    getScheduledDate(): Date {
-        return this.date;
-    }
-    // getScheduledTime(): Time {
-    //     return this.time;
-    // }
-    getScheduledDayOfWeek(): Days {
-        return this.dayOfWeek;
-    }
-    getScheduledDayOfMonth(): number {
-        return this.dayOfMonth;
-    }
+
     getCronExpression(): string {
         return this.cronExpression;
     }
-    private setCronExpression(time): string {
-        let hour: number = time.hour;
+    private setCronExpression(time: Time): string {
+        let hour: number = time.hours;
         let minute: number = time.minutes;
+        let dayAcronym: string = null;
+        if(this.dayOfWeek == Days.SUNDAY){
+            dayAcronym = "SUN";
+        }else if(this.dayOfWeek == Days.MONDAY){
+            dayAcronym = "MON";
+        }else if(this.dayOfWeek == Days.TUESDAY){
+            dayAcronym = "TUE";
+        }else if(this.dayOfWeek == Days.WEDNESDAY){
+            dayAcronym = "WED";
+        }else if(this.dayOfWeek == Days.THURSDAY){
+            dayAcronym = "THU";
+        }else if(this.dayOfWeek == Days.FRIDAY){
+            dayAcronym = "FRI";
+        }else if(this.dayOfWeek == Days.SATURDAY){
+            dayAcronym = "SAT";
+        }
         // cron expression: fires weekly
-        return "0 "+minute+" "+hour+" ? * "+this.dayOfWeek+" *";
+        return "0 "+minute+" "+hour+" ? * "+dayAcronym+" *";
     }
-    private setDateTime(date: Date, time: Time): Date{        
-        date.setHours(time.hours);
+    private setTime(time: Time): Date{ 
+        let date: Date = new Date();      
+        date.setHours(time.hours+3);
         date.setMinutes(time.minutes);
         return date;
     }
@@ -256,7 +169,6 @@ export class ScheduleWeekly implements Schedule{
 export class ScheduleMonthly implements Schedule{
     name: string;    
     type: ScheduleType;
-    // time: Time;
     date: Date;
     dayOfWeek: Days;
     dayOfMonth: number;
@@ -267,34 +179,15 @@ export class ScheduleMonthly implements Schedule{
         this.name = scheduleName;
         this.type = scheduleType;
         this.date = this.setDateTime(date, time);
-        // this.time = time;
         this.dayOfMonth = dayOfMonth;
         this.dayOfWeek = null;
         this.cronExpression = this.setCronExpression(time);
     }
-    getScheduleName(): string {
-        return this.name;
-    }
-    getScheduleType(): string {
-        return this.type;
-    }
-    getScheduledDate(): Date {
-        return this.date;
-    }
-    // getScheduledTime(): Time {
-    //     return this.time;
-    // }
-    getScheduledDayOfWeek(): Days {
-        return this.dayOfWeek;
-    }
-    getScheduledDayOfMonth(): number {
-        return this.dayOfMonth;
-    }
     getCronExpression(): string {
         return this.cronExpression;
     }
-    private setCronExpression(time): string {
-        let hour: number = time.hour;
+    private setCronExpression(time: Time): string {
+        let hour: number = time.hours;
         let minute: number = time.minutes;
         // cron expression: fires monthly
         return "0 " + minute + " " + hour + " " + this.dayOfMonth + " * ?";

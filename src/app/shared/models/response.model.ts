@@ -32,3 +32,7 @@ export interface UnitsResponseSuccess extends response{
     title: string;
     message: string;
 } 
+
+export class AvailabilityResponse implements response{
+    isAvailable: boolean;
+}
