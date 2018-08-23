@@ -6,6 +6,7 @@ import { CampaignService } from '../../shared/services/campaign/campaign.service
 import { MonthlyExpenditure } from '../../shared/models/monthly-expenditure.model';
 import { UnitsService } from '../../shared/services/units/units.service';
 import { UnitsDetailsResponse } from '../../shared/models/response.model';
+import { FormBuilder } from '../../../../node_modules/@angular/forms';
 
 @Component({
     selector: 'app-dashboard',
@@ -33,8 +34,9 @@ export class DashboardComponent implements OnInit {
     public smsCostData: number[] = []; 
     public smsScheduledCostData: number[] = [];
     public months: string[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
+    public modalRefDel: NgbModalRef;
 
-    constructor(private _modalService: NgbModal, private _campaignService: CampaignService,
+    constructor(private modalService: NgbModal, private _campaignService: CampaignService,
         private _unitsService: UnitsService) { }
 
     ngOnInit() {
@@ -114,14 +116,16 @@ export class DashboardComponent implements OnInit {
     }
 
     public openUnitsRequestModal() {
-        this._modalService.open(UnitsComponent);
+        this.modalService.open(UnitsComponent);
     }
 
     public openPurchase(modal){
-        // this.modalRefDel = this.modalService.open(modal);
+        // this.modalRefDel = 
+        this.modalService.open(modal,  { size: 'sm' });
     }
 
     public openDelivery(modal){
-
+        // this.modalRefDel = 
+        this.modalService.open(modal,  { size: 'sm' });
     }
 }
