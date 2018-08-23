@@ -22,61 +22,125 @@
         </div>
       </div>
     </div>
-    <!-- Scheduled Campaigns Table -->
+    <!-- Scheduled Campaigns Table --> 
     <ngx-datatable class="bootstrap mt-3" [rows]="schedules" [limit]="perPage" [columnMode]="'force'"
       [rowHeight]="55" [cssClasses]="customPagerIcons" [footerHeight]="40" [scrollbarH]="true">
-      <ngx-datatable-column name="Campaign Name">
-        <ng-template ngx-datatable-cell-template let-row="row" let-value="value" let-rowIndex="rowIndex">
-          {{row.jobName}}
-        </ng-template>
+      <ngx-datatable-column name="Name">
       </ngx-datatable-column>
-      <ngx-datatable-column name="Schedule Type">
+      <ngx-datatable-column name="Type">
         <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
-          <button *ngIf='row.groupName == "DAILY"' class="btn btn-sm btn-outline-danger mx-1"  type="button"><i class="fa fa-chevron-circle-right"></i> Daily</button> 
-          <button *ngIf='row.groupName == "WEEKLY"' class="btn btn-sm btn-outline-warning mx-1"  type="button"><i class="fa fa-chevron-circle-right"></i> Weekly</button> 
-          <button *ngIf='row.groupName == "MONTHLY"' class="btn btn-sm btn-outline-info mx-1"  type="button"><i class="fa fa-chevron-circle-right"></i> Monthly</button> 
+          <button *ngIf='row.type == "DATE"' class="btn btn-sm btn-outline-info mx-1"  type="button"><i class="fa fa-chevron-circle-right"></i> Date</button> 
+          <button *ngIf='row.type == "DAILY"' class="btn btn-sm btn-outline-danger mx-1"  type="button"><i class="fa fa-chevron-circle-right"></i> Daily</button> 
+          <button *ngIf='row.type == "WEEKLY"' class="btn btn-sm btn-outline-warning mx-1"  type="button"><i class="fa fa-chevron-circle-right"></i> Weekly</button> 
+          <button *ngIf='row.type == "MONTHLY"' class="btn btn-sm btn-outline-info mx-1"  type="button"><i class="fa fa-chevron-circle-right"></i> Monthly</button> 
         </ng-template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="Scheduled Time">
-        <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
-          <span class="border rounded bg-light p-2">
-            <i class="fa fa-clock-o fa-lg text-primary"></i> {{row.scheduleTime.getHours()}}:{{row.scheduleTime.getMinutes()}} 
-            <i class="fa fa-calendar fa-lg text-primary"></i> {{row.scheduleTime.toISOString().slice(0,10)}}
-          </span> 
+      <ngx-datatable-column name="Schedule">
+        <ng-template ngx-datatable-cell-template let-row="row" let-value="value" let-rowIndex="rowIndex">          
+          <div *ngIf='row.type == "DATE"'>
+            {{value | date: 'MMM d, y, h:mm a'}}
+          </div>          
+          <div *ngIf='row.type == "DAILY"'>
+            {{value | date: 'shortTime'}}
+          </div>          
+          <div *ngIf='row.type == "WEEKLY"'>
+            {{value | date: 'EEEE'}}, {{value | date: 'shortTime'}}
+          </div>          
+          <div *ngIf='row.type == "MONTHLY"'>
+            Date: {{value | date: 'dd'}}, {{value | date: 'shortTime'}}
+          </div>
         </ng-template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="Last Fired Time">
+      <ngx-datatable-column name="Last Fired">
         <ng-template ngx-datatable-cell-template let-row="row" let-value="value" let-rowIndex="rowIndex">
-          <span class="border rounded bg-light p-2">
-            <i class="fa fa-clock-o fa-lg text-danger"></i> {{value.getHours()}}:{{value.getMinutes()}} 
-            <i class="fa fa-calendar fa-lg text-danger"></i> {{value.toISOString().slice(0,10)}}
-          </span> 
-        </ng-template>
+          <button class="btn btn-sm btn-warning mx-1"  type="button" *ngIf='value == ""' disabled>
+              <i class="fa fa-ban"></i> Never
+          </button>
+          <div *ngIf='value != ""'>
+            {{value | date: 'MMM d, y, h:mm a'}}
+          </div> 
+          </ng-template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="Next Fire Time">
+      <ngx-datatable-column name="Next Fire">
         <ng-template ngx-datatable-cell-template let-row="row" let-value="value" let-rowIndex="rowIndex">
-          <span class="border rounded bg-light p-2">
-            <i class="fa fa-clock-o fa-lg text-success"></i> {{value.getHours()}}:{{value.getMinutes()}} 
-            <i class="fa fa-calendar fa-lg text-success"></i> {{value.toISOString().slice(0,10)}}
-          </span> 
+          <button class="btn btn-sm btn-success mx-1"  type="button" *ngIf='value == ""' disabled>
+            <i class="fa fa-ban"></i> Never
+          </button>
+          <div *ngIf='value != ""'>
+            {{value | date: 'MMM d, y, h:mm a'}}
+          </div>        
         </ng-template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="jobStatus">
+      <ngx-datatable-column name="Status">
         <ng-template ngx-datatable-cell-template let-row="row" let-value="value" let-rowIndex="rowIndex"> 
-          <button *ngIf='value == "RUNNING" && !scheduleStopped[rowIndex]' (click)="pauseSchedule(row, rowIndex)" class="btn btn-sm btn-success mx-1"  type="button" data-toggle="tooltip" data-placement="top" title="Click to Pause schedule"><i class="fa fa-ellipsis-h fa-lg"></i> Running</button>
-          <button *ngIf='scheduleStopped[rowIndex] || value == "PAUSED"' (click)="runSchedule(row, rowIndex)" class="btn btn-sm btn-warning mx-1"  type="button" data-toggle="tooltip" data-placement="top" title="Click to resume running schedule"><i class="fa fa-circle"></i> Resume</button>
-          <button *ngIf='scheduleStopped[rowIndex] || value == "PAUSED"' (click)="stopSchedule(row, rowIndex)" class="btn btn-sm btn-outline-danger mx-1"  type="button" data-toggle="tooltip" data-placement="top" title="Click to stop schedule"><i class="fa fa-square"></i> Stop</button>
+          <button *ngIf='value == "RUNNING"' class="btn btn-sm btn-success mx-1"  type="button" 
+            data-toggle="tooltip" data-placement="top" title="job schedule is currently running">
+            <i class="fa fa-ellipsis-h fa-lg"></i> 
+            Running
+          </button>
+           
+          <button *ngIf='value == "PAUSED"' class="btn btn-sm btn-warning mx-1"  type="button" 
+            data-toggle="tooltip" data-placement="top" title="job schedule is paused">
+            <i class="fa fa-circle"></i> 
+            Paused
+          </button>
           
-          <button *ngIf='value == "SCHEDULED"' (click)="runSchedule(row, rowIndex)" class="btn btn-sm btn-outline-secondary mx-1"  type="button" data-toggle="tooltip" data-placement="top" title="Click to run schedule now"><i class="fa fa-play"></i> Scheduled</button>
-          <button *ngIf='value == "COMPLETE"' class="btn btn-sm btn-info mx-1"  type="button" data-toggle="tooltip" data-placement="top" title="Schedule is complete"><i class="fa fa-check"></i> Completed</button>
-          <button *ngIf='value == "ERROR"' class="btn btn-sm btn-danger mx-1"  type="button" data-toggle="tooltip" data-placement="top" title="Schedule has an error"><i class="fa fa-warning"></i> Error</button>
+          <button *ngIf='value == "BLOCKED"'
+            class="btn btn-sm btn-outline-danger mx-1"  type="button" data-toggle="tooltip" data-placement="top" 
+            title="job schedule was stopped"><i class="fa fa-square"></i> 
+            Stopped
+          </button>
+          
+          <button *ngIf='value == "SCHEDULED"' class="btn btn-sm btn-outline-primary mx-1" type="button" 
+          data-toggle="tooltip" data-placement="top" title="job schedule is to run in the future">
+          <i class="fa fa-play"></i> 
+            Scheduled
+          </button>
+          
+          <button *ngIf='value == "COMPLETE"' class="btn btn-sm btn-info mx-1"  type="button" data-toggle="tooltip" 
+            data-placement="top" title="job schedule is complete"><i class="fa fa-check"></i> 
+            Completed
+          </button>
+
+          <button *ngIf='value == "ERROR"' class="btn btn-sm btn-danger mx-1"  type="button" data-toggle="tooltip" 
+            data-placement="top" title="job schedule has an error"><i class="fa fa-warning"></i> 
+            Error
+          </button>
         </ng-template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="actions">
+      <ngx-datatable-column name="Actions">
         <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
           <div class="btn-group" role="group" aria-label="actions">
-            <button (click)="openEditDialog(editModal, row, rowIndex)" [disabled]='row.jobStatus == "COMPLETE"' class="btn btn-sm btn-outline-info" data-toggle="tooltip" data-placement="top" title="Edit schedule"><i class="fa fa-pencil"></i></button>
-            <button (click)="openDeletionDialog(deleteModal, row, rowIndex)" class="btn btn-sm btn-outline-danger" data-toggle="tooltip" data-placement="top" title="Delete schedule"><i class="fa fa-trash"></i></button>
+            
+            <!-- <button (click)="edit(editModal, row, rowIndex)" [disabled]='row.status == "COMPLETE"'
+               class="btn btn-sm btn-outline-info" data-toggle="tooltip" data-placement="top" title="Edit schedule">
+              <i class="fa fa-pencil"></i>
+            </button> -->
+
+            <button (click)="start(row, rowIndex)" class="btn btn-sm btn-outline-success" *ngIf='row.status == "SCHEDULED"'
+              data-toggle="tooltip" data-placement="top" title="Start schedule Now"><i class="fa fa-play"></i>
+              Start
+            </button>
+
+            <button (click)="pause(row, rowIndex)" class="btn btn-sm btn-outline-warning" *ngIf='row.status == "RUNNING"'
+              data-toggle="tooltip" data-placement="top" title="Pause schedule"><i class="fa fa-trash"></i>
+              Pause
+            </button>
+
+            <button (click)="resume(row, rowIndex)" class="btn btn-sm btn-outline-success" *ngIf='row.status == "PAUSED"'
+              data-toggle="tooltip" data-placement="top" title="Resume schedule"><i class="fa fa-trash"></i>
+              Resume
+            </button>
+
+            <button (click)="stop(row, rowIndex)" class="btn btn-sm btn-outline-secondary" *ngIf='row.status == "RUNNING"'
+              data-toggle="tooltip" data-placement="top" title="Stop schedule"><i class="fa fa-square"></i>
+              Stop
+            </button>
+
+            <button (click)="delete(deleteModal, row, rowIndex)" class="btn btn-sm btn-outline-danger" 
+             data-toggle="tooltip" data-placement="top" title="Delete schedule"><i class="fa fa-trash"></i>
+            </button>
+          
           </div>
         </ng-template>
       </ngx-datatable-column>
@@ -85,39 +149,40 @@
 </div>
 
 <!-- Edit Schedule Details -->
-<ng-template #editModal let-c="close" let-d="dismiss">
+<!-- <ng-template #editModal let-c="close" let-d="dismiss">
   <div class="modal-header bg-info">
     <h5 class="modal-title text-white"><i class="fa fa-pencil fa-lg"></i> Edit Schedule</h5>
     <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-  <div class="modal-body">
+  <div class="modal-body"> -->
     <!-- Scheduled Campaign -->
-    <div class="card mt-3 shadow">
+    <!-- <div class="card mt-3 shadow">
       <h6 class="card-header">Scheduled Campaign</h6>
       <div class="card-body">
         <h6 class="mb-0 border rounded bg-info text-white p-2">Initial details:</h6>
         <div class="card border-top-0 mb-4 mx-2">
           <div class="card-body bg-light">
-            <fieldset disabled>
+            <fieldset disabled> -->
               <!-- Campaign Name -->        
-              <div class="input-group mb-3">
+              <!-- <div class="input-group mb-3">
                 <div class="input-group-prepend">
                   <span class="input-group-text bg-dark text-white" id="campaignName">Name</span>
                 </div>
-                <input type="text" class="form-control" aria-label="campaignName" aria-describedby="campaignName" [(ngModel)]="editableCampaign.title">
+                <input type="text" class="form-control" aria-label="campaignName" aria-describedby="campaignName"
+                 [(ngModel)]="editableCampaign.title">
               </div>
-              <h6 class="mb-0 bg-dark p-2 mb-1 text-white rounded">Schedule type: <b>{{editableCampaign.scheduleType}}</b></h6>
+              <h6 class="mb-0 bg-dark p-2 mb-1 text-white rounded">Schedule type: <b>{{editableCampaign.scheduleType}}</b></h6> -->
               <!-- Daily -->
-              <div class="input-group mb-3" *ngIf="editableCampaign.scheduleType == 'DAILY'">
+              <!-- <div class="input-group mb-3" *ngIf="editableCampaign.scheduleType == 'DAILY'">
                 <div class="input-group-prepend">
                   <span class="input-group-text bg-dark text-white" id="dailyTime">Time</span>
                 </div>
                 <input type="text" class="form-control" aria-label="dailyTime" aria-describedby="dailyTime" [(ngModel)]="editableCampaign.time">
-              </div>
+              </div> -->
               <!-- Weekly -->
-              <div class="form-row" *ngIf="editableCampaign.scheduleType == 'WEEKLY'">
+              <!-- <div class="form-row" *ngIf="editableCampaign.scheduleType == 'WEEKLY'">
                 <div class="input-group col-sm-6 mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text bg-dark text-white" id="weeklyTime">Time</span>
@@ -130,9 +195,9 @@
                   </div>
                   <input type="text" class="form-control" aria-label="day" aria-describedby="day" [(ngModel)]="editableCampaign.dayOfWeek">
                 </div>
-              </div>
+              </div> -->
               <!-- Monthly -->
-              <div class="form-row" *ngIf="editableCampaign.scheduleType == 'MONTHLY'">
+              <!-- <div class="form-row" *ngIf="editableCampaign.scheduleType == 'MONTHLY'">
                 <div class="input-group col-sm-6 mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text bg-dark text-white" id="monthlyTime">Time</span>
@@ -148,12 +213,12 @@
               </div>
             </fieldset> 
           </div>
-        </div>
+        </div> -->
         <!-- Form -->
-        <form [formGroup] = "form" (ngSubmit) = "sendEditedCampaign(form.value)">
-          <h6 class="mb-0 bg-light p-2">Change campaign schedule type:</h6>
+        <!-- <form [formGroup] = "form" (ngSubmit) = "sendEditedCampaign(form.value)">
+          <h6 class="mb-0 bg-light p-2">Change campaign schedule type:</h6> -->
           <!-- Schedule options -->
-          <div class="card border-top-0 mb-4">
+          <!-- <div class="card border-top-0 mb-4">
             <div class="card-body">
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" formControlName="schedule" id="daily" value="DAILY">
@@ -166,16 +231,16 @@
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" formControlName="schedule" id="monthly" value="MONTHLY">
                 <label class="form-check-label" for="monthly">Monthly</label>
-              </div>
+              </div> -->
               <!-- Daily Schedule -->
-              <div class="card mt-2" *ngIf="form.value.schedule == 'DAILY'">
+              <!-- <div class="card mt-2" *ngIf="form.value.schedule == 'DAILY'">
                 <div class="card-body">
                   <p class="bg-light p-2"><b>Daily Campaign - Time:</b></p>
                     <ngb-timepicker formControlName="dailyTime" [meridian]="meridian"></ngb-timepicker>
                 </div>
-              </div>
+              </div> -->
               <!-- Weekly Schedule -->
-              <div class="card mt-2" *ngIf="form.value.schedule == 'WEEKLY'">
+              <!-- <div class="card mt-2" *ngIf="form.value.schedule == 'WEEKLY'">
                 <div class="card-body">
                     <p class="bg-light p-2"><b>Weekly Campaign:</b></p>
                   <div class="row">
@@ -195,9 +260,9 @@
                   </div>
                   
                 </div>
-              </div>
+              </div> -->
               <!-- Monthly Schedule -->
-              <div class="card-sm-12 mt-2" *ngIf="form.value.schedule == 'MONTHLY'">
+              <!-- <div class="card-sm-12 mt-2" *ngIf="form.value.schedule == 'MONTHLY'">
                 <div class="card-body">
                   <p class="bg-light p-2"><b>Monthly Campaign:</b></p>
                   <div class="row">
@@ -221,9 +286,9 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
           <!-- Compose message -->
-          <h6 class="mb-4 bg-light p-2 rounded">Edit message:</h6>
+          <!-- <h6 class="mb-4 bg-light p-2 rounded">Edit message:</h6>
           <div class="form-group">
             <textarea class="form-control" formControlName="message" rows="5" [(ngModel)]="editableCampaign.message"></textarea>
           </div>
@@ -259,7 +324,7 @@
   <div class="modal-footer">
     <button type="button" class="btn btn-outline-danger" (click)="c('Save click')">Dismiss</button>
   </div>
-</ng-template>
+</ng-template> -->
 
 <!-- Delete Schedule -->
 <ng-template #deleteModal let-c="close" let-d="dismiss">
@@ -270,8 +335,8 @@
     </button>
   </div>
   <div class="modal-body">
-    Are you sure you want to delete <span class="bg-light border rounded px-2"> <b>{{deleteSchedule.groupName}}</b></span> schedule, 
-    <span class="bg-light border rounded px-2"> <b>{{deleteSchedule.jobName}}</b></span>  ?    
+    Are you sure you want to delete <span class="bg-light border rounded px-2"> <b>{{deleteSchedule.type}}</b></span> schedule, 
+    <span class="bg-light border rounded px-2"> <b>{{deleteSchedule.name}}</b></span>  ?    
   <hr>
   <div class="d-flex justify-content-between">
       <button type="button" class="btn btn-outline-danger" (click)="deleteCampaign()">Delete</button>

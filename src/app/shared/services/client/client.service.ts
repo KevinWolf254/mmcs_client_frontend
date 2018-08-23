@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { GroupManagerService } from '../group/group-manager.service';
 import { Client, Contacts, Charges } from '../../models/client.model';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpEventType } from '@angular/common/http';
 import { Observable } from '../../../../../node_modules/rxjs/Observable';
 import { GroupedContactsRequest } from '../../models/group.model';
 
@@ -10,32 +9,44 @@ export class ClientService {
 
   private basicUri: string = "http://localhost:8083/mmcs";
   private jsonHeader = {headers: new HttpHeaders({'Content-Type':'application/json'})};
-  private fileHeader = {headers: new HttpHeaders({'Content-Type':'application/x-www-form-urlencoded'})};
-  clients: Client[] = [];
+  private header = {headers: new HttpHeaders({'Content-Type':'application/x-www-form-urlencoded'})};
 
-  constructor(private _http: HttpClient, private _groupManager: GroupManagerService) { }
+  constructor(private _http: HttpClient) { }
 
-  public createClient(client: Client){
-    return this._http.post(this.basicUri + "/secure/contact", client, this.jsonHeader);
+  public saveClient(contact: Client){
+    return this._http.post(this.basicUri + "/secure/contact", contact, this.jsonHeader);
   }
 
-  public createClients(file: File){
+  public saveContactToGroup(contact: Client, groupId: number){
+    return this._http.post(this.basicUri + "/secure/contact/"+groupId, contact);
+  }
+
+  public saveClients(file: File){
     let formData: FormData = new FormData();    
     formData.append("file", file, file.name);
-    return this._http.post(this.basicUri + "/secure/contacts", formData, this.fileHeader);
+    return this._http.post(this.basicUri + "/secure/contacts", formData, {
+      reportProgress: true,
+      observe: 'events'
+    });
   }
 
-  // findClientsByGroupId(groupId: number): Client[]{
-  //   if(this._groupManager.findGroup(groupId) != null){ 
-  //     let client: Client;     
-  //     for(let i=1; i<=50; i++){
-  //       client = new Client(i, '+254', 724000000 + i, 'Client '+i);
-  //       this.clients.push(client);
-  //     }
-  //     return this.clients;
-  //   }
-  //   return [];
-  // }
+  public saveContactsToGroup(file: File, groupId: number){
+    let formData: FormData = new FormData();    
+    formData.append("file", file, file.name);
+    return this._http.post(this.basicUri + "/secure/contacts/"+groupId, formData, {
+      reportProgress: true,
+      observe: 'events'
+    });
+  }
+
+  public removeContactFromGroup(contactId: number, groupId: number){
+    let requestParams = "ContactId="+contactId+"&GroupId="+groupId;
+    return this._http.post(this.basicUri + "/secure/contact/remove", requestParams, this.header);
+  }
+
+  public contactExists(code: string, phone: string){
+    return this._http.get(this.basicUri + "/secure/contact/"+code+"/"+phone);
+  }
 
   public getNoOfContacts(): Observable<Contacts>{
     return this._http.get<any>(this.basicUri + "/secure/contact");

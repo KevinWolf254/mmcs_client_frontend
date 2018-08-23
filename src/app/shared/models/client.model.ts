@@ -1,14 +1,21 @@
 export class Client {
-    id: number;
     countryCode: string;
-    phoneNumber: number;
-    name: string;
+    phoneNumber: string;
 
-    constructor(id: number, countryCode: string, phoneNumber: number, name: string){
-        this.id = id;
+    constructor(countryCode: string, phoneNumber: string){
         this.countryCode = countryCode;
         this.phoneNumber = phoneNumber;
-        this.name = name;
+    }
+}
+
+export class ContactDetails extends Client{
+    id: number;
+    teleCom: ServiceProvider;
+    constructor(id: number, countryCode: string, 
+        phoneNumber: string, teleCom: ServiceProvider){
+        super(countryCode, phoneNumber)
+        this.id = id;
+        this.countryCode = countryCode;
     }
 }
 

@@ -5,6 +5,8 @@ import { Subject } from 'rxjs/Subject';
 import { debounceTime } from 'rxjs/operators';
 import { ClientService } from '../../services/client/client.service';
 import { Client } from '../../models/client.model';
+import { ToastrService } from '../../../../../node_modules/ngx-toastr';
+import { HttpEventType } from '../../../../../node_modules/@angular/common/http';
 
 @Component({
   selector: 'app-client',
@@ -16,56 +18,58 @@ export class ClientComponent implements OnInit {
   public form: FormGroup;
   public isCreating: boolean = false;
   public isCreatingClients: boolean = false;
-  public fileForm: FormGroup;
+  public file: File;
+
+  public fileName: string = '';
 
   codes: string[] = ["+254", "+255", "+256", "+257"];
 
-  _success = new Subject<string>();
-  successMessage: string;
-
-  constructor(private _fb: FormBuilder, private clientService: ClientService) { 
+  constructor(private _fb: FormBuilder, private clientService: 
+    ClientService, private notify: ToastrService) { 
     this.form = _fb.group({
-      'names': [null],
-      'code': [null,Validators.compose([Validators.required, Validators.pattern('[0-9]{3,3}')])],
-      'phone': [null,Validators.compose([Validators.required, Validators.pattern('^7[0-9]{8,8}')])]
-    });
-    this.fileForm = _fb.group({
-      'file': [null,Validators.required]
+      'code': [null,Validators.compose([Validators.required, 
+        Validators.pattern('[0-9]{3,3}')])],
+      'phone': [null,Validators.compose([Validators.required, 
+        Validators.pattern('^7[0-9]{8,8}')])]
     });
   }
 
   ngOnInit() {
-    this._success.subscribe((message) => this.successMessage = message);
-    this._success.pipe(
-      debounceTime(5000)
-    ).subscribe(() => this.successMessage = null);
   }
 
   public createClient(form){
     this.isCreating = true;
     let countryCode: string = "+" + form.code
-    this.clientService.createClient(new Client(0, countryCode, form.phone, form.names)).subscribe(
-      (response: Client) =>{        
-        this._success.next("Successfully created Client " + form.names + " with Phone No: " + form.phone);
+    this.clientService.saveClient(new Client(countryCode, form.phone)).subscribe(
+      (response: any) =>{        
         this.form.reset();
-        this.isCreating = false;
+        this.isCreating = false;        
+        this.notify.success(response.message, response.title);
       },error => {
-        this._success.error("Error creating Client " + form.names + " with Phone No: " + form.phone);
         this.isCreating = false;
+        this.notify.error(error.error.error_description, error.error.error);
       }
     );   
   }
+  public uploadFile(event){
+      this.file = event.target.files[0];
+      this.fileName = this.file.name;
+  }
 
-  public createClients(form){
+  public saveContacts(){
     this.isCreatingClients = true;
-    this.clientService.createClients(form.file).subscribe(
-      (response) =>{        
-        this._success.next("Successfully created Clients");
-        this.fileForm.reset();
-        this.isCreatingClients = false;
+    this.clientService.saveClients(this.file).subscribe(
+      (response: any) =>{   
+        if(response.type === HttpEventType.UploadProgress){
+          // console.log("uploading progress: "+ Math.round(100 * response.loaded / response.total) +'%');
+        }else if(response.type === HttpEventType.Response){ 
+          this.isCreatingClients = false;
+          this.fileName = '';      
+          this.notify.success(response.body.message, response.body.title);
+        }
       },error => {
-        this._success.error("Error creating Clients");
-        this.isCreatingClients = false;
+        this.notify.error(error.error.error_description, error.error.error);
+        this.isCreatingClients = false;          
       }
     );
   }

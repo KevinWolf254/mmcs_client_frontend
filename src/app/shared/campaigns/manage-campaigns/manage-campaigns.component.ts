@@ -1,13 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Schedule } from '../../models/schedule.model';
+import { ScheduleDetails, ScheduleStatus } from '../../models/schedule.model';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Group } from '../../models/group.model';
-import { selectValidator } from '../../validators/select-validator';
-import { GroupManagerService } from '../../services/group/group-manager.service';
 import { CampaignService } from '../../services/campaign/campaign.service';
-import { Campaign } from '../../models/campaign.model';
+import { ToastrService } from '../../../../../node_modules/ngx-toastr';
 
 @Component({
   selector: 'app-manage-campaigns',
@@ -16,102 +12,51 @@ import { Campaign } from '../../models/campaign.model';
 })
 export class ManageCampaignsComponent implements OnInit {
 
-  schedules: Schedule[] = [];
+  public schedules: ScheduleDetails[] = [];
 
-  perPage: number;
-  perPageNos: number[] = [10, 25, 50, 100];
-  tempCampaigns = [];
+  public tempSchedules = [];
+
+  public deleteSchedule: ScheduleDetails;
+
+  public modalRefDel: NgbModalRef;
+
+  public perPage: number;
+  public perPageNos: number[] = [10, 25, 50, 100];
   @ViewChild(DatatableComponent) table: DatatableComponent;
   customPagerIcons = {
-    sortAscending: 'fa fa-sort-asc', sortDescending: 'fa fa-sort-desc', pagerLeftArrow: 'fa fa-chevron-left', 
-    pagerRightArrow: 'fa fa-chevron-right', pagerPrevious: 'fa fa-step-backward', pagerNext: 'fa fa-step-forward'
-  };
+    sortAscending: 'fa fa-sort-asc', sortDescending: 'fa fa-sort-desc', 
+    pagerLeftArrow: 'fa fa-chevron-left', pagerRightArrow: 'fa fa-chevron-right', 
+    pagerPrevious: 'fa fa-step-backward', pagerNext: 'fa fa-step-forward'
+  };  
 
-  scheduleStopped = {};
-  
-  modalRefEdit: NgbModalRef;
-  modalRefDel: NgbModalRef;
-  
-  editableCampaign: Campaign;
-  week: string[] = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];  
-  form: FormGroup;
-  defaultTime = {hour: 12, minute: 30};
-  meridian: boolean = true;
-  
-  selected = 0;
-  message: string;
-  groupsOfSelectedCampaign: Group[] = [];
-  allgroups: Group[] = [];
-
-  deleteSchedule: Schedule;
-  deleteRow: number;
-
-  toggleMeridian() {
-      this.meridian = !this.meridian;
-  }
-
-  constructor(private modalService: NgbModal, private _fb: FormBuilder, private _groupService: GroupManagerService,
-  private _campaignService: CampaignService) {
-    this.form = _fb.group({
-    'schedule': [null],
-    'message': [null,Validators.compose([Validators.required, Validators.maxLength(160)])],
-    'group': [null]
-    }); 
-  }
+  constructor(private modalService: NgbModal, private notify: ToastrService,
+    private campaignService: CampaignService){}
 
   ngOnInit() {
     this.getSchedules();
-    // this.allgroups =  this._groupService.getGroups();
     this.perPage = this.perPageNos[0];
+  }
 
-    this.form.get('schedule').valueChanges.subscribe( type =>{
-        if(type == 'DAILY'){
-          if(this.form.contains('dayOfWeek')){
-            this.form.removeControl('dayOfWeek');
-            this.form.removeControl('weeklyTime');
-          }else if(this.form.contains('monthlyDate')){
-            this.form.removeControl('monthlyDate');
-            this.form.removeControl('monthlyTime');
-          }
-          this.form.addControl('dailyTime', this._fb.control(this.defaultTime, Validators.required)); 
-        }else if (type == 'WEEKLY'){
-          if(this.form.contains('dailyTime')){
-            this.form.removeControl('dailyTime');
-          }else if(this.form.contains('monthlyDate')){
-            this.form.removeControl('monthlyDate');
-            this.form.removeControl('monthlyTime');
-          }
-          this.form.addControl('dayOfWeek', this._fb.control(0, selectValidator)); 
-          this.form.addControl('weeklyTime', this._fb.control(this.defaultTime, Validators.required));
-        }else if (type == 'MONTHLY'){
-          if(this.form.contains('dailyTime')){
-            this.form.removeControl('dailyTime');
-          }else if(this.form.contains('dayOfWeek')){
-            this.form.removeControl('dayOfWeek');
-            this.form.removeControl('weeklyTime');
-          }
-          this.form.addControl('monthlyDate', this._fb.control('', Validators.required));
-          this.form.addControl('monthlyTime', this._fb.control(this.defaultTime, Validators.required)); 
-        }
+  public getSchedules(){
+    this.campaignService.getCampaigns().subscribe(
+      (response: any) => {
+        console.log(response);
+        this.schedules = response;
+        // cache our schedules
+        this.tempSchedules = [...this.schedules];
       }
     );
   }
 
-  getSchedules(){
-    this.schedules = this._campaignService.getCampaigns();
-    // cache our schedules
-    this.tempCampaigns = [...this.schedules];
-  }
-
-  changePageEntries(event){
+  public changePageEntries(event){
     this.perPage = event.target.value;
   }
 
-  search(event) {
+  public search(event) {
     let searchParam = event.target.value.toLowerCase();
     // filter our data
-    let temp = this.tempCampaigns.filter(schedule => {
-      return schedule.jobName.toLowerCase().indexOf(searchParam) !== -1 || !searchParam;
+    let temp = this.tempSchedules.filter(schedule => {
+      return schedule.name.toLowerCase().indexOf(searchParam) !== -1 || !searchParam;
     });
     // update the rows
     this.schedules = temp;
@@ -120,75 +65,61 @@ export class ManageCampaignsComponent implements OnInit {
   }
 
   /*Pauses a running schedule */
-  pauseSchedule(schedule, rowIndex){
-    // this.schedules[rowIndex].jobStatus = "PAUSE";
-    this.scheduleStopped[rowIndex] = true;
+  public pause(schedule, rowIndex){
+    let name: string = schedule.name;
+    this.campaignService.changeScheduleStatus(name, ScheduleStatus.PAUSED).subscribe(
+      (response: any) => {
+        this.notify.success(response.message, response.title);
+        this.getSchedules();
+      }, error => {
+        this.notify.error(error.error.error_description, error.error.error);
+      }
+    );
+    // this.scheduleStopped[rowIndex] = true;
   }
 
   /*Runs a stopped/scheduled schedule */
-  runSchedule(schedule, rowIndex){    
-    console.log("Schedule: "+schedule.jobName+" resumed!");
-    // this.schedules[rowIndex].jobStatus = "RUNNING";
-    this.scheduleStopped[rowIndex] = false;
+  public start(schedule, rowIndex){   
+    let name: string = schedule.name;
+    this.campaignService.changeScheduleStatus(name, ScheduleStatus.SCHEDULED).subscribe(
+      (response: any) => {
+        this.notify.success(response.message, response.title);
+        this.getSchedules();
+      }, error => {
+        this.notify.error(error.error.error_description, error.error.error);
+      }
+    ); false;
   }
 
   /*Unschedules a running schedule */
-  stopSchedule(schedule, rowIndex){
-    console.log("Schedule: "+schedule.jobName+" stopped!");
-    // this.schedules[rowIndex].jobStatus = "SCHEDULED";
-    this.scheduleStopped[rowIndex] = false;
-  }
-
-  openEditDialog(modal, schedule: Schedule, rowIndex){
-    this.modalRefEdit = this.modalService.open(modal);
-    this.editableCampaign = this._campaignService.getCampaignByName(schedule);
-
-    this.groupsOfSelectedCampaign = [];
-    this.groupsOfSelectedCampaign = this.editableCampaign.groups;
-  }
-
-  addGroupToCampaign(){
-    //find group with selected id
-    // let group: Group = this._groupService.findGroup(this.selected);
-    //check if recipients has a group of recipients added to it
-    if(this.groupsOfSelectedCampaign.length !=0){
-        //check and remove duplicates
-        this.groupsOfSelectedCampaign = this.removeDuplicate();
-    }
-    // this.groupsOfSelectedCampaign.push(group);
-    this.selected = 0;
-    // this.form.get('group').setValue(0);
-  }
-
-  removeDuplicate(): Group[]{
-    return this.groupsOfSelectedCampaign = this.groupsOfSelectedCampaign.filter((group: Group)=>{
-        return group.id != this.selected;
-    });
-  }
-
-  /**removes group from array of selected groups */
-  remove(removeGroup: Group){
-    this.groupsOfSelectedCampaign.forEach((group, index)=>{
-      if(group.id == removeGroup.id){
-        this.groupsOfSelectedCampaign.splice(index, 1);
+  public stop(schedule, rowIndex){
+    let name: string = schedule.name;
+    this.campaignService.changeScheduleStatus(name, ScheduleStatus.BLOCKED).subscribe(
+      (response: any) => {
+        this.notify.success(response.message, response.title);
+        this.getSchedules();
+      }, error => {
+        this.notify.error(error.error.error_description, error.error.error);
       }
-    }); 
-  } 
-
-  sendEditedCampaign(form){
-
+    ); 
   }
 
-  openDeletionDialog(modal, schedule, rowIndex){
-    // this.deleteSchedule = new Schedule(schedule.jobName, schedule.groupName, schedule.scheduleTime, schedule.lastFiredTime, schedule.jobStatus, schedule.nextFireTime);
-    this.deleteRow = rowIndex;    
+  public delete(modal, schedule: ScheduleDetails, rowIndex){
+    this.deleteSchedule = new ScheduleDetails(schedule.name, schedule.type, schedule.schedule,
+      schedule.nextFire, schedule.lastFired, schedule.status);
     this.modalRefDel = this.modalService.open(modal);
   }
 
-  deleteCampaign(){
-    this.schedules.splice(this.deleteRow, 1);
-    this.schedules = [...this.schedules];
-    this.tempCampaigns = [...this.schedules];
+  public deletionConfirmed(){    
+    let name: string = this.deleteSchedule.name;
+    this.campaignService.changeScheduleStatus(name, ScheduleStatus.NONE).subscribe(
+      (response: any) => {
+        this.notify.success(response.message, response.title);
+        this.getSchedules();
+      }, error => {
+        this.notify.error(error.error.error_description, error.error.error);
+      }
+    );
     this.modalRefDel.close(); 
   }
 }

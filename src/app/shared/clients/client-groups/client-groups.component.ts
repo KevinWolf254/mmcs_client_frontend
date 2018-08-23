@@ -6,7 +6,8 @@ import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GroupManagerService } from '../../services/group/group-manager.service';
 import { ClientService } from '../../services/client/client.service';
-import { Client } from '../../models/client.model';
+import { Client, ContactDetails } from '../../models/client.model';
+import { ToastrService } from '../../../../../node_modules/ngx-toastr';
 
 @Component({
   selector: 'app-client-groups',
@@ -15,35 +16,34 @@ import { Client } from '../../models/client.model';
 })
 export class ClientGroupsComponent implements OnInit {
 
-  entriesPerPage: number;
-  perPageNos: number[] = [10, 25, 50, 100];
-  tempClients: Client[] = [];
+  public entriesPerPage: number;
+  public perPageNos: number[] = [10, 25, 50, 100];
+  public tempContacts: ContactDetails[] = [];
+
+  public isCreatingGroup: boolean = false;
+  public isDeletingGroup: boolean = false;
+
+  public groups: Group[] = [];  
+  public createForm: FormGroup;
+  public deleteForm: FormGroup;
+  
+  public groupContacts: ContactDetails[] = [];
+  private removeModal: NgbModalRef;
+
+  public removeContact: ContactDetails = null;
+  public removeRow: number;
+
+  public selectedGroupId: number = 0;
+  public selectedGroup: Group;
+
   @ViewChild(DatatableComponent) table: DatatableComponent;
   customPagerIcons = {
     sortAscending: 'fa fa-sort-asc', sortDescending: 'fa fa-sort-desc', pagerLeftArrow: 'fa fa-chevron-left', 
     pagerRightArrow: 'fa fa-chevron-right', pagerPrevious: 'fa fa-step-backward', pagerNext: 'fa fa-step-forward'
   };
 
-  groupClients: Client[] = [];
-
-  selected: number = 0;
-  groups: Group[] = [];
-  createForm: FormGroup;
-  deleteForm: FormGroup;
-
-  selectedGroupId: number = 0;
-  
-  editableClientModal: NgbModalRef;
-  removableClientModal: NgbModalRef;
-
-  editableClient: Client;
-  editableRow: number;
-
-  removableClient: Client = null;
-  removableRow: number;
-
-  constructor(private _fb: FormBuilder, private modalService: NgbModal, 
-    private _groupManager: GroupManagerService, private _clientService: ClientService) { 
+  constructor(private _fb: FormBuilder, private modalService: NgbModal, private notify: ToastrService,
+    private groupService: GroupManagerService, private contactService: ClientService) { 
     this.createForm = _fb.group({
       'name': [null,Validators.required]
     });
@@ -53,71 +53,92 @@ export class ClientGroupsComponent implements OnInit {
   }
 
   ngOnInit() {    
-    // this.groups = this._groupManager.getGroups();
+    this.getGroups();
 
     this.entriesPerPage = this.perPageNos[0];
   } 
-
-  getGroupClients(event){
-    let groupId = event.target.value;
-    this.getGroupClientsFromWebApi(groupId);
-  }
-
-  getGroupClientsFromWebApi(groupId: number){
-    // this.groupClients = this._clientService.findClientsByGroupId(groupId);
-    // cache our clients
-    this.tempClients = [...this.groupClients];
-  }
-
-  changeEntriesPerPage(event){
-    this.entriesPerPage = event.target.value;
-  }
-
-  searchClient(event) {
-
-    let searchParam = event.target.value.toLowerCase();
-
-    // filter our data
-    let tempClients = this.tempClients.filter((client: Client) => {
-      return client.name.toLowerCase().indexOf(searchParam) !== -1 || !searchParam;
+  
+  private getGroups() {
+    this.groupService.getGroups().subscribe(response => {
+      this.groups = response;
     });
+  }
 
+  public searchContact(event) {
+    let searchParam = event.target.value.toLowerCase();
+    // filter our data
+    let tempContacts = this.tempContacts.filter((contact: ContactDetails) => {
+      return contact.phoneNumber.indexOf(searchParam) !== -1 || !searchParam;
+    });
     // update the rows
-    this.groupClients = tempClients;
+    this.groupContacts = tempContacts;
     // Whenever the filter changes, always go back to the first page
     this.table.offset = 0;
   }
 
-  createGroup(form){
-    // this._groupManager.createGroup(form.name);
-    this.createForm.reset();
+  public createGroup(form) {
+    this.isCreatingGroup = true;
+    this.groupService.saveGroup(form.name).subscribe(
+      (response: any) => {
+        this.createForm.reset();
+        this.isCreatingGroup = false;
+        this.notify.success(response.message, response.title);
+      }, error => {
+        this.isCreatingGroup = false;
+        this.notify.error(error.error.error_description, error.error.error);        
+      }
+    ); 
   }
 
-  openClientDetailsDialog(clientDetailsModal, selectedClient: Client, rowIndex){
-    this.editableClient = new Client(selectedClient.id, selectedClient.countryCode, 
-      selectedClient.phoneNumber, selectedClient.name);
-    this.editableRow = rowIndex;    
-    this.editableClientModal = this.modalService.open(clientDetailsModal);
+  public getContactsOfGroup(event){
+    this.selectedGroupId = event.target.value;
+    this.groupService.getContactsOfGroup(this.selectedGroupId).subscribe(
+      (response: any) => {
+        this.groupContacts = response;
+        //initialize the selected group
+        this.selectedGroup = this.groups.find(group => {
+          return group.id == this.selectedGroupId;
+        })
+        // cache our clients
+        this.tempContacts = [...this.groupContacts];
+        this.groups
+      }, error => {
+        this.notify.error(error.error);        
+      }
+    );
   }
 
-  openRemoveClientDialog(removeClientModal, selectedClient: Client, rowIndex){
-    this.removableClient = new Client(selectedClient.id, selectedClient.countryCode, 
-      selectedClient.phoneNumber, selectedClient.name);
-    this.removableRow = rowIndex;
-    this.removableClientModal = this.modalService.open(removeClientModal);
+  public openRemoveClientDialog(removeModal, contact: ContactDetails, rowIndex){
+    this.removeContact = new ContactDetails(contact.id, contact.countryCode, 
+      contact.phoneNumber, contact.teleCom);
+    this.removeRow = rowIndex;
+    this.removeModal = this.modalService.open(removeModal);
   }
-  
-  deleteGroup(form){
-    // this._groupManager.deleteGroup(form.group);
-    this.deleteForm.reset();
-    this.deleteForm.get(['group']).setValue(0);
-    this.groupClients = [];
+  public changeEntriesPerPage(event){
+    this.entriesPerPage = event.target.value;
   }
 
-  removeClientFromGroup(){    
-    this.groupClients.splice(this.removableRow, 1);
-    this.groupClients = [...this.groupClients];
-    this.tempClients = [...this.groupClients];
-    this.removableClientModal.close(); 
+  public removeContactFromGroup(){    
+    this.groupContacts.splice(this.removeRow, 1);
+    this.contactService.removeContactFromGroup(this.removeContact.id, this.selectedGroup.id).subscribe(
+      (response: any) => {
+        this.notify.success(response.message, response.title);
+      }, error =>{
+        this.notify.error(error.error);        
+      }
+    );
+    this.groupContacts = [...this.groupContacts];
+    this.tempContacts = [...this.groupContacts];
+    this.removeModal.close(); 
   }
+public deleteGroup(form){
+  this.groupService.deleteGroup(form.group).subscribe(
+    (response:any) => {
+      this.getGroups();
+      this.notify.success(response.message, response.title);
+    }, error =>{
+      this.notify.error(error.error);        
+    }
+  );
+}
 }

@@ -8,24 +8,22 @@ export class GroupManagerService {
 
   private basicUri: string = "http://localhost:8083/mmcs";
   private jsonHeader = {headers: new HttpHeaders({'Content-Type':'application/json'})};
+  private header = {headers: new HttpHeaders({'Content-Type':'application/x-www-form-urlencoded'})};
 
-  // groups: Group[] = [];
-
-  constructor(private _http: HttpClient) {    
-    // this.setGroups();
-   }
+  constructor(private _http: HttpClient) {}
 
   public getGroups(): Observable<Group[]>{
     return this._http.get<any>(this.basicUri + "/secure/group");
   }
 
-  // setGroups(){
-  //     let receivedGroup: Group;
-  //     for(let i=1; i<11; i++){
-  //         receivedGroup = new Group(i, "Group "+i);
-  //         this.groups.push(receivedGroup);
-  //     } 
-  // }  
+  public saveGroup(name: string){
+    let requestParam = "name="+name;
+    return this._http.post(this.basicUri + "/secure/group", requestParam, this.header);
+  }
+
+  public getContactsOfGroup(id: number) {
+    return this._http.get(this.basicUri + "/secure/contacts/" + id);
+  } 
 
   public findGroup(groups: Group[], selectedGroupId: number): Group{
     let foundGroup: Group = groups.find((group: Group) =>{
@@ -34,17 +32,7 @@ export class GroupManagerService {
     return foundGroup;
   }
 
-  // deleteGroup(removeGroupId: number){
-  //   this.groups.forEach((group, index)=>{
-  //     if(group.id == removeGroupId){
-  //       this.groups.splice(index, 1);
-  //     }
-  //   });
-  // }
-
-  // createGroup(groupName: string){
-  //   let lastIndex = this.groups.length - 1;
-  //   let newGroup: Group = new Group(lastIndex + 2, groupName);
-  //   this.groups.push(newGroup);
-  // }
+  deleteGroup(groupId: number){
+    return this._http.delete(this.basicUri + "/secure/group/"+groupId);
+  }
 }

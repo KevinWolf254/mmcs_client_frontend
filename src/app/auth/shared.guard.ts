@@ -9,7 +9,8 @@ export class SharedGuard implements CanActivate {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-      if(localStorage.getItem('userRole') == Role.USER || localStorage.getItem('userRole') == Role.ADMIN){
+      if(localStorage.getItem('userRole') == Role.USER || 
+         localStorage.getItem('userRole') == Role.ADMIN){
         return true;
       }
       this.router.navigate(['signin']);

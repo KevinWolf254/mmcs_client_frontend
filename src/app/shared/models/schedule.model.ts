@@ -11,6 +11,12 @@ export enum ScheduleType{
     NONE = 'NONE'
 }
 
+export enum ScheduleStatus{
+    SCHEDULED = 'SCHEDULED', RUNNING = 'RUNNING', PAUSED = 'PAUSED', 
+    COMPLETE = 'COMPLETE', BLOCKED = 'BLOCKED', ERROR = 'ERROR', 
+    NONE = 'NONE'
+}
+
 export interface Schedule{
     name: string;
     type: ScheduleType;
@@ -22,6 +28,26 @@ export interface Schedule{
     getCronExpression(): string;
 }
 
+export abstract class _ScheduleDetails{
+    name: string;
+    type: ScheduleType;
+    schedule: Date;
+    nextFire: Date;
+    lastFired: Date;
+    status: ScheduleStatus;
+
+    constructor(name: string, type: ScheduleType,schedule: Date,
+         nextFire: Date, lastFired: Date, status: ScheduleStatus){
+        this.name = name;
+        this.type = type;
+        this.schedule = schedule;
+        this.nextFire = nextFire;
+        this.lastFired = lastFired;
+        this.status = status;
+    }
+}
+export class ScheduleDetails extends _ScheduleDetails{
+}
 export class NoSchedule implements Schedule{    
     name: string;    
     type: ScheduleType;

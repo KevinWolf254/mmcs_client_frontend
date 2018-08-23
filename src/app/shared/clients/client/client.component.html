@@ -1,24 +1,20 @@
 <div class="card border-top-0 shadow">
   <div class="card-body">
-    <p class="bg-light p-2 rounded"><b>Single Client creation:</b></p>
-    <ngb-alert *ngIf="successMessage" type="success" (close)="successMessage = null">{{ successMessage }}</ngb-alert>
+    <p class="bg-light p-2 rounded"><b>Add Contact:</b></p>
     <form [formGroup] = "form" (ngSubmit) = "createClient(form.value)">
-        <div class="input-group mb-3">
-          <div class="input-group-prepend">
-            <span class="input-group-text"><i class="fa fa-user"></i></span>
-          </div>
-          <input type="text" class="form-control form-control-sm" formControlName="names" placeholder="Full names">
-        </div>
         <div class="input-group mb-2">
           <div class="input-group-prepend">
               <span class="input-group-text"><i class="fa fa-phone"></i></span>
-          </div>
-          <input type="number" class="form-control form-control-sm col-sm-2" formControlName="code" placeholder="Country Code">
-          <input type="number" class="form-control form-control-sm col-sm-10" formControlName="phone" placeholder="Phone Number">
+          </div> 
+          <input type="number" class="form-control form-control-sm col-sm-3" formControlName="code"
+           placeholder="Country Code">
+          <input type="number" class="form-control form-control-sm col-sm-9" formControlName="phone"
+           placeholder="Phone Number">
         </div>
+        <small>Example - country code: 254 phone number: 720000000</small>
       <button type="submit" class="btn btn-sm btn-primary btn-block mb-2" [disabled]="!form.valid">
         <div *ngIf="!isCreating">
-          Create Client
+          Save Contact
         </div>
         <div *ngIf="isCreating" class="sk-circle my-0 py-0">
           <div class="sk-circle1 sk-child"></div>
@@ -37,32 +33,41 @@
       </button>
     </form>
     <hr class="mb-4">
-    <p class="bg-light p-2 rounded"><b>Multiple Client creation:</b></p>
-    <form [formGroup] = "fileForm" (ngSubmit) = "createClients(fileForm.value)">
-      <div class="form-group">
-        <label for="importFile">Import from File</label>
-        <input type="file" class="form-control-file" id="importFile" formControlName="file">
+    <p class="bg-light p-2 rounded"><b>Add Multiple Contacts:</b></p>
+      <div>
+        <input style="display: none" type="file" name="selectCsv" id="selectCsv" accept=".csv" #fileUpload 
+        (change)="uploadFile($event)">
       </div>
-      <button type="submit" class="btn btn-sm btn-primary btn-block mb-2" [disabled]="!fileForm.valid">
-        <div *ngIf="!isCreatingClients">
-          Create Clients
+      <div class="input-group mb-0">
+        <!-- <div class="custom-file"> -->
+          <input type="text" class="form-control form-control-sm" placeholder="Choose Csv file" aria-label="" 
+          aria-describedby="basic-addon1" [value]="fileName" readonly>
+        <!-- </div> -->
+        <div class="input-group-append">
+          <button class="btn btn-sm btn-outline-secondary" type="button" (click)="fileUpload.click()">Browse...</button>
+          <button type="button" class="btn btn-sm btn-primary" (click)="saveContacts()" 
+            [disabled]="!contactsChoosen">
+            <div *ngIf="!isCreatingClients">
+              Upload Contacts
+            </div>
+            <div *ngIf="isCreatingClients" class="sk-circle my-0 py-0">
+              <div class="sk-circle1 sk-child"></div>
+              <div class="sk-circle2 sk-child"></div>
+              <div class="sk-circle3 sk-child"></div>
+              <div class="sk-circle4 sk-child"></div>
+              <div class="sk-circle5 sk-child"></div>
+              <div class="sk-circle6 sk-child"></div>
+              <div class="sk-circle7 sk-child"></div>
+              <div class="sk-circle8 sk-child"></div>
+              <div class="sk-circle9 sk-child"></div>
+              <div class="sk-circle10 sk-child"></div>
+              <div class="sk-circle11 sk-child"></div>
+              <div class="sk-circle12 sk-child"></div>
+            </div>
+          </button>
         </div>
-        <div *ngIf="isCreatingClients" class="sk-circle my-0 py-0">
-          <div class="sk-circle1 sk-child"></div>
-          <div class="sk-circle2 sk-child"></div>
-          <div class="sk-circle3 sk-child"></div>
-          <div class="sk-circle4 sk-child"></div>
-          <div class="sk-circle5 sk-child"></div>
-          <div class="sk-circle6 sk-child"></div>
-          <div class="sk-circle7 sk-child"></div>
-          <div class="sk-circle8 sk-child"></div>
-          <div class="sk-circle9 sk-child"></div>
-          <div class="sk-circle10 sk-child"></div>
-          <div class="sk-circle11 sk-child"></div>
-          <div class="sk-circle12 sk-child"></div>
-        </div>
-      </button>
-    </form>
+      </div>    
+    <small class="mt-0">Browse for file to upload/save the contacts</small>
   </div>
 </div>  
    

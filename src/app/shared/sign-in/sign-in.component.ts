@@ -19,7 +19,6 @@ import { Role } from '../models/user.model';
 export class SignInComponent implements OnInit {
 
   public signInForm: FormGroup; 
-  // private userDetails: UserDetails;
   public isSigningIn: boolean = false;
 
   private userDetails: _UserDetails;
@@ -41,14 +40,6 @@ export class SignInComponent implements OnInit {
       (jwt: JsonWebToken)=>{
         localStorage.setItem('userToken', jwt.access_token);
 
-        // this.signinService.sendRequestForUserDetails().subscribe(
-        //   (userDetails: UserDetails)=>{
-        //     this.isSigningIn = false;
-        //     this.setUserDetails(userDetails);
-        //     this.routeUser();
-        //   }
-        // );
-
         this.signinService.sendRequestForUserDetails().subscribe(
             (userDetails: _UserDetails)=>{
               this.isSigningIn = false;
@@ -65,21 +56,10 @@ export class SignInComponent implements OnInit {
     );  
   }
 
-  // private setUserDetails(userDetails){
-  //   this.userDetails = userDetails;
-  //   localStorage.setItem('userRole', userDetails.credentials.role);
-  // }
   private setUserDetails(userDetails){
     this.userDetails = userDetails;
     localStorage.setItem('userRole', userDetails.role);
   }
-
-  // private isAdmin(): boolean{
-  //   if(this.userDetails.credentials.role === Role.ADMIN){
-  //     return true;
-  //   }
-  //   return false;
-  // } 
 
   private isAdmin(): boolean{
     if(this.userDetails.role === Role.ADMIN){

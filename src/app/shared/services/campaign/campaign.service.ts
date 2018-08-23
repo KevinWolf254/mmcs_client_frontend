@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Schedule } from '../../models/schedule.model';
+import { Schedule, ScheduleDetails, ScheduleStatus } from '../../models/schedule.model';
 import { Campaign } from '../../models/campaign.model';
 import { GroupManagerService } from '../group/group-manager.service';
 import { MonthlyExpenditure } from '../../models/monthly-expenditure.model';
@@ -38,8 +38,12 @@ export class CampaignService {
     return this._http.get<AvailabilityResponse>(this.basicUri + '/secure/schedule/'+name);
   }
 
-  getCampaigns(): Schedule[]{
-    return this.campaigns;
+  public getCampaigns(){
+    return this._http.get(this.basicUri + '/secure/schedule');
+  }
+
+  public changeScheduleStatus(name: string, status: ScheduleStatus){
+    return this._http.put(this.basicUri + '/secure/schedule/'+name+"/"+status, null);
   }
 
   setCampaigns(){

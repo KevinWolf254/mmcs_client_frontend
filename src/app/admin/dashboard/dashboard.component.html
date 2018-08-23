@@ -8,97 +8,167 @@
     </nav>
     <!-- Content Body -->
     <div class="col-md-9 ml-sm-auto mt-5 px-2 pt-2">
-      <div class="row">
-        <div class="col">
-            <div class="d-flex pb-2 mb-3 border-bottom">
-                <h3>Dashboard</h3>
-              </div>
-        </div>
-      </div> 
-      <div class="row">
-        <div class="col-sm-6">
-          <div class="card shadow mb-5 rounded"> 
+      <div class="d-flex pb-2 mb-2 border-bottom">
+        <h3>Dashboard</h3>
+      </div>
+      <div class="row mb-3">
+        <div class="col-sm-5">
+          <div class="card mt-2">
+            <h6 class="card-header">Units Available</h6>
             <div class="card-body">
-              <div *ngIf="unitsAvailableIsLoading" class="spinner mt-3">
-                <div class="bounce1"></div>
-                <div class="bounce2"></div>
-                <div class="bounce3"></div>
-              </div>
-              <h4 class="card-title">{{currency}} {{unitsDetails.unitsAvailable}} </h4> 
-            </div>
-            <div class="card-footer text-right text-muted">
-              <h6 class="card-text text-right">
-                Units Available
-              </h6>
+            <h5>
+              {{currency}} {{unitsDetails.unitsAvailable}}
+            </h5>
             </div>
           </div>
         </div>
-        <div class="col-sm-6">
-          <div class="card shadow mb-3 rounded">
-            <div class="card-body">
-              <div *ngIf="previousMonthUnitsIsLoading" class="spinner mt-3">
-                <div class="bounce1"></div>
-                <div class="bounce2"></div>
-                <div class="bounce3"></div>
-              </div>
-              <h4 class="card-title">{{unitsSpentPreviousMonth | currency:'ksh '}} </h4>
-            </div>
-            <div class="card-footer text-right text-muted">
-              <h6 class="card-text text-right">
-                  Units Spent Previous Month
-              </h6>
-            </div>
+        <div class="col-sm-7">
+          <div class="card mt-2">
+            <h6 class="card-header">Reports Available</h6>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <div class="row">
+                  <div class="col-sm-6">
+                    Purchase report
+                  </div>
+                  <div class="col-sm-6">
+                    <button type="button" (click)="openPurchase(purchaseReportModal)" 
+                    class="btn btn-sm btn-outline-secondary">
+                      Download
+                    </button>
+                  </div>
+                </div>
+              </li>
+              <li class="list-group-item">
+                <div class="row">
+                  <div class="col-sm-6">
+                    Delivery report
+                  </div>
+                  <div class="col-sm-6">
+                    <button type="button" (click)="openDelivery(deliveryReportModal)"
+                    class="btn btn-sm btn-outline-secondary">
+                      Download
+                    </button>
+                  </div>
+                </div>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col">
-          <div class="card shadow rounded">
-            <div class="card-body p-2 bg-light">
-              <div class="d-flex flex-row-reverse bd-highlight">
-                <div class="px-2 bd-highlight">
-                  <button type="button" class="btn btn-sm btn-outline-secondary"
-                    data-toggle="tooltip" data-placement="top" title="Pending Requests" placement="left" 
-                    ngbPopover="Total Amount Requested: {{unitsDetails.requestsPendingApprovalAmount | currency: 'ksh '}}" 
-                    popoverTitle="Requested Amount">
-                    Requests 
-                    <span class="badge badge-info">{{unitsDetails.requestsPendingApproval}}</span>
-                  </button>
-                </div>
-                <div class="px-3 bd-highlight"> | </div>
-                <div class="px-2 bd-highlight">
-                  <button type="button" class="btn btn-sm btn-outline-secondary" (click)="openUnitsRequestModal()"
-                    data-toggle="tooltip" data-placement="top" title="Send request to add units">
-                    <i class="fa fa-plus-circle"></i>
-                    Request Units
-                  </button>
-                </div>
-                <div class="px-3 bd-highlight"> | </div>
-                <div class="px-2 bd-highlight">
-                  <select class="form-control form-control-sm px-3" id="selectYear" (change)="changeMonthlyExpenditure($event)">
-                    <option *ngFor="let year of years" [value]="year">{{year}}</option>
-                  </select> 
-                </div>
-                <div class="pr-0 pt-1 bd-highlight text-muted"> Choose Year: </div>
-                <div class="px-3 bd-highlight d-sm-none  d-lg-block"> | </div>
-                <div class="pl-2 pr-0 pt-1 bd-highlight text-muted d-sm-none d-lg-block"> Monthly Campaigns</div>
-              </div>
+      <!-- Ribbon -->
+      <div class="card shadow rounded">
+        <div class="card-body p-2 bg-light">
+          <div class="d-flex flex-row-reverse bd-highlight">
+            <div class="px-2 bd-highlight">
+              <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="tooltip" data-placement="top" title="Pending Requests"
+                placement="left" ngbPopover="Total Amount Requested: 
+                    {{unitsDetails.requestsPendingApprovalAmount | currency: 'ksh '}}" popoverTitle="Requested Amount">
+                Requests
+                <span class="badge badge-info">
+                  {{unitsDetails.requestsPendingApproval}}
+                </span>
+              </button>
             </div>
+            <div class="px-3 bd-highlight"> | </div>
+            <div class="px-2 bd-highlight">
+              <button type="button" class="btn btn-sm btn-outline-secondary" (click)="openUnitsRequestModal()" data-toggle="tooltip" data-placement="top"
+                title="Send request to add units">
+                <i class="fa fa-plus-circle"></i>
+                Request Units
+              </button>
+            </div>
+            <div class="px-3 bd-highlight"> | </div>
+            <div class="px-2 bd-highlight">
+              <select class="form-control form-control-sm px-3" id="selectYear" (change)="changeMonthlyExpenditure($event)">
+                <option *ngFor="let year of years" [value]="year">{{year}}</option>
+              </select>
+            </div>
+            <div class="pr-0 pt-1 bd-highlight text-muted"> Choose Year: </div>
+            <div class="px-3 bd-highlight d-sm-none  d-lg-block"> | </div>
+            <div class="pl-2 pr-0 pt-1 bd-highlight text-muted d-sm-none d-lg-block"> Monthly Campaigns</div>
           </div>
         </div>
       </div>
-      <div class="row mt-3 px-4">
-        <div class="col">
-            <div *ngIf="expendituresAreLoading" class="spinner mt-3">
-              <div class="bounce1"></div>
-              <div class="bounce2"></div>
-              <div class="bounce3"></div>
-            </div>
-            <div [hidden]="expendituresAreLoading">              
-              <canvas id="monthlySmsExpenditureChart" class="chartjs-render-monitor"></canvas>
-            </div>
-        </div>
+      <!-- chart -->
+      <div *ngIf="expendituresAreLoading" class="spinner mt-3">
+        <div class="bounce1"></div>
+        <div class="bounce2"></div>
+        <div class="bounce3"></div>
+      </div>
+      <div [hidden]="expendituresAreLoading">
+        <canvas id="monthlySmsExpenditureChart" class="chartjs-render-monitor"></canvas>
       </div>
     </div>
   </div>
 </div>
+
+<!-- purchaseReportModal  -->
+<ng-template #purchaseReportModal let-c="close" let-d="dismiss">
+  <div class="modal-header bg-danger text-white">
+    <h5 class="modal-title">
+      <i class="fa fa-light fa-lg"></i> Report parameters</h5>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form class="form-inline">
+      <div class="form-group mr-1">
+        <select class="form-control form-control-sm" id="selectYear" (change)="changeMonthlyExpenditure($event)">
+          <option [value]="0">month</option>
+          <option *ngFor="let year of years" [value]="year">{{year}}</option>
+        </select>
+      </div>
+      <div class="form-group mr-1 mx-0 px-0">
+        <select class="form-control form-control-sm" id="selectYear" (change)="changeMonthlyExpenditure($event)">
+          <option [value]="0">year</option>
+          <option *ngFor="let year of years" [value]="year">{{year}}</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-sm btn-light">
+        Download
+      </button>
+    </form>
+    <hr>
+    <div class="d-flex justify-content-between">
+      <!-- <button type="button" class="btn btn-outline-danger" (click)="deleteCampaign()">Delete</button> -->
+      <button type="button" class="btn btn-success" (click)="c('Save click')">Dismiss</button>
+    </div>
+  </div>
+</ng-template>
+
+  <!-- deliveryReportModal  -->
+<ng-template #deliveryReportModal let-c="close" let-d="dismiss">
+  <div class="modal-header bg-danger text-white">
+    <h5 class="modal-title">
+      <i class="fa fa-light fa-lg"></i> Report parameters</h5>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form class="form-inline">
+      <div class="form-group mr-1">
+        <select class="form-control form-control-sm" id="selectYear" (change)="changeMonthlyExpenditure($event)">
+          <option [value]="0">month</option>
+          <option *ngFor="let year of years" [value]="year">{{year}}</option>
+        </select>
+      </div>
+      <div class="form-group mr-1 mx-0 px-0">
+        <select class="form-control form-control-sm" id="selectYear" (change)="changeMonthlyExpenditure($event)">
+          <option [value]="0">year</option>
+          <option *ngFor="let year of years" [value]="year">{{year}}</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-sm btn-light">
+        Download
+      </button>
+    </form>
+    <hr>
+    <div class="d-flex justify-content-between">
+      <!-- <button type="button" class="btn btn-outline-danger" (click)="deleteCampaign()">Delete</button> -->
+      <button type="button" class="btn btn-success" (click)="c('Save click')">Dismiss</button>
+    </div>
+  </div>
+  </ng-template>

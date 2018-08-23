@@ -7,10 +7,7 @@ import { GroupManagerService } from '../../services/group/group-manager.service'
 import { Sms, SmsToGroup } from '../../models/sms.model';
 import { ScheduleDate, ScheduleType, ScheduleDaily, ScheduleWeekly, ScheduleMonthly } from '../../models/schedule.model';
 import { CampaignService } from '../../services/campaign/campaign.service';
-import { stringify } from '../../../../../node_modules/@angular/core/src/util';
-import { debounce, debounceTime } from '../../../../../node_modules/rxjs/operators';
 import { AvailabilityResponse } from '../../models/response.model';
-import { NgbDateStruct } from '../../../../../node_modules/@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from '../../../../../node_modules/ngx-toastr';
 
 @Component({
@@ -138,8 +135,8 @@ export class ScheduledCampaignComponent implements OnInit {
     let group: Group = this.groupService.findGroup(this.groups, this.selected);
     //check if recipients has a group of recipients added to it
     if(this.selectedRecipients.length !=0){
-        //check and remove duplicates
-        this.selectedRecipients = this.removeDuplicate();
+      //check and remove duplicates
+      this.selectedRecipients = this.removeDuplicate();
     }
     this.selectedRecipients.push(group);    
     this.recipientsIds.push(group.id);
