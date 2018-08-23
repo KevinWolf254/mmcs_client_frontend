@@ -6,7 +6,7 @@ import { CampaignService } from '../../shared/services/campaign/campaign.service
 import { MonthlyExpenditure } from '../../shared/models/monthly-expenditure.model';
 import { UnitsService } from '../../shared/services/units/units.service';
 import { UnitsDetailsResponse } from '../../shared/models/response.model';
-import { FormBuilder } from '../../../../node_modules/@angular/forms';
+import { FormBuilder, FormGroup } from '../../../../node_modules/@angular/forms';
 
 @Component({
     selector: 'app-dashboard',
@@ -36,17 +36,10 @@ export class DashboardComponent implements OnInit {
     public months: string[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
     public modalRefDel: NgbModalRef;
 
-    public form: FormGroup;
-
     constructor(private modalService: NgbModal, private _campaignService: CampaignService,
-        private _unitsService: UnitsService, private fb: FormBuilder) { }
+        private _unitsService: UnitsService) { }
 
     ngOnInit() {
-        this.form = _fb.group({
-            'message': [null,Validators.compose([Validators.required, Validators.maxLength(320)])],
-            'group': ['0', selectValidator]
-          });
-
         this.getUnitsDetails();
         this.getSpentPreviousMonthUnits();
         this.calculatePrevious10YearsForSelect();
