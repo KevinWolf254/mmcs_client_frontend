@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Chart } from 'chart.js';
 import { UnitsComponent } from '../units/units.component';
 import { CampaignService } from '../../shared/services/campaign/campaign.service';
@@ -16,13 +16,13 @@ export class DashboardComponent implements OnInit {
 
     public unitsDetails: UnitsDetailsResponse = new UnitsDetailsResponse('', 0, 0, 0);
     public currency: string = '';
-    public unitsAvailableIsLoading: boolean = true;
+    public unitsAvailableIsLoading: boolean = true; 
     public previousMonthUnitsIsLoading: boolean = true;
     public expendituresAreLoading: boolean = true;
 
     public unitsSpentPreviousMonth: number = 0;
 
-    public years: number[] = new Array(10);
+    public years: number[] = new Array(10); 
 
     public date: Date = new Date();
     public currentYear: number = this.date.getFullYear();
@@ -115,5 +115,13 @@ export class DashboardComponent implements OnInit {
 
     public openUnitsRequestModal() {
         this._modalService.open(UnitsComponent);
+    }
+
+    public openPurchase(modal){
+        // this.modalRefDel = this.modalService.open(modal);
+    }
+
+    public openDelivery(modal){
+
     }
 }
