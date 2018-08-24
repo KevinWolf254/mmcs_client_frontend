@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { UsersModule } from './users/users.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { NavigationModule } from '../shared/navigation/navigation.module';
-import { NgbModule, NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UnitsComponent } from './units/units.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AdminComponent } from './admin.component';

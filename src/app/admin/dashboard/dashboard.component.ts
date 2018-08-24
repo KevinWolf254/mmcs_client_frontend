@@ -9,11 +9,31 @@ import { UnitsDetailsResponse } from '../../shared/models/response.model';
 import { FormBuilder, FormGroup, Validators } from '../../../../node_modules/@angular/forms';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date';
 import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-calendar';
+import { ReportService } from '../../shared/services/report/report.service';
 
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
-    styleUrls: ['./dashboard.component.scss']
+    // styleUrls: ['./dashboard.component.scss']
+    styles: [`
+    .custom-day {
+      text-align: center;
+      padding: 0.185rem 0.25rem;
+      display: inline-block;
+      height: 2rem;
+      width: 2rem;
+    }
+    .custom-day.focused {
+      background-color: #e6e6e6;
+    }
+    .custom-day.range, .custom-day:hover {
+      background-color: rgb(2, 117, 216);
+      color: white;
+    }
+    .custom-day.faded {
+      background-color: rgba(2, 117, 216, 0.5);
+    }
+  `]
 })
 export class DashboardComponent implements OnInit {
 
@@ -42,29 +62,36 @@ export class DashboardComponent implements OnInit {
     public purchasesForm: FormGroup;
     public deliveryForm: FormGroup;
 
+    purchaseReportParamsIsValid: boolean;
+    deliveryReportParamsIsValid: boolean;
+
     hoveredDate: NgbDate;
 
     fromDate: NgbDate;
     toDate: NgbDate;
 
-    constructor(private fb: FormBuilder, private modalService: NgbModal, private calendar: NgbCalendar
+    constructor(private fb: FormBuilder, private modalService: NgbModal, calendar: NgbCalendar,
         private _campaignService: CampaignService, private _unitsService: UnitsService) {
-            this.fromDate = calendar.getToday();
-            this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
-         }
+
+        // this.fromDate = calendar.getToday();
+        // this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
+        // console.log(this.fromDate.before(this.toDate))
+        // console.log(this.toDate.equals(this.fromDate))
+
+    }
 
     ngOnInit() {
         this.purchasesForm = this.fb.group({
-            'dateRange': ['',Validators.required]
+            'from': ['',Validators.required],
+            'to': ['',Validators.required],
         });
         this.deliveryForm = this.fb.group({
             'from': ['',Validators.required],
             'to': ['',Validators.required],
         });
         this.getUnitsDetails();
-        this.getSpentPreviousMonthUnits();
         this.calculatePrevious10YearsForSelect();
-        this.sendRequestForMonthlyExpenditure(this.currentYear);
+        // this.sendRequestForMonthlyExpenditure(this.currentYear);
     }
 
     private getUnitsDetails() { 
@@ -75,11 +102,6 @@ export class DashboardComponent implements OnInit {
                 this.unitsAvailableIsLoading = false;
             }
         );
-    }
-
-    getSpentPreviousMonthUnits() {
-        this.unitsSpentPreviousMonth = 5000;
-        this.previousMonthUnitsIsLoading = false;
     }
 
     private setUpCurrency(unitsDetails: UnitsDetailsResponse){
@@ -142,48 +164,66 @@ export class DashboardComponent implements OnInit {
 
     public openPurchase(modal){
         // this.modalRefDel = 
-        this.modalService.open(modal,  { size: 'sm' });
+        this.modalService.open(modal,  { size: 'lg' });
     }
 
     public openDelivery(modal){
         // this.modalRefDel = 
-        this.modalService.open(modal,  { size: 'sm' });
-    }
-
-    sendRequestForDeliveryReport(form) {
-        let from: Date = new Date();
-        let to: Date = new Date();
-        from.setUTCFullYear(form.from.year, form.from.month - 1,
-            form.from.day);
-
-        to.setUTCFullYear(form.to.year, form.to.month - 1, 
-            form.to.day);
-
-        console.log("From Date: "+from);
-        console.log("To Date: "+to);
+        this.modalService.open(modal,  { size: 'lg' });
     }
 
     sendRequestForPurchasesReport(form){
-        let from: Date = new Date();
-        let to: Date = new Date();
-        from.setUTCFullYear(form.from.year, form.from.month - 1,
-            form.from.day);
+        let from: NgbDate = new NgbDate(form.from.year, form.from.month, form.from.day);
+        let to: NgbDate = new NgbDate(form.to.year, form.to.month, form.to.day);
+        if(from.after(to)){
+            this.purchaseReportParamsIsValid = false;
+            console.log("invalid range: ");
+        }else {
+            // this.reportService.requestPurchasesReport(from, to).subscribe(
+            //     response =>{
+                    
+            //     }
+            // );
+        }
+        // from.setUTCFullYear(form.from.year, form.from.month - 1,
+        //     form.from.day);
 
-        to.setUTCFullYear(form.to.year, form.to.month - 1, 
-            form.to.day);
+        // to.setUTCFullYear(form.to.year, form.to.month - 1, 
+        //     form.to.day);
 
         console.log("From Date: "+from);
         console.log("To Date: "+to);
     }
 
-    onDateSelection(date: NgbDate) {
-        if (!this.fromDate && !this.toDate) {
-          this.fromDate = date;
-        } else if (this.fromDate && !this.toDate && date.after(this.fromDate)) {
-          this.toDate = date;
-        } else {
-          this.toDate = null;
-          this.fromDate = date;
+    sendRequestForDeliveryReport(form) {
+        let from: NgbDate = new NgbDate(form.from.year, form.from.month, form.from.day);
+        let to: NgbDate = new NgbDate(form.to.year, form.to.month, form.to.day);
+        if(from.after(to)){
+            this.deliveryReportParamsIsValid = false;
+            console.log("invalid range: ");
+        }else{
+            // this.reportService.requestDeliveryReport(from, to).subscribe(
+            //     response =>{
+
+            //     }
+            // );
         }
-      }
+
+        // let from: Date = new Date();
+        // let to: Date = new Date();
+        // from.setUTCFullYear(form.from.year, form.from.month - 1,
+        //     form.from.day);
+
+        // to.setUTCFullYear(form.to.year, form.to.month - 1, 
+        //     form.to.day);
+    }
+
+    onFromSelection(date: NgbDate){
+        this.fromDate = date;
+        console.log("from date: "+this.fromDate);
+    }
+    onToSelection(date: NgbDate){
+        this.toDate = date;
+        console.log("to date: "+this.toDate);
+    }
 }
