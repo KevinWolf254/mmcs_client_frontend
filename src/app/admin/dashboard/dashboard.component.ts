@@ -35,11 +35,24 @@ export class DashboardComponent implements OnInit {
     public smsScheduledCostData: number[] = [];
     public months: string[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
     public modalRefDel: NgbModalRef;
+    
+    public formDeliverys: FormGroup; 
+    public formPurchases: FormGroup; 
 
     constructor(private modalService: NgbModal, private _campaignService: CampaignService,
-        private _unitsService: UnitsService) { }
+        private _unitsService: UnitsService, private _fb: FormBuilder) { }
 
     ngOnInit() {
+        this.formDeliverys = _fb.group({
+            'from': ['', Validators.required],
+            'to': ['', Validators.required]
+        });
+
+        this.formPurchases = _fb.group({
+            'from': ['', Validators.required],
+            'to': ['', Validators.required]
+        });
+
         this.getUnitsDetails();
         this.getSpentPreviousMonthUnits();
         this.calculatePrevious10YearsForSelect();
@@ -121,11 +134,22 @@ export class DashboardComponent implements OnInit {
 
     public openPurchase(modal){
         // this.modalRefDel = 
-        this.modalService.open(modal,  { size: 'sm' });
+        this.modalService.open(modal,  { size: 'lg' });
     }
 
     public openDelivery(modal){
         // this.modalRefDel = 
-        this.modalService.open(modal,  { size: 'sm' });
+        this.modalService.open(modal,  { size: 'lg' });
+    }
+
+    public sendRequestForDeliveryReport(form){
+        let from: Date = new Date();
+        let to: Date = new Date();
+        from.setUTCFullYear(form.from.year, form.from.month - 1, 
+            form.from.day);
+            
+        to.setUTCFullYear(form.to.year, form.to.month - 1, 
+            form.to.day);
+
     }
 }
