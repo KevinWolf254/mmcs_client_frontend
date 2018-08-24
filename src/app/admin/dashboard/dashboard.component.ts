@@ -33,13 +33,25 @@ export class DashboardComponent implements OnInit {
 
     public smsCostData: number[] = []; 
     public smsScheduledCostData: number[] = [];
-    public months: string[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
+    public months: string[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+    "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
     public modalRefDel: NgbModalRef;
 
-    constructor(private modalService: NgbModal, private _campaignService: CampaignService,
-        private _unitsService: UnitsService) { }
+    public purchasesForm: FormGroup;
+    public deliveryForm: FormGroup;
+
+    constructor(private fb: FormBuilder, private modalService: NgbModal, 
+        private _campaignService: CampaignService, private _unitsService: UnitsService) { }
 
     ngOnInit() {
+        this.purchasesForm = this.fb.group({
+            'from': ['',Validators.required],
+            'to': ['',Validators.required],
+        });
+        this.deliveryForm = this.fb.group({
+            'from': ['',Validators.required],
+            'to': ['',Validators.required],
+        });
         this.getUnitsDetails();
         this.getSpentPreviousMonthUnits();
         this.calculatePrevious10YearsForSelect();
@@ -129,11 +141,24 @@ export class DashboardComponent implements OnInit {
         this.modalService.open(modal,  { size: 'sm' });
     }
 
-    sendRequestForDeliveryReport(form){
+    sendRequestForDeliveryReport(form) {
+        let from: Date = new Date();
+        let to: Date = new Date();
+        from.setUTCFullYear(form.from.year, form.from.month - 1,
+            form.from.day);
+
+        to.setUTCFullYear(form.to.year, form.to.month - 1, 
+            form.to.day);
 
     }
 
     sendRequestForPurchasesReport(form){
+        let from: Date = new Date();
+        let to: Date = new Date();
+        from.setUTCFullYear(form.from.year, form.from.month - 1,
+            form.from.day);
 
+        to.setUTCFullYear(form.to.year, form.to.month - 1, 
+            form.to.day);
     }
 }
