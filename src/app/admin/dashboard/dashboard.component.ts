@@ -7,6 +7,8 @@ import { MonthlyExpenditure } from '../../shared/models/monthly-expenditure.mode
 import { UnitsService } from '../../shared/services/units/units.service';
 import { UnitsDetailsResponse } from '../../shared/models/response.model';
 import { FormBuilder, FormGroup, Validators } from '../../../../node_modules/@angular/forms';
+import { NgbDate } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date';
+import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-calendar';
 
 @Component({
     selector: 'app-dashboard',
@@ -40,13 +42,20 @@ export class DashboardComponent implements OnInit {
     public purchasesForm: FormGroup;
     public deliveryForm: FormGroup;
 
-    constructor(private fb: FormBuilder, private modalService: NgbModal, 
-        private _campaignService: CampaignService, private _unitsService: UnitsService) { }
+    hoveredDate: NgbDate;
+
+    fromDate: NgbDate;
+    toDate: NgbDate;
+
+    constructor(private fb: FormBuilder, private modalService: NgbModal, private calendar: NgbCalendar
+        private _campaignService: CampaignService, private _unitsService: UnitsService) {
+            this.fromDate = calendar.getToday();
+            this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
+         }
 
     ngOnInit() {
         this.purchasesForm = this.fb.group({
-            'from': ['',Validators.required],
-            'to': ['',Validators.required],
+            'dateRange': ['',Validators.required]
         });
         this.deliveryForm = this.fb.group({
             'from': ['',Validators.required],
@@ -150,6 +159,8 @@ export class DashboardComponent implements OnInit {
         to.setUTCFullYear(form.to.year, form.to.month - 1, 
             form.to.day);
 
+        console.log("From Date: "+from);
+        console.log("To Date: "+to);
     }
 
     sendRequestForPurchasesReport(form){
@@ -160,5 +171,19 @@ export class DashboardComponent implements OnInit {
 
         to.setUTCFullYear(form.to.year, form.to.month - 1, 
             form.to.day);
+
+        console.log("From Date: "+from);
+        console.log("To Date: "+to);
     }
+
+    onDateSelection(date: NgbDate) {
+        if (!this.fromDate && !this.toDate) {
+          this.fromDate = date;
+        } else if (this.fromDate && !this.toDate && date.after(this.fromDate)) {
+          this.toDate = date;
+        } else {
+          this.toDate = null;
+          this.fromDate = date;
+        }
+      }
 }

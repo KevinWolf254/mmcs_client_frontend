@@ -113,8 +113,13 @@
     </button>
   </div>
   <div class="modal-body">
-    <form class="form-inline">
-      <div class="form-group mr-1">
+    <form class="form-inline" [formGroup] = "purchasesForm" 
+    (ngSubmit) = "sendRequestForPurchasesReport(purchasesForm.value)">
+
+      <ngb-datepicker #dp (select)="onDateSelection($event)" [displayMonths]="2" 
+      formControlName="dateRange"  [dayTemplate]="t"></ngb-datepicker>
+
+      <!-- <div class="form-group mr-1">
         <select class="form-control form-control-sm" id="selectYear">
           <option [value]="0">month</option>
           <option *ngFor="let month of months" [value]="month">{{month}}</option>
@@ -125,7 +130,7 @@
           <option [value]="0">year</option>
           <option *ngFor="let year of years" [value]="year">{{year}}</option>
         </select>
-      </div>
+      </div> -->
       <button type="submit" class="btn btn-sm btn-outline-secondary">
         Download
       </button>
@@ -143,18 +148,18 @@
     </button>
   </div>
   <div class="modal-body">
-    <form class="form-inline" [formGroup] = "formDeliverys" 
-      (ngSubmit) = "sendRequestForDeliveryReport(form.value)">
+    <form class="form-inline" [formGroup] = "deliveryForm" 
+      (ngSubmit) = "sendRequestForDeliveryReport(deliveryForm.value)">
 
       <div class="row">
         <div class="col-sm-6 mt-3">
           From:
           <div class="form-group">
             <div class="input-group">
-              <input class="form-control" placeholder="YYYY-MM-DD" formControlName="from" 
-                ngbDatepicker #oneOffDate="ngbDatepicker">
+              <input class="form-control form-control-sm" placeholder="YYYY-MM-DD" formControlName="from" 
+                ngbDatepicker #dateFrom="ngbDatepicker">
               <div class="input-group-append">
-                <button class="btn btn-primary" (click)="oneOffDate.toggle()" type="button">
+                <button class="btn btn-sm btn-primary" (click)="dateFrom.toggle()" type="button">
                   <i class="fa fa-calendar"></i>
                 </button>
               </div>
@@ -165,10 +170,10 @@
           To:
           <div class="form-group">
             <div class="input-group">
-              <input class="form-control" placeholder="YYYY-MM-DD" formControlName="to" 
-              ngbDatepicker #oneOffDate="ngbDatepicker">
+              <input class="form-control form-control-sm" placeholder="YYYY-MM-DD" formControlName="to" 
+              ngbDatepicker #dateTo="ngbDatepicker">
               <div class="input-group-append">
-                <button class="btn btn-primary" (click)="oneOffDate.toggle()" type="button">
+                <button class="btn btn-sm btn-primary" (click)="dateTo.toggle()" type="button">
                   <i class="fa fa-calendar"></i>
                 </button>
               </div>
@@ -189,9 +194,18 @@
           <option *ngFor="let year of years" [value]="year">{{year}}</option>
         </select>
       </div> -->
-      <button type="submit" class="btn btn-sm btn-outline-secondary">
+      <hr>
+      <button type="submit" class="btn btn-sm mt-3 btn-outline-secondary" [disabled]="!deliveryForm.valid">
         Download
       </button>
     </form>
   </div>
   </ng-template>
+
+<ng-template #t let-date="date" let-focused="focused">
+  <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)" 
+    [class.faded]="isHovered(date) || isInside(date)"
+    (mouseenter)="hoveredDate = date" (mouseleave)="hoveredDate = null">
+    {{ date.day }}
+  </span>
+</ng-template>
