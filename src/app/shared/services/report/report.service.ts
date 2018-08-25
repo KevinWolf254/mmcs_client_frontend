@@ -12,14 +12,20 @@ export class ReportService {
   constructor(private _http: HttpClient) { }
 
   requestPurchasesReport(from: NgbDate, to: NgbDate){
-    let params = new ReportDates(from, to);
-    return this._http.post(this.basicUri + "/secure/reportPDF/purchase", params, 
+    let params = new ReportDates(new Date(from.year, from.month - 1, 
+      from.day), new Date(to.year, to.month - 1, to.day));
+
+      console.log(params);
+    return this._http.post(this.basicUri + "/reportPDF/purchase", params, 
     this.header);
   }
 
   requestDeliveryReport(from, to){
-    let params = new ReportDates(from, to);
-    return this._http.post(this.basicUri + "/secure/reportPDF/delivery", params,
+    let params = new ReportDates(new Date(from.year, from.month - 1, 
+      from.day), new Date(to.year, to.month - 1, to.day));          
+      
+      console.log(params);
+      return this._http.post(this.basicUri + "/reportPDF/delivery", params,
      this.header);
   }
 

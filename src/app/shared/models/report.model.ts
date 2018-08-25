@@ -1,9 +1,8 @@
-import { NgbDate } from "@ng-bootstrap/ng-bootstrap/datepicker/ngb-date";
 
 export class ReportDates{
-    from: NgbDate;
-    to: NgbDate;
-    constructor(from: NgbDate, to: NgbDate){
+    from: Date;
+    to: Date;
+    constructor(from: Date, to: Date){
         this.from = from;
         this.to = to;
     }

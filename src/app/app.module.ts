@@ -23,6 +23,7 @@ import { SignUpService } from './shared/services/sign-up/sign-up.service';
 import { AeonService } from './shared/services/aeon/aeon.service';
 import { UserService } from './shared/services/user/user.service';
 import { CountryService } from './shared/services/country/country.service';
+import { ReportService } from './shared/services/report/report.service';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { CountryService } from './shared/services/country/country.service';
     CampaignService,
     UnitsService,
     CountryService,
+    ReportService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
