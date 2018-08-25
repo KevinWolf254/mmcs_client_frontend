@@ -167,11 +167,13 @@ export class DashboardComponent implements OnInit {
         this.modalService.open(modal,  { size: 'lg' });
     }
     public getUserInfo(){
+        let organization: stirng;
         this.signinService.sendRequestForUserDetails().subscribe(
-            (userDetails: UserDetails)=>{
-                organisation = userDetails.organisation;
+            (userDetails: _UserDetails)=>{
+                organization = userDetails.organisation;
             }
           );
+          return organization;
     }
     sendRequestForPurchasesReport(form){
         let from: NgbDate = new NgbDate(form.from.year, form.from.month, form.from.day);
