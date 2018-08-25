@@ -5,7 +5,7 @@ import { UnitsComponent } from '../units/units.component';
 import { CampaignService } from '../../shared/services/campaign/campaign.service';
 import { MonthlyExpenditure } from '../../shared/models/monthly-expenditure.model';
 import { UnitsService } from '../../shared/services/units/units.service';
-import { UnitsDetailsResponse } from '../../shared/models/response.model';
+import { UnitsDetailsResponse, _UserDetails } from '../../shared/models/response.model';
 import { FormBuilder, FormGroup, Validators } from '../../../../node_modules/@angular/forms';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date';
 import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-calendar';
@@ -49,7 +49,7 @@ export class DashboardComponent implements OnInit {
 
     public date: Date = new Date();
     public currentYear: number = this.date.getFullYear();
-    private expenseChart = [];
+    expenseChart = [];
     public smsLabel: string = 'sms expense 2018';
     public smsScheduledLabel: string = 'scheduled sms expense 2018';
 
@@ -70,13 +70,9 @@ export class DashboardComponent implements OnInit {
     fromDate: NgbDate;
     toDate: NgbDate;
 
-    constructor(private fb: FormBuilder, private modalService: NgbModal, calendar: NgbCalendar,
-        private _campaignService: CampaignService, private _unitsService: UnitsService) {
-
-        // this.fromDate = calendar.getToday();
-        // this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
-        // console.log(this.fromDate.before(this.toDate))
-        // console.log(this.toDate.equals(this.fromDate))
+    constructor(private fb: FormBuilder, private modalService: NgbModal,
+        private _campaignService: CampaignService, private _unitsService: UnitsService,
+        private reportService: ReportService, private signinService: SignInService) {
 
     }
 
@@ -115,7 +111,7 @@ export class DashboardComponent implements OnInit {
         }
     }
 
-    public sendRequestForMonthlyExpenditure(year: number){
+    sendRequestForMonthlyExpenditure(year: number){
         if(!this.expendituresAreLoading){
             this.expendituresAreLoading = true;            
         }
@@ -163,15 +159,21 @@ export class DashboardComponent implements OnInit {
     }
 
     public openPurchase(modal){
-        // this.modalRefDel = 
         this.modalService.open(modal,  { size: 'lg' });
     }
 
     public openDelivery(modal){
-        // this.modalRefDel = 
         this.modalService.open(modal,  { size: 'lg' });
     }
-
+    public getUserInfo(){
+        let organization: string;
+        this.signinService.sendRequestForUserDetails().subscribe(
+            (userDetails: _UserDetails)=>{
+                organization = userDetails.organisation;
+            }
+          );
+          return organization;
+    }
     sendRequestForPurchasesReport(form){
         let from: NgbDate = new NgbDate(form.from.year, form.from.month, form.from.day);
         let to: NgbDate = new NgbDate(form.to.year, form.to.month, form.to.day);
@@ -179,20 +181,12 @@ export class DashboardComponent implements OnInit {
             this.purchaseReportParamsIsValid = false;
             console.log("invalid range: ");
         }else {
-            // this.reportService.requestPurchasesReport(from, to).subscribe(
-            //     response =>{
+            this.reportService.requestPurchasesReport(from, to).subscribe(
+                response =>{
                     
-            //     }
-            // );
+                }
+            );
         }
-        // from.setUTCFullYear(form.from.year, form.from.month - 1,
-        //     form.from.day);
-
-        // to.setUTCFullYear(form.to.year, form.to.month - 1, 
-        //     form.to.day);
-
-        console.log("From Date: "+from);
-        console.log("To Date: "+to);
     }
 
     sendRequestForDeliveryReport(form) {
@@ -202,28 +196,11 @@ export class DashboardComponent implements OnInit {
             this.deliveryReportParamsIsValid = false;
             console.log("invalid range: ");
         }else{
-            // this.reportService.requestDeliveryReport(from, to).subscribe(
-            //     response =>{
+            this.reportService.requestDeliveryReport(from, to).subscribe(
+                response =>{
 
-            //     }
-            // );
+                }
+            );
         }
-
-        // let from: Date = new Date();
-        // let to: Date = new Date();
-        // from.setUTCFullYear(form.from.year, form.from.month - 1,
-        //     form.from.day);
-
-        // to.setUTCFullYear(form.to.year, form.to.month - 1, 
-        //     form.to.day);
-    }
-
-    onFromSelection(date: NgbDate){
-        this.fromDate = date;
-        console.log("from date: "+this.fromDate);
-    }
-    onToSelection(date: NgbDate){
-        this.toDate = date;
-        console.log("to date: "+this.toDate);
     }
 }
