@@ -10,6 +10,7 @@ import { FormBuilder, FormGroup, Validators } from '../../../../node_modules/@an
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date';
 import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-calendar';
 import { ReportService } from '../../shared/services/report/report.service';
+import { SignInService } from '../../shared/services/sign-in/sign-in.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -72,7 +73,7 @@ export class DashboardComponent implements OnInit {
 
     constructor(private fb: FormBuilder, private modalService: NgbModal,
         private _campaignService: CampaignService, private _unitsService: UnitsService,
-        private reportService: ReportService, private signinService: SignInService) {
+        private reportService: ReportService) {
 
     }
 
@@ -166,13 +167,11 @@ export class DashboardComponent implements OnInit {
         this.modalService.open(modal,  { size: 'lg' });
     }
     public getUserInfo(){
-        let organization: string;
         this.signinService.sendRequestForUserDetails().subscribe(
-            (userDetails: _UserDetails)=>{
-                organization = userDetails.organisation;
+            (userDetails: UserDetails)=>{
+                organisation = userDetails.organisation;
             }
           );
-          return organization;
     }
     sendRequestForPurchasesReport(form){
         let from: NgbDate = new NgbDate(form.from.year, form.from.month, form.from.day);
