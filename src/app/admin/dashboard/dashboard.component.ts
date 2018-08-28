@@ -8,33 +8,14 @@ import { UnitsService } from '../../shared/services/units/units.service';
 import { UnitsDetailsResponse, _UserDetails } from '../../shared/models/response.model';
 import { FormBuilder, FormGroup, Validators } from '../../../../node_modules/@angular/forms';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date';
-import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-calendar';
 import { ReportService } from '../../shared/services/report/report.service';
 import { SignInService } from '../../shared/services/sign-in/sign-in.service';
+import { ClientService } from '../../shared/services/client/client.service';
 
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
-    // styleUrls: ['./dashboard.component.scss']
-    styles: [`
-    .custom-day {
-      text-align: center;
-      padding: 0.185rem 0.25rem;
-      display: inline-block;
-      height: 2rem;
-      width: 2rem;
-    }
-    .custom-day.focused {
-      background-color: #e6e6e6;
-    }
-    .custom-day.range, .custom-day:hover {
-      background-color: rgb(2, 117, 216);
-      color: white;
-    }
-    .custom-day.faded {
-      background-color: rgba(2, 117, 216, 0.5);
-    }
-  `]
+    styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
 
@@ -71,9 +52,9 @@ export class DashboardComponent implements OnInit {
     fromDate: NgbDate;
     toDate: NgbDate;
 
-    constructor(private fb: FormBuilder, private modalService: NgbModal,
+    constructor(private fb: FormBuilder, private modalService: NgbModal,private signinService: SignInService,
         private _campaignService: CampaignService, private _unitsService: UnitsService,
-        private reportService: ReportService) {
+        private reportService: ReportService, private clientService: ClientService) {
 
     }
 
@@ -166,42 +147,45 @@ export class DashboardComponent implements OnInit {
     public openDelivery(modal){
         this.modalService.open(modal,  { size: 'lg' });
     }
-    public getUserInfo(){
-        let organization: stirng;
-        this.signinService.sendRequestForUserDetails().subscribe(
-            (userDetails: _UserDetails)=>{
-                organization = userDetails.organisation;
-            }
-          );
-          return organization;
-    }
-    sendRequestForPurchasesReport(form){
+    public sendRequestForPurchasesReport(form) {
         let from: NgbDate = new NgbDate(form.from.year, form.from.month, form.from.day);
         let to: NgbDate = new NgbDate(form.to.year, form.to.month, form.to.day);
-        if(from.after(to)){
+        if (from.after(to)) {
             this.purchaseReportParamsIsValid = false;
             console.log("invalid range: ");
-        }else {
-            this.reportService.requestPurchasesReport(from, to).subscribe(
-                response =>{
-                    
+        } else {
+            this.signinService.sendRequestForUserDetails().subscribe(
+                (userDetails: _UserDetails) => {
+                    let organization = userDetails.organisation;
+                    console.log(organization);
+                    this.reportService.requestPurchasesReport(organization, from, to).subscribe(
+                        response => {
+
+                        }
+                    );
                 }
             );
         }
     }
 
-    sendRequestForDeliveryReport(form) {
+    public sendRequestForDeliveryReport(form) {
         let from: NgbDate = new NgbDate(form.from.year, form.from.month, form.from.day);
         let to: NgbDate = new NgbDate(form.to.year, form.to.month, form.to.day);
         if(from.after(to)){
             this.deliveryReportParamsIsValid = false;
             console.log("invalid range: ");
         }else{
-            this.reportService.requestDeliveryReport(from, to).subscribe(
-                response =>{
+            this.signinService.sendRequestForUserDetails().subscribe(
+                (userDetails: _UserDetails) => {
+                    let organization = userDetails.organisation;
+                    console.log(organization);
+                    this.reportService.requestDeliveryReport(organization, from, to).subscribe(
+                        response => {
 
+                        }
+                    );
                 }
-            );
+            );            
         }
     }
 }

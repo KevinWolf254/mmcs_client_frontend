@@ -36,7 +36,7 @@ export interface Contacts {
         tzsAir: number;
     ugx: number;
         ugxAir: number;
-    other: number;
+    other: number; 
 }
 /*
  *what aeon charges to send 

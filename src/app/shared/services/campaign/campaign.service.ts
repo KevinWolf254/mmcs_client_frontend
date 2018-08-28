@@ -20,7 +20,7 @@ export class CampaignService {
     this.setCampaigns();
    }
 
-   public sendRequestForMonthlyExpenditure(year: number): Observable<MonthlyExpenditure[]>{
+   sendRequestForMonthlyExpenditure(year: number): Observable<MonthlyExpenditure[]>{
     return this._http.get<MonthlyExpenditure[]>(this.basicUri+'/group/costs/'+year).pipe(
       retry(2),
       map(result => result)

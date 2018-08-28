@@ -11,8 +11,8 @@ export class ReportService {
 
   constructor(private _http: HttpClient) { }
 
-  requestPurchasesReport(from: NgbDate, to: NgbDate){
-    let params = new ReportDates(new Date(from.year, from.month - 1, 
+  requestPurchasesReport(org_name: string, from: NgbDate, to: NgbDate){
+    let params = new ReportDates(org_name, new Date(from.year, from.month - 1, 
       from.day), new Date(to.year, to.month - 1, to.day));
 
       console.log(params);
@@ -20,8 +20,8 @@ export class ReportService {
     this.header);
   }
 
-  requestDeliveryReport(from, to){
-    let params = new ReportDates(new Date(from.year, from.month - 1, 
+  requestDeliveryReport(org_name: string, from: NgbDate, to: NgbDate){
+    let params = new ReportDates(org_name, new Date(from.year, from.month - 1, 
       from.day), new Date(to.year, to.month - 1, to.day));          
       
       console.log(params);

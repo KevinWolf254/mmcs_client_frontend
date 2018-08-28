@@ -8,15 +8,17 @@
     </nav>
     <!-- Content Body -->
     <div class="col-md-9 ml-sm-auto mt-5 px-2 pt-2">
-      <div class="d-flex pb-2 mb-2 border-bottom">
+      <!-- Dashboard -->
+      <div class="pb-2 mb-2 border-bottom">
         <h3>Dashboard</h3>
       </div>
+      <!-- summary -->
       <div class="row mb-3">
         <div class="col-sm-5">
           <div class="card mt-2">
             <h6 class="card-header">Units Available</h6>
             <div class="card-body">
-            <h5>
+            <h5 class="d-flex flex-row-reverse bd-highlight">
               {{currency}} {{unitsDetails.unitsAvailable}}
             </h5>
             </div>
@@ -33,7 +35,8 @@
                   </div>
                   <div class="col-sm-6">
                     <button type="button" (click)="openPurchase(purchaseReportModal)" 
-                    class="btn btn-sm btn-outline-secondary">
+                    class="btn btn-sm btn-outline-secondary">                    
+                      <i class="fa fa-cloud-download"></i>
                       Download
                     </button>
                   </div>
@@ -41,12 +44,13 @@
               </li>
               <li class="list-group-item">
                 <div class="row">
-                  <div class="col-sm-6">
-                    Delivery report
+                  <div class="col-sm-6">                    
+                    Sms Delivery report
                   </div>
                   <div class="col-sm-6">
                     <button type="button" (click)="openDelivery(deliveryReportModal)"
-                    class="btn btn-sm btn-outline-secondary">
+                    class="btn btn-sm btn-outline-secondary">                    
+                    <i class="fa fa-cloud-download"></i>
                       Download
                     </button>
                   </div>
@@ -61,7 +65,8 @@
         <div class="card-body p-2 bg-light">
           <div class="d-flex flex-row-reverse bd-highlight">
             <div class="px-2 bd-highlight">
-              <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="tooltip" data-placement="top" title="Pending Requests"
+              <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="tooltip" data-placement="top" 
+              title="Pending Requests"
                 placement="left" ngbPopover="Total Amount Requested: 
                     {{unitsDetails.requestsPendingApprovalAmount | currency: 'ksh '}}" popoverTitle="Requested Amount">
                 Requests
@@ -72,11 +77,26 @@
             </div>
             <div class="px-3 bd-highlight"> | </div>
             <div class="px-2 bd-highlight">
-              <button type="button" class="btn btn-sm btn-outline-secondary" (click)="openUnitsRequestModal()" data-toggle="tooltip" data-placement="top"
-                title="Send request to add units">
-                <i class="fa fa-plus-circle"></i>
-                Request Units
-              </button>
+            
+              <div ngbDropdown class="d-inline-block">
+                <button class="btn btn-sm btn-outline-secondary" id="confirmPayment" ngbDropdownToggle>
+                  <i class="fa fa-check"></i>
+                  Confirm Payments
+                </button>
+                <div ngbDropdownMenu aria-labelledby="confirmPayment">
+                  <button class="dropdown-item btn btn-sm btn-secondary py-3" (click)="openUnitsRequestModal()" data-toggle="tooltip" 
+                    data-placement="top" title="Confirm Mpesa Payment">
+                    <i class="fa fa-mobile fa-2x"></i>
+                    Mpesa Payment
+                  </button>
+                  <button class="dropdown-item" data-toggle="tooltip" data-placement="top"
+                   title="Confirm Paypal Payment" disabled>
+                    <i class="fa fa-paypal"></i>
+                    Coming Soon
+                  </button>
+                </div>
+              </div>
+            
             </div>
             <div class="px-3 bd-highlight"> | </div>
             <div class="px-2 bd-highlight">
@@ -202,4 +222,3 @@
     </form>
   </div>
   </ng-template>
-
