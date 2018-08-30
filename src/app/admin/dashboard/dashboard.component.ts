@@ -11,6 +11,7 @@ import { NgbDate } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date';
 import { ReportService } from '../../shared/services/report/report.service';
 import { SignInService } from '../../shared/services/sign-in/sign-in.service';
 import { ClientService } from '../../shared/services/client/client.service';
+import { Contacts } from '../../shared/models/client.model';
 
 @Component({
     selector: 'app-dashboard',
@@ -68,8 +69,8 @@ export class DashboardComponent implements OnInit {
             'to': ['',Validators.required],
         });
         this.getUnitsDetails();
-        this.calculatePrevious10YearsForSelect();
-        // this.sendRequestForMonthlyExpenditure(this.currentYear);
+        // this.calculatePrevious10YearsForSelect();
+        this.getContactsForPieChart();
     }
 
     private getUnitsDetails() { 
@@ -86,55 +87,114 @@ export class DashboardComponent implements OnInit {
         this.currency = this._unitsService.setUpCurrency(unitsDetails); 
     }
 
-    private calculatePrevious10YearsForSelect() {
-        for (let i = 0; i < 10; i++) {
-            this.years[i] = this.currentYear;
-            this.currentYear--;
-        }
-    }
+    // private calculatePrevious10YearsForSelect() {
+    //     for (let i = 0; i < 10; i++) {
+    //         this.years[i] = this.currentYear;
+    //         this.currentYear--;
+    //     }
+    // }
 
-    sendRequestForMonthlyExpenditure(year: number){
+    public getContactsForPieChart(){
         if(!this.expendituresAreLoading){
             this.expendituresAreLoading = true;            
         }
-        this._campaignService.sendRequestForMonthlyExpenditure(year).subscribe(
-            (expenditures: MonthlyExpenditure[]) => {               
+        this.clientService.getNoOfContacts().subscribe(
+            (contacts: Contacts) => {               
                 this.expendituresAreLoading = false;
-                this.setLineChart(expenditures);
+                this.setPieChart(contacts);
             }
         );
     }
 
-    public setLineChart(expenditures: MonthlyExpenditure[]) {
-        
-        this.smsLabel = expenditures[0].label;
-        this.smsScheduledLabel = expenditures[1].label;
-
-        this.smsCostData = expenditures[0].monthlyExpenditure;
-        this.smsScheduledCostData = expenditures[1].monthlyExpenditure; 
-        this.expenseChart = new Chart('monthlySmsExpenditureChart', {
-            type: 'line',
+    public setPieChart(contacts: Contacts) {
+        this.expenseChart = new Chart('ctx', {
+            type: 'pie',
             data: {
-                labels: this.months,
                 datasets: [{
-                    label: this.smsLabel,
-                    borderColor: '#3cba9f',
-                    fill: false,
-                    data: this.smsCostData
-                },
-                {
-                    label: this.smsScheduledLabel,
-                    borderColor: '#ffcc00',
-                    fill: false,
-                    data: this.smsScheduledCostData
+                    data: [
+                        contacts.rwf,
+                        contacts.rwfAir,
+                        contacts.kes,
+                        contacts.kesAir,
+                        contacts.tzs,
+                        contacts.tzsAir,
+                        contacts.ugx,
+                        contacts.ugxAir,
+                        contacts.other,
+                    ],
+                    backgroundColor: [
+                        '#3cba9f',
+                        '#148970',
+                        '#348bca',
+                        '#175d91',
+                        '#b8d759',
+                        '#749219',
+                        '#d6bc44',
+                        '#a48b16',
+                        '#9334bf',
+                    ],
+                    label: 'Dataset 1'
                 }],
+                labels: [
+                    'Rwanda',
+                    'Rwanda Airtel',
+                    'Kenya',
+                    'Kenya Airtel',
+                    'Uganda',
+                    'Uganda Airtel',
+                    'Tanzania',
+                    'Tanzania Airtel',
+                    'Other'
+                ]
             },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Contacts'
+                },
+                legend: {
+                    display: true,
+                    labels: {
+                        fontColor: 'rgb(255, 99, 132)'
+                    }
+                }
+            }
         });
-    } 
-
-    public changeMonthlyExpenditure(event) {
-        this.sendRequestForMonthlyExpenditure(event.target.value);
     }
+
+    
+    // setLineChart(expenditures: MonthlyExpenditure[]) {
+        
+    //     this.smsLabel = expenditures[0].label;
+    //     this.smsScheduledLabel = expenditures[1].label;
+
+    //     this.smsCostData = expenditures[0].monthlyExpenditure;
+    //     this.smsScheduledCostData = expenditures[1].monthlyExpenditure; 
+    //     this.expenseChart = new Chart('monthlySmsExpenditureChart', {
+    //         type: 'line',
+    //         data: {
+    //             labels: this.months,
+    //             datasets: [{
+    //                 label: this.smsLabel,
+    //                 borderColor: '#3cba9f',
+    //                 fill: false,
+    //                 data: this.smsCostData
+    //             },
+    //             {
+    //                 label: this.smsScheduledLabel,
+    //                 borderColor: '#ffcc00',
+    //                 fill: false,
+    //                 data: this.smsScheduledCostData
+    //             }],
+    //         },
+    //     });
+    // } 
+    
+
+    // changeMonthlyExpenditure(event) {
+    //     this.sendRequestForMonthlyExpenditure(event.target.value);
+    // }
 
     public openUnitsRequestModal() {
         this.modalService.open(UnitsComponent);

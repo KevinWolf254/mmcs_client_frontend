@@ -18,9 +18,9 @@
           <div class="card mt-2">
             <h6 class="card-header">Units Available</h6>
             <div class="card-body">
-            <h5 class="d-flex flex-row-reverse bd-highlight">
-              {{currency}} {{unitsDetails.unitsAvailable}}
-            </h5>
+              <h5 class="d-flex flex-row-reverse bd-highlight">
+                {{currency}} {{unitsDetails.unitsAvailable}}
+              </h5>
             </div>
           </div>
         </div>
@@ -34,8 +34,7 @@
                     Purchases report
                   </div>
                   <div class="col-sm-6">
-                    <button type="button" (click)="openPurchase(purchaseReportModal)" 
-                    class="btn btn-sm btn-outline-secondary">                    
+                    <button type="button" (click)="openPurchase(purchaseReportModal)" class="btn btn-sm btn-outline-secondary">
                       <i class="fa fa-cloud-download"></i>
                       Download
                     </button>
@@ -44,13 +43,12 @@
               </li>
               <li class="list-group-item">
                 <div class="row">
-                  <div class="col-sm-6">                    
+                  <div class="col-sm-6">
                     Sms Delivery report
                   </div>
                   <div class="col-sm-6">
-                    <button type="button" (click)="openDelivery(deliveryReportModal)"
-                    class="btn btn-sm btn-outline-secondary">                    
-                    <i class="fa fa-cloud-download"></i>
+                    <button type="button" (click)="openDelivery(deliveryReportModal)" class="btn btn-sm btn-outline-secondary">
+                      <i class="fa fa-cloud-download"></i>
                       Download
                     </button>
                   </div>
@@ -65,11 +63,10 @@
         <div class="card-body p-2 bg-light">
           <div class="d-flex flex-row-reverse bd-highlight">
             <div class="px-2 bd-highlight">
-              <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="tooltip" data-placement="top" 
-              title="Pending Requests"
+              <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="tooltip" data-placement="top" title="Pending Requests"
                 placement="left" ngbPopover="Total Amount Requested: 
                     {{unitsDetails.requestsPendingApprovalAmount | currency: 'ksh '}}" popoverTitle="Requested Amount">
-                Requests
+                Pending Top Up's
                 <span class="badge badge-info">
                   {{unitsDetails.requestsPendingApproval}}
                 </span>
@@ -77,47 +74,46 @@
             </div>
             <div class="px-3 bd-highlight"> | </div>
             <div class="px-2 bd-highlight">
-            
               <div ngbDropdown class="d-inline-block">
                 <button class="btn btn-sm btn-outline-secondary" id="confirmPayment" ngbDropdownToggle>
                   <i class="fa fa-check"></i>
-                  Confirm Payments
+                  Confirm Top Up Payments
                 </button>
                 <div ngbDropdownMenu aria-labelledby="confirmPayment">
-                  <button class="dropdown-item btn btn-sm btn-secondary py-3" (click)="openUnitsRequestModal()" data-toggle="tooltip" 
-                    data-placement="top" title="Confirm Mpesa Payment">
+                  <button class="dropdown-item btn btn-sm btn-secondary py-3" (click)="openUnitsRequestModal()" data-toggle="tooltip" data-placement="top"
+                    title="Confirm Mpesa Payment">
                     <i class="fa fa-mobile fa-2x"></i>
                     Mpesa Payment
                   </button>
-                  <button class="dropdown-item" data-toggle="tooltip" data-placement="top"
-                   title="Confirm Paypal Payment" disabled>
+                  <button class="dropdown-item" data-toggle="tooltip" data-placement="top" title="Confirm Paypal Payment" disabled>
                     <i class="fa fa-paypal"></i>
                     Coming Soon
                   </button>
                 </div>
               </div>
-            
             </div>
-            <div class="px-3 bd-highlight"> | </div>
-            <div class="px-2 bd-highlight">
-              <select class="form-control form-control-sm px-3" id="selectYear" (change)="changeMonthlyExpenditure($event)">
-                <option *ngFor="let year of years" [value]="year">{{year}}</option>
-              </select>
+            <div class="px-3 bd-highlight d-sm-none  d-md-block"> | </div>
+            <div class="pl-2 pr-0 pt-1 bd-highlight text-muted d-sm-none d-md-block">
+              Top up
             </div>
-            <div class="pr-0 pt-1 bd-highlight text-muted"> Choose Year: </div>
-            <div class="px-3 bd-highlight d-sm-none  d-lg-block"> | </div>
-            <div class="pl-2 pr-0 pt-1 bd-highlight text-muted d-sm-none d-lg-block"> Monthly Campaigns</div>
           </div>
         </div>
       </div>
-      <!-- chart -->
-      <div *ngIf="expendituresAreLoading" class="spinner mt-3">
-        <div class="bounce1"></div>
-        <div class="bounce2"></div>
-        <div class="bounce3"></div>
-      </div>
-      <div [hidden]="expendituresAreLoading">
-        <canvas id="monthlySmsExpenditureChart" class="chartjs-render-monitor"></canvas>
+      <div class="card mt-3">
+        <h6 class="card-header">
+          Contacts analysis
+        </h6>
+        <div class="card-body">
+          <!-- chart -->
+          <div *ngIf="expendituresAreLoading" class="spinner mt-3">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+          </div>
+          <div [hidden]="expendituresAreLoading">
+            <canvas id="ctx" class="chartjs-render-monitor"></canvas>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -133,15 +129,13 @@
     </button>
   </div>
   <div class="modal-body">
-    <form class="form-inline" [formGroup] = "purchasesForm" 
-      (ngSubmit) = "sendRequestForPurchasesReport(purchasesForm.value)">
+    <form class="form-inline" [formGroup]="purchasesForm" (ngSubmit)="sendRequestForPurchasesReport(purchasesForm.value)">
       <div class="row">
         <div class="col-sm-6 mt-3">
           From:
           <div class="form-group">
             <div class="input-group">
-              <input class="form-control form-control-sm" placeholder="YYYY-MM-DD" formControlName="from" 
-                ngbDatepicker #dateFrom01="ngbDatepicker">
+              <input class="form-control form-control-sm" placeholder="YYYY-MM-DD" formControlName="from" ngbDatepicker #dateFrom01="ngbDatepicker">
               <div class="input-group-append">
                 <button class="btn btn-sm btn-primary" (click)="dateFrom01.toggle()" type="button">
                   <i class="fa fa-calendar"></i>
@@ -154,8 +148,7 @@
           To:
           <div class="form-group">
             <div class="input-group">
-              <input class="form-control form-control-sm" placeholder="YYYY-MM-DD" formControlName="to" 
-              ngbDatepicker #dateTo02="ngbDatepicker">
+              <input class="form-control form-control-sm" placeholder="YYYY-MM-DD" formControlName="to" ngbDatepicker #dateTo02="ngbDatepicker">
               <div class="input-group-append">
                 <button class="btn btn-sm btn-primary" (click)="dateTo02.toggle()" type="button">
                   <i class="fa fa-calendar"></i>
@@ -173,7 +166,7 @@
   </div>
 </ng-template>
 
-  <!-- DeliveryReportModal  -->
+<!-- DeliveryReportModal  -->
 <ng-template #deliveryReportModal let-c="close" let-d="dismiss">
   <div class="modal-header bg-light">
     <h5 class="modal-title">
@@ -183,15 +176,13 @@
     </button>
   </div>
   <div class="modal-body">
-    <form class="form-inline" [formGroup] = "deliveryForm" 
-      (ngSubmit) = "sendRequestForDeliveryReport(deliveryForm.value)">
+    <form class="form-inline" [formGroup]="deliveryForm" (ngSubmit)="sendRequestForDeliveryReport(deliveryForm.value)">
       <div class="row">
         <div class="col-sm-6 mt-3">
           From:
           <div class="form-group">
             <div class="input-group">
-              <input class="form-control form-control-sm" placeholder="YYYY-MM-DD" formControlName="from" 
-                ngbDatepicker #dateFrom="ngbDatepicker">
+              <input class="form-control form-control-sm" placeholder="YYYY-MM-DD" formControlName="from" ngbDatepicker #dateFrom="ngbDatepicker">
               <div class="input-group-append">
                 <button class="btn btn-sm btn-primary" (click)="dateFrom.toggle()" type="button">
                   <i class="fa fa-calendar"></i>
@@ -204,8 +195,7 @@
           To:
           <div class="form-group">
             <div class="input-group">
-              <input class="form-control form-control-sm" placeholder="YYYY-MM-DD" formControlName="to" 
-              ngbDatepicker #dateTo="ngbDatepicker">
+              <input class="form-control form-control-sm" placeholder="YYYY-MM-DD" formControlName="to" ngbDatepicker #dateTo="ngbDatepicker">
               <div class="input-group-append">
                 <button class="btn btn-sm btn-primary" (click)="dateTo.toggle()" type="button">
                   <i class="fa fa-calendar"></i>
@@ -221,4 +211,4 @@
       </button>
     </form>
   </div>
-  </ng-template>
+</ng-template>

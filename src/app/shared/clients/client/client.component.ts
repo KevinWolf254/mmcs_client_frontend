@@ -18,6 +18,7 @@ export class ClientComponent implements OnInit {
   public form: FormGroup;
   public isCreating: boolean = false;
   public isCreatingClients: boolean = false;
+  contactsChoosen: boolean = false;
   public file: File;
 
   public fileName: string = '';
@@ -54,6 +55,8 @@ export class ClientComponent implements OnInit {
   public uploadFile(event){
       this.file = event.target.files[0];
       this.fileName = this.file.name;
+      if(this.fileName)
+        this.contactsChoosen = true;
   }
 
   public saveContacts(){
@@ -66,6 +69,7 @@ export class ClientComponent implements OnInit {
           this.isCreatingClients = false;
           this.fileName = '';      
           this.notify.success(response.body.message, response.body.title);
+          this.contactsChoosen = false;
         }
       },error => {
         this.notify.error(error.error.error_description, error.error.error);

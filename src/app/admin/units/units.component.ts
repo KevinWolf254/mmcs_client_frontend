@@ -39,9 +39,9 @@ export class UnitsComponent implements OnInit {
   }
   
   public requestMoreUnits(form){
+    console.log(form.units);
     this.unitsService.addUnits(form.units, form.mpesaTransNo).subscribe(
       (response: UnitsResponseSuccess) =>{
-        console.log(response);
         this.notify.success(response.message, response.title);
         this.requestForm.reset();
         this.activeModal.close();
