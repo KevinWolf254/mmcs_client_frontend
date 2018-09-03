@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { SignInComponent } from './shared/sign-in/sign-in.component';
-import { DashboardComponent } from './Admin/dashboard/dashboard.component';
 import { UserProfileComponent } from './shared/user-profile/user-profile.component';
 import { CampaignsComponent } from './shared/campaigns/campaigns.component';
 import { ClientsComponent } from './shared/clients/clients.component';
-import { AdminComponent } from './Admin/admin.component';
 import { AdminGuard } from './auth/admin.guard';
 import { SharedGuard } from './auth/shared.guard';
 import { SignUpComponent } from './shared/sign-up/sign-up.component';
+import { DashboardComponent } from './admin/dashboard/dashboard.component';
+import { AdminComponent } from './admin/admin.component';
 
 const routes: Routes = [  
   {path:'signup', component:SignUpComponent},

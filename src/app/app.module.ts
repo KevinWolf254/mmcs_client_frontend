@@ -7,7 +7,6 @@ import { SharedModule } from './shared/shared.module';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 import { AppComponent } from './app.component';
-import { AdminModule } from './Admin/admin.module';
 import { AdminGuard } from './auth/admin.guard';
 import { SharedGuard } from './auth/shared.guard';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -24,6 +23,7 @@ import { AeonService } from './shared/services/aeon/aeon.service';
 import { UserService } from './shared/services/user/user.service';
 import { CountryService } from './shared/services/country/country.service';
 import { ReportService } from './shared/services/report/report.service';
+import { AdminModule } from './admin/admin.module';
 
 @NgModule({
   declarations: [
